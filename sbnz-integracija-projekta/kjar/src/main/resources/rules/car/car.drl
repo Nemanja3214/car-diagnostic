@@ -1,11 +1,13 @@
 package car;
 import com.ftn.sbnz.model.models.Symptom
 import com.ftn.sbnz.model.models.Breakdown
-
+import com.ftn.sbnz.model.models.ElectricCar
+import com.ftn.sbnz.model.models.GasCar
 
 rule "broken battery if headlights are on and engine is not starting"
     when
-        $breakdown : Breakdown()
+        $breakdown : Breakdown($car: car)
+        eval($car instanceof GasCar)
         exists Symptom( this == Symptom.NO_START ) from $breakdown.getSymptoms()
         exists Symptom( this == Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
         not Symptom( this != Symptom.NO_START && this != Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
@@ -59,3 +61,108 @@ rule "flooded car if headlights are on and engine is on and not low gas and pres
     then
         System.out.println("Prazan akumulator!");
 end
+
+
+// maybe CEP
+// rule "25. Potential battery problem"
+// when
+//     $breakdown : Breakdown($car: car)
+//     Car(batterySOCDropSignificant: true, name: $name)
+// then
+//     System.out.println($name + ": Flag as potential battery problem");
+//     modify($car) {
+//         setBrokenBattery(true)
+//     }
+// end
+
+// rule "26. Check health of batteries and charging system"
+// when
+//     $breakdown : Breakdown()
+//     Car(suddenLossOfPowerOrRange: true, name: $name)
+// then
+//     System.out.println($name + ": Check for health of batteries and charging system");
+// end
+
+
+
+// HEREEEEEEEEEEEEEEEE
+// rule "27. Investigate potential engine failure"
+// when
+//     $breakdown : Breakdown($car: Car)
+//     exists Symptom( this == Symptom.UNUSUAL_NOISE ) from $breakdown.getSymptoms()
+// then
+//     System.out.println($name + ": Investigate potential engine failure");
+// end
+
+// rule "28. Evaluate engine management system for errors"
+// when
+//     $breakdown : Breakdown()
+//     exists Symptom( this == Symptom.HESITATION || this == Symptom.JERKING ) from $breakdown.getSymptoms()
+// then
+//     System.out.println($name + ": Evaluate engine management system for errors");
+// end
+
+// rule "29. Check charging components for errors"
+// when
+//     $breakdown : Breakdown()
+//     Vehicle(failsToChargeOrIntermittentProblems: true, name: $name)
+// then
+//     System.out.println($name + ": Check charging port, cables, and built-in charger for errors");
+// end
+
+// rule "30. Check for significantly slower charge rate"
+// when
+//     $breakdown : Breakdown()
+//     Vehicle(significantlySlowerChargeRate: true, name: $name)
+// then
+//     System.out.println($orderNumber + " " + $name + ": Check for significantly slower charge rate");
+// end
+
+rule "20. Patch tire"
+    when
+        $breakdown : Breakdown()
+        exists Symptom( this == Symptom.FLAT_TIRE) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.DAMAGED_TIRE ) from $breakdown.getSymptoms()
+    then
+        System.out.println("Patch the tire");
+end
+
+rule "21. Inflate tire"
+    when
+        $breakdown : Breakdown($car: car)  
+        exists Symptom( this == Symptom.FLAT_TIRE) from $breakdown.getSymptoms()
+        not (exists Symptom( this == Symptom.DAMAGED_TIRE ) from $breakdown.getSymptoms())
+    then
+        System.out.println("Inflate the tire");
+end
+
+
+rule "22. Balance tire"
+when
+    $breakdown : Breakdown()
+    not (exists Symptom( this == Symptom.FLAT_TIRE) from $breakdown.getSymptoms())
+    exists Symptom( this == Symptom.TIRE_VIBRATING ) from $breakdown.getSymptoms()
+then
+    System.out.println("Balance the tires");
+end
+
+
+rule "23. Balance tire"
+when
+    $breakdown : Breakdown()
+    not (exists Symptom( this == Symptom.FLAT_TIRE) from $breakdown.getSymptoms())
+    exists Symptom( this == Symptom.DIFFICULT_STEERING ) from $breakdown.getSymptoms()
+then
+    System.out.println("Balance the tires");
+end
+
+rule "24. Optics"
+when
+    $breakdown : Breakdown()
+    not (exists Symptom( this == Symptom.FLAT_TIRE) from $breakdown.getSymptoms())
+    exists Symptom( this == Symptom.PULLING_TO_SIDE ) from $breakdown.getSymptoms()
+then
+    System.out.println("Do the optics");
+end
+
+
