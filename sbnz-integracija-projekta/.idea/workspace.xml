@@ -4,7 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9a9fb20f-1021-41ac-9901-ff7100cd8d25" name="Changes" comment="" />
+    <list default="true" id="9a9fb20f-1021-41ac-9901-ff7100cd8d25" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sbnz-integracija-projekta.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/src/main/java/com/ftn/sbnz/model/models/Breakdown.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/src/main/java/com/ftn/sbnz/model/models/Car.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/src/main/java/com/ftn/sbnz/model/models/CarModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/src/main/java/com/ftn/sbnz/model/models/Client.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/src/main/java/com/ftn/sbnz/model/models/Discount.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/src/main/java/com/ftn/sbnz/model/models/Lamp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/src/main/java/com/ftn/sbnz/model/models/Mechanic.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/src/main/java/com/ftn/sbnz/model/models/Repairment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/src/main/java/com/ftn/sbnz/model/models/Symptom.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,8 +53,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "dev",
-    "last_opened_file_path": "D:/Fax/SIIT-8.Sem/SBZ/car-diagnostic",
+    "git-widget-placeholder": "Merging dev",
+    "last_opened_file_path": "D:/Fax/SIIT-8.Sem/SBZ/car-diagnostic/sbnz-integracija-projekta",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -57,6 +73,7 @@
       <workItem from="1715516679938" duration="1097000" />
       <workItem from="1715517812156" duration="1356000" />
       <workItem from="1715602989168" duration="502000" />
+      <workItem from="1715603573698" duration="396000" />
     </task>
     <servers />
   </component>
