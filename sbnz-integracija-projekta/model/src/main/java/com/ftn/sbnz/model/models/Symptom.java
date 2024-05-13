@@ -2,9 +2,12 @@ package com.ftn.sbnz.model.models;
 
 public enum Symptom {
     HEADLIGHTS_ON,
+    HEADLIGHTS_FLUCTUATE,
     NO_START,
+    START,
     CRANKING,
     EMPTY_TANK,
+    NOT_EMPTY_TANK,
     FLOODED,
     FUEL_SCENT,
     FLAT_TIRE,

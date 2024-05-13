@@ -12,3 +12,50 @@ rule "broken battery if headlights are on and engine is not starting"
     then
         System.out.println("Pokvaren akumulator!");
 end
+
+rule "run outof gas if headlights are on and engine is cranking and low gas "
+    when
+        $breakdown : Breakdown()
+        exists Symptom( this == Symptom.CRANKING ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.EMPTY_TANK ) from $breakdown.getSymptoms()
+        not Symptom( this != Symptom.CRANKING && this != Symptom.HEADLIGHTS_ON && this != Symptom.EMPTY_TANK) from $breakdown.getSymptoms()
+    then
+        System.out.println("Automobil ostao bez goriva!");
+end
+
+
+rule "low battery if headlights are on and engine is cranking and low gas "
+    when
+        $breakdown : Breakdown()
+        exists Symptom( this == Symptom.CRANKING ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.NOT_EMPTY_TANK ) from $breakdown.getSymptoms()
+        not Symptom( this != Symptom.HEADLIGHTS_FLUCTATE && this != Symptom.CRANKING && this != Symptom.HEADLIGHTS_ON && this != Symptom.EMPTY_TANK) from $breakdown.getSymptoms()
+    then
+        System.out.println("Prazan akumulator!");
+end
+
+
+rule "run out of gas if headlights are on and engine is on and low gas "
+    when
+        $breakdown : Breakdown()
+        exists Symptom( this == Symptom.START ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.EMPTY_TANK ) from $breakdown.getSymptoms()
+        not Symptom(this != Symptom.CRANKING && this != Symptom.HEADLIGHTS_ON && this != Symptom.EMPTY_TANK) from $breakdown.getSymptoms()
+    then
+        System.out.println(" Automobil ostao bez goriva!");
+end
+
+rule "flooded car if headlights are on and engine is on and not low gas and present gas scent "
+    when
+        $breakdown : Breakdown()
+        exists Symptom( this == Symptom.START ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.NOT_EMPTY_TANK ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.FUEL_SCENT) from $breakdown.getSymptoms()
+        not Symptom( this != Symptom.FUEL_SCENT && this != Symptom.START && this != Symptom.HEADLIGHTS_ON && this != Symptom.EMPTY_TANK) from $breakdown.getSymptoms()
+    then
+        System.out.println("Prazan akumulator!");
+end
