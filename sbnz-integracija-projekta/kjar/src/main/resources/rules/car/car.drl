@@ -1,0 +1,14 @@
+package car;
+import com.ftn.sbnz.model.models.Symptom
+import com.ftn.sbnz.model.models.Breakdown
+
+
+rule "broken battery if headlights are on and engine is not starting"
+    when
+        $breakdown : Breakdown()
+        exists Symptom( this == Symptom.NO_START ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
+        not Symptom( this != Symptom.NO_START && this != Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
+    then
+        System.out.println("Pokvaren akumulator!");
+end

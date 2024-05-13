@@ -1,9 +1,11 @@
 package com.ftn.sbnz.service.tests;
 
 import org.junit.Test;
-// import org.kie.api.KieServices;
-// import org.kie.api.runtime.KieContainer;
-// import org.kie.api.runtime.KieSession;
+ import org.kie.api.KieServices;
+ import org.kie.api.runtime.KieContainer;
+ import org.kie.api.runtime.KieSession;
+import com.ftn.sbnz.model.models.Symptom;
+import com.ftn.sbnz.model.models.Breakdown;
 
 
 
@@ -14,6 +16,14 @@ public class CEPConfigTest {
         // KieServices ks = KieServices.Factory.get();
         // KieContainer kContainer = ks.getKieClasspathContainer(); 
         // KieSession ksession = kContainer.newKieSession("cepKsession");
-      
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kContainer = ks.getKieClasspathContainer();
+        KieSession ksession = kContainer.newKieSession("carKsession");
+        List<Symptom> s = new ArrayList<>();
+        s.add(Symptom.HEADLIGHTS_ON);
+        s.add(Symptom.NO_START);
+        Breakdown b = new Breakdown('kvar1', s);
+        ksession.insert(b);
+        ruleCount= ksession.fireAllRules();
     }
 }
