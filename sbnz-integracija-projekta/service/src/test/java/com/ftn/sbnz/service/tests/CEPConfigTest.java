@@ -1,5 +1,8 @@
 package com.ftn.sbnz.service.tests;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
  import org.kie.api.KieServices;
  import org.kie.api.runtime.KieContainer;
@@ -22,8 +25,8 @@ public class CEPConfigTest {
         List<Symptom> s = new ArrayList<>();
         s.add(Symptom.HEADLIGHTS_ON);
         s.add(Symptom.NO_START);
-        Breakdown b = new Breakdown('kvar1', s);
+        Breakdown b = new Breakdown("kvar1", s);
         ksession.insert(b);
-        ruleCount= ksession.fireAllRules();
+        int ruleCount = ksession.fireAllRules();
     }
 }

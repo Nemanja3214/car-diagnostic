@@ -1,4 +1,4 @@
-package model.src.main.java.com.ftn.sbnz.model.models;
+package com.ftn.sbnz.model.models;
 
 import java.util.List;
 
