@@ -1,4 +1,6 @@
-package model.src.main.java.com.ftn.sbnz.model.models;
+package com.ftn.sbnz.model.models;
+
+
 
 public class Discount {
     private double percent;
