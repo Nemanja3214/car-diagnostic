@@ -1,28 +1,24 @@
-package model.src.main.java.com.ftn.sbnz.model.models;
+package com.ftn.sbnz.model.models;
+
+
 
 import java.util.List;
 
 public class Car {
-    private String plate;
-    private int yearOfProduction;
-    private boolean potentionalEngineIssue;
-    private boolean potentionalTurbineIssue;
-    private boolean potentionalCoolingLeakage;
-
-    private Client owner;
-
-    private CarModel model;
-    private List<Lamp> lamps;
-    private List<Repairment> repairments;
+    protected String plate;
+    protected int yearOfProduction;
+    protected boolean potentionalEngineIssue;
+    protected Client owner;
+    protected CarModel model;
+    protected List<Lamp> lamps;
+    protected List<Repairment> repairments;
 
     public Car() {}
 
-    public Car(String plate, int yearOfProduction, boolean potentionalEngineIssue, boolean potentionalTurbineIssue, boolean potentionalCoolingLeakage, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments) {
+    public Car(String plate, int yearOfProduction, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments) {
         this.plate = plate;
         this.yearOfProduction = yearOfProduction;
         this.potentionalEngineIssue = potentionalEngineIssue;
-        this.potentionalTurbineIssue = potentionalTurbineIssue;
-        this.potentionalCoolingLeakage = potentionalCoolingLeakage;
         this.owner = owner;
         this.model = model;
         this.lamps = lamps;
@@ -59,22 +55,6 @@ public class Car {
 
     public void setPotentionalEngineIssue(boolean potentionalEngineIssue) {
         this.potentionalEngineIssue = potentionalEngineIssue;
-    }
-
-    public boolean isPotentionalTurbineIssue() {
-        return potentionalTurbineIssue;
-    }
-
-    public void setPotentionalTurbineIssue(boolean potentionalTurbineIssue) {
-        this.potentionalTurbineIssue = potentionalTurbineIssue;
-    }
-
-    public boolean isPotentionalCoolingLeakage() {
-        return potentionalCoolingLeakage;
-    }
-
-    public void setPotentionalCoolingLeakage(boolean potentionalCoolingLeakage) {
-        this.potentionalCoolingLeakage = potentionalCoolingLeakage;
     }
 
     public Client getOwner() {

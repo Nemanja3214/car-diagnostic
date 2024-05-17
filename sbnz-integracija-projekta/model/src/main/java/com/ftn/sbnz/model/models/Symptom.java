@@ -1,10 +1,13 @@
-package model.src.main.java.com.ftn.sbnz.model.models;
+package com.ftn.sbnz.model.models;
 
 public enum Symptom {
     HEADLIGHTS_ON,
+    HEADLIGHTS_FLUCTUATE,
     NO_START,
+    START,
     CRANKING,
     EMPTY_TANK,
+    NOT_EMPTY_TANK,
     FLOODED,
     FUEL_SCENT,
     FLAT_TIRE,
@@ -15,5 +18,13 @@ public enum Symptom {
     WEIRD_NOISE_ACCELERATION,
     HIGH_ENGINE_TEMP,
     WHITE_SMOKE,
-    LOW_COOLING_LIQUID
+    LOW_COOLING_LIQUID,
+    UNUSUAL_NOISE,
+    HESITATION,
+    JERKING,
+
+   ELECTRICAL_CODE_A,
+    ELECTRICAL_CODE_B,
+    ELECTRICAL_CODE_C,
+    ELECTRICAL_CODE_D
 }
