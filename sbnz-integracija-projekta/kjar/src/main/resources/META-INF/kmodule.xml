@@ -3,9 +3,9 @@
         <ksession name="bwKsession"/>
     </kbase>
     <kbase name="cepKbase" eventProcessingMode="stream" packages="cep">
-        <ksession name="cepKsession" clockType="pseudo"/>
+        <ksession name="cepKsession" clockType="realtime"/>
     </kbase>
     <kbase name="carKbase" eventProcessingMode="stream" packages="car">
-        <ksession name="carKsession" clockType="pseudo"/>
+        <ksession name="carKsession" clockType="realtime"/>
     </kbase>
 </kmodule>
