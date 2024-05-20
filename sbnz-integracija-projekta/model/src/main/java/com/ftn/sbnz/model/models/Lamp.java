@@ -1,12 +1,16 @@
 package com.ftn.sbnz.model.models;
 
 import java.util.List;
+import org.kie.api.definition.type.Position;
+
 
 public class Lamp {
-
+    @Position(0)
     private String lampKind;
-
-    private List<Lamp> causedBy;
+    @Position(2)
+    private String plate;
+    @Position(1)
+    private String causedByLamp;
 
     public Lamp() {}
 
@@ -14,20 +18,30 @@ public class Lamp {
         return lampKind;
     }
 
+    public Lamp(String lampKind, String causedByLamp, String plate) {
+        this.lampKind = lampKind;
+        this.plate = plate;
+        this.causedByLamp = causedByLamp;
+    }
+
+    public String getPlate() {
+        return plate;
+    }
+
+    public void setPlate(String plate) {
+        this.plate = plate;
+    }
+
+    public String getCausedByLamp() {
+        return causedByLamp;
+    }
+
+    public void setCausedByLamp(String causedByLamp) {
+        this.causedByLamp = causedByLamp;
+    }
+
     public void setLampKind(String lampKind) {
         this.lampKind = lampKind;
     }
 
-    public List<Lamp> getCausedBy() {
-        return causedBy;
-    }
-
-    public void setCausedBy(List<Lamp> causedBy) {
-        this.causedBy = causedBy;
-    }
-
-    public Lamp(String lampKind, List<Lamp> causedBy) {
-        this.lampKind = lampKind;
-        this.causedBy = causedBy;
-    }
 }
