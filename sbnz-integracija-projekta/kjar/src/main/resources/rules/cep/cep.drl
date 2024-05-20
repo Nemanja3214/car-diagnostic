@@ -1,1 +1,154 @@
 package cep;
+import com.ftn.sbnz.model.models.battery.events.BatteryChargeEvent;
+import com.ftn.sbnz.model.models.battery.events.BatteryDischargeEvent;
+import com.ftn.sbnz.model.models.battery.Battery;
+import com.ftn.sbnz.model.models.battery.BatteryStates;
+import com.ftn.sbnz.model.models.battery.events.VoltageReadingEvent;
+import com.ftn.sbnz.model.models.battery.events.CurrentReadingEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.lang.Math;
+
+rule "Battery Empty"
+    when
+        // current close to zero, practically I = 0
+        $currentReading: CurrentReadingEvent($batteryId: batteryId, value < 0.01, value > -0.01)
+        // only after discharging can battery be empty
+        $battery : Battery(state == BatteryStates.DISCHARGING, id == $batteryId)
+    then
+        modify($battery) {
+            setState(BatteryStates.EMPTY)
+        }
+end
+
+rule "Battery Charged"
+    when
+        // current close to zero, practically I = 0
+        $currentReading: CurrentReadingEvent($batteryId: batteryId, value < 0.01, value > -0.01)
+        // if not discharging and current is zero then it is charged
+        $battery : Battery(state != BatteryStates.DISCHARGING, id == $batteryId)
+    then
+        modify($battery) {
+            setState(BatteryStates.CHARGED)
+        }
+
+end
+
+rule "Battery Charging Started"
+    when
+        // current less zero, practically I < 0
+        $currentReading: CurrentReadingEvent($batteryId: batteryId, value < -0.01)
+        // get into RHS only if neccessary
+    $battery : Battery(state != BatteryStates.CHARGING, id == $batteryId)
+    then
+        modify($battery) {
+            setState(BatteryStates.CHARGING)
+        }
+end
+
+// this comes after charged coming into discharging and needs to be before assigning discharging
+rule "Set Maximum charge" salience 10
+    when
+        // current more than zero, practically I > 0
+        $currentReading: CurrentReadingEvent($batteryId: batteryId, value > 0.01)
+         $voltageReading: VoltageReadingEvent($batteryId == batteryId)
+        //  last voltage reading
+        not VoltageReadingEvent(this != $voltageReading, $voltageReading.getBatteryId() == batteryId, startTime > $voltageReading.getStartTime() )
+        $battery : Battery(state == BatteryStates.CHARGED, id == $batteryId)
+    then
+        modify($currentReading) {
+            setMaxCharge()
+        }
+        // detect lower maximum voltage
+        // System.out.println(($voltageReading.getValue() / $battery.getNominalMaxVoltage())* 100 > 0);
+        if(Math.abs($voltageReading.getValue() - $battery.getNominalMaxVoltage()) > 0.3)
+            System.out.println("Battery maximum voltage is lower and it's at: " + (Math.abs($voltageReading.getValue() / $battery.getNominalMaxVoltage()))* 100);
+
+        if(Math.abs($currentReading.getValue() - $battery.getNominalMaxCharge()) > 0.3)
+            System.out.println("Battery maximum charge is lower and it's at: " + (Math.abs($currentReading.getValue() / $battery.getNominalMaxCharge()))* 100);
+end
+
+rule "Battery Discharging Started"
+    when
+        // current more than zero, practically I > 0
+        $currentReading: CurrentReadingEvent($batteryId: batteryId, value > 0.01)
+        $battery : Battery(state != BatteryStates.DISCHARGING, id == $batteryId)
+    then
+        modify($battery) {
+            setState(BatteryStates.DISCHARGING)
+        }
+end
+
+rule "Initial SOC assignment"
+    when
+        $firstReading : CurrentReadingEvent($batteryId: batteryId) 
+        $voltageReading: VoltageReadingEvent($firstReading.getBatteryId() == batteryId)
+        // there is no other reading for this measurement before
+        not CurrentReadingEvent(this != $firstReading, $firstReading.getBatteryId() == batteryId )
+    then
+        double a = $voltageReading.getInitialSOC();
+        modify($firstReading) {
+            setCurrentSOC(a);
+        }
+        System.out.println("INITIAL  " + $firstReading.getStartTime().getTime());
+end
+
+declare window LastEventWindow
+    CurrentReadingEvent() over window:length(2)
+end
+
+
+rule "SOC calculation"
+when
+    $list : ArrayList(size >= 2) from collect (CurrentReadingEvent() from window LastEventWindow)
+    $previousReading : CurrentReadingEvent() from $list.get(0)
+    $currentReading : CurrentReadingEvent(this after $previousReading) from $list
+    exists VoltageReadingEvent($currentReading.getBatteryId() == batteryId)
+    // there is no reading after except this currently observed
+    not CurrentReadingEvent(this != $currentReading, $currentReading.getBatteryId() == batteryId, startTime > $currentReading.getStartTime() )
+    // there is reading before
+    exists CurrentReadingEvent(this != $currentReading, $currentReading.getBatteryId() == batteryId, startTime < $currentReading.getStartTime() )
+    
+then
+    double timeDiff = ($currentReading.getStartTime().getTime() - $previousReading.getStartTime().getTime() ) * 1000.0;
+    $currentReading.calculateAndSetSOC(timeDiff);
+    System.out.println("$g: " + $previousReading);
+    System.out.println("$r: " + $currentReading);
+    // modify($battery) {
+    //     setStatus("Discharged")
+    // }
+        // System.out.println("FIRST  " + ((CurrentReadingEvent)$events.get(0)).getStartTime().getTime());
+    // System.out.println("SECOND " + ((CurrentReadingEvent)$events.get(1)).getStartTime().getTime());
+        System.out.println("SIZE ");
+end
+
+
+declare window LastMinuteWindow
+    CurrentReadingEvent(currentSOC != 0.0) over window:time(60000ms)
+end
+
+rule "Charging Problem Detection"
+when
+    accumulate ( 
+        CurrentReadingEvent( $soc: currentSOC != 0.0 ) from window LastMinuteWindow;
+        $min : min( $soc ),
+        $max : max( $soc ),
+        $count: count(1);
+        $count < 10)
+then
+    System.out.println("There is a charger problem, no sufficient readings");
+end
+
+rule "if SOC doesn't rise for at least 1% every minute, charging problem "
+when
+    accumulate ( 
+        CurrentReadingEvent( $soc: currentSOC != 0.0 ) from window LastMinuteWindow;
+        $min : min( $soc ),
+        $max : max( $soc ),
+        $count: count(1);
+        $count > 10,
+        ($max - $min) < 1.0 || ($max - $min) > 5.0)
+then
+    System.out.println("Battery is degraded");
+end
