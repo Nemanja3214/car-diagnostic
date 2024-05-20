@@ -30,7 +30,7 @@ rule "broken battery if headlights are on and engine is not starting"
         insert(new Repairment(null, 40.0, null, null, $breakdown));
 end
 
-rule "run outof gas if headlights are on and engine is cranking and low gas "
+rule "run out of gas if headlights are on and engine is cranking and low gas "
     when
         $breakdown : Breakdown($car: car)
           eval($car instanceof GasCar)
@@ -54,6 +54,7 @@ rule "low battery if headlights are on and engine is cranking and low gas "
         exists Symptom( this == Symptom.CRANKING ) from $breakdown.getSymptoms()
         exists Symptom( this == Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
         exists Symptom( this == Symptom.NOT_EMPTY_TANK ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.HEADLIGHTS_FLUCTUATE ) from $breakdown.getSymptoms()
         not Symptom( this != Symptom.HEADLIGHTS_FLUCTUATE && this != Symptom.CRANKING && this != Symptom.HEADLIGHTS_ON && this != Symptom.EMPTY_TANK) from $breakdown.getSymptoms()
     then
         System.out.println("Prazan akumulator!");
@@ -80,6 +81,18 @@ rule "run out of gas if headlights are on and engine is on and low gas "
         insert(new Repairment(null, 40.0, null, null, $breakdown));
 end
 
+rule "undefind breakdown if headlights are on and car is cranking and tank is not empty and not fluctuating"
+    when
+        $breakdown : Breakdown($car: car)
+        eval($car instanceof GasCar)
+        exists Symptom( this == Symptom.CRANKING ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.NOT_EMPTY_TANK ) from $breakdown.getSymptoms()
+        not Symptom(this != Symptom.CRANKING && this != Symptom.HEADLIGHTS_ON && this != Symptom.NOT_EMPTY_TANK) from $breakdown.getSymptoms()
+    then
+        System.out.println("Uzrok kvara se ne moze indentifikovati na osnovu trenutnih simptoma!");
+end
+
 rule "flooded car if headlights are on and engine is on and not low gas and present gas scent "
     when
         $breakdown : Breakdown($car: car)
@@ -90,7 +103,116 @@ rule "flooded car if headlights are on and engine is on and not low gas and pres
         exists Symptom( this == Symptom.FUEL_SCENT) from $breakdown.getSymptoms()
         not Symptom( this != Symptom.FUEL_SCENT && this != Symptom.START && this != Symptom.HEADLIGHTS_ON && this != Symptom.EMPTY_TANK) from $breakdown.getSymptoms()
     then
-        System.out.println("Prazan akumulator!");
+        System.out.println("Automobil je potopljen!");
+        modify((GasCar)$car){setPotentionalTurbineIssue(false);}
+        modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
+        modify((GasCar)$car){setPotentionalEngineIssue(false);}
+        insert(new Repairment(null, 40.0, null, null, $breakdown));
+end
+
+rule "flooded car if headlights are on and engine is on and not low gas and present gas scent PERIODICALLY "
+    when
+        $breakdown : Breakdown($car: car)
+          eval($car instanceof GasCar)
+        exists Symptom( this == Symptom.START ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.NOT_EMPTY_TANK ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.PERIODICALLY_FUEL_SCENT) from $breakdown.getSymptoms()
+        not Symptom( this != Symptom.PERIODICALLY_FUEL_SCENT && this != Symptom.START && this != Symptom.HEADLIGHTS_ON && this != Symptom.EMPTY_TANK) from $breakdown.getSymptoms()
+    then
+        System.out.println("Automobil je potopljen!");
+        modify((GasCar)$car){setPotentionalTurbineIssue(false);}
+        modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
+        modify((GasCar)$car){setPotentionalEngineIssue(false);}
+        insert(new Repairment(null, 40.0, null, null, $breakdown));
+end
+
+rule "undefind breakdown if headlights are on and engine is on and not low gas"
+    when
+        $breakdown : Breakdown($car: car)
+          eval($car instanceof GasCar)
+        exists Symptom( this == Symptom.START ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.NOT_EMPTY_TANK ) from $breakdown.getSymptoms()
+        not Symptom(this != Symptom.START && this != Symptom.HEADLIGHTS_ON && this != Symptom.EMPTY_TANK) from $breakdown.getSymptoms()
+    then
+        System.out.println("Uzrok kvara se ne moze indentifikovati na osnovu trenutnih simptoma!");
+end
+
+rule "undefind breakdown if headlights are on and engine is on and uncertain gas level"
+    when
+        $breakdown : Breakdown($car: car)
+          eval($car instanceof GasCar)
+        exists Symptom( this == Symptom.START ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.UNCERTAIN_AMOUNT_OF_GAS ) from $breakdown.getSymptoms()
+        not Symptom(this != Symptom.START && this != Symptom.HEADLIGHTS_ON && this != Symptom.UNCERTAIN_AMOUNT_OF_GAS) from $breakdown.getSymptoms()
+    then
+        System.out.println("Uzrok kvara se ne moze indentifikovati na osnovu trenutnih simptoma!");
+end
+
+rule "out of gas if headlights are on and periodically cranking and low on gas"
+    when
+        $breakdown : Breakdown($car: car)
+          eval($car instanceof GasCar)
+        exists Symptom( this == Symptom.HEADLIGHTS_ON ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.PERIODICALLY_CRANKING ) from $breakdown.getSymptoms()
+        exists Symptom( this == Symptom.EMPTY_TANK ) from $breakdown.getSymptoms()
+        not Symptom(this != Symptom.PERIODICALLY_CRANKING && this != Symptom.HEADLIGHTS_ON && this != Symptom.EMPTY_TANK) from $breakdown.getSymptoms()
+    then
+        System.out.println(" Automobil ostao bez goriva!");
+        modify((GasCar)$car){setPotentionalTurbineIssue(false);}
+        modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
+        modify((GasCar)$car){setPotentionalEngineIssue(false);}
+        insert(new Repairment(null, 40.0, null, null, $breakdown));
+end
+
+rule "engine check lamp is on"
+    when
+        $car: GasCar($p: plate)
+        exists Lamp(plate == $p, lampKind=="Engine") from $breakdown.getSymptoms()
+    then
+        modify($car){setPotentionalEngineIssue(true);}
+end
+
+rule "potential engine issue and strange noise during acceleration"
+    when
+        $car: GasCar(potentialEngineIssue == true)
+        $breakdown : Breakdown($car == car)
+        exists Symptom( this == Symptom.WEIRD_NOISE_ACCELERATION ) from $breakdown.getSymptoms()
+    then
+        modify((GasCar)$car){setPotentionalEngineIssue(false);}
+        modify((GasCar)$car){setPotentionalTurbineIssue(true);}
+end
+
+rule "potential engine issue and hight engine temp"
+    when
+        $car: GasCar(potentialEngineIssue == true)
+        $breakdown : Breakdown($car == car)
+        exists Symptom( this == Symptom.HIGH_ENGINE_TEMP ) from $breakdown.getSymptoms()
+    then
+        modify((GasCar)$car){setPotentionalEngineIssue(false);}
+        modify((GasCar)$car){setPotentionalCoolingLeakage(true);}
+end
+
+rule "potential turbine issue and white smoke"
+    when
+        $car: GasCar(potentialTurbineIssue == true)
+        $breakdown : Breakdown($car == car)
+        exists Symptom( this == Symptom.WHITE_SMOKE ) from $breakdown.getSymptoms()
+    then
+        modify((GasCar)$car){setPotentionalTurbineIssue(false);}
+        modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
+        modify((GasCar)$car){setPotentionalEngineIssue(false);}
+        insert(new Repairment(null, 40.0, null, null, $breakdown));
+end
+
+rule "potential turbine issue and white smoke"
+    when
+        $car: GasCar(potentionalCoolingLeakage == true)
+        $breakdown : Breakdown($car == car)
+        exists Symptom( this == Symptom.LOW_COOLING_LIQUID ) from $breakdown.getSymptoms()
+    then
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
