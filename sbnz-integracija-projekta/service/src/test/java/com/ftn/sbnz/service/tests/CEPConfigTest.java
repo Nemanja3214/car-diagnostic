@@ -3,17 +3,12 @@ package com.ftn.sbnz.service.tests;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ftn.sbnz.model.models.*;
 import org.junit.Test;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
-import com.ftn.sbnz.model.models.Breakdown;
-import com.ftn.sbnz.model.models.ElectricCar;
-import com.ftn.sbnz.model.models.FaultCodes;
-import com.ftn.sbnz.model.models.GasCar;
-import com.ftn.sbnz.model.models.Symptom;
-import com.ftn.sbnz.model.models.Util;
 import com.ftn.sbnz.model.models.FaultProblems.FaultProblem;
 import com.ftn.sbnz.model.models.FaultProblems.FaultProblemKinds;
 
@@ -119,6 +114,45 @@ public class CEPConfigTest {
             ruleCount = ksession.fireAllRules();
 
         }
+
+    @Test
+    public void testBackward() {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kContainer = ks.getKieClasspathContainer();
+        KieSession ksession = kContainer.newKieSession("bwKsession");
+        Car car = new Car();
+        car.setPlate("1");
+        Lamp l1 = new Lamp("Root", "Malfunction", "1");
+
+        Lamp l2 = new Lamp("Service", "Root", "1");
+        Lamp l3 = new Lamp("Transmission", "Root", "1");
+
+        Lamp l4 = new Lamp("Oil", "Service", "1");
+        Lamp l5 = new Lamp("Engine", "Service", "1");
+
+        Lamp l6 = new Lamp("Small Service", "Oil", "1");
+        Lamp l7 = new Lamp("Big Service", "Engine", "1");
+
+        Lamp l8 = new Lamp("Transmission Service", "Transmission", "1");
+        Lamp l9 = new Lamp("Clutch Service", "Clutch", "1");
+        Lamp l10 = new Lamp("Clutch", "Transmission", "1");
+        ksession.insert(car);
+        ksession.insert(l1);
+        ksession.insert(l2);
+        ksession.insert(l3);
+        ksession.insert(l4);
+        ksession.insert(l5);
+        ksession.insert(l6);
+        ksession.insert(l7);
+        ksession.insert(l8);
+        ksession.insert(l9);
+        ksession.insert(l10);
+
+        ksession.fireAllRules();
+
+
+
+    }
 
 
 }

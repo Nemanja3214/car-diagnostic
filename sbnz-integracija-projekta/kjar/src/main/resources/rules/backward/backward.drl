@@ -1,1 +1,50 @@
 package backward;
+import com.ftn.sbnz.model.models.Car
+import com.ftn.sbnz.model.models.Lamp
+
+query isService(A, B, plate)
+    Lamp(A, B, plate; )
+    or
+    (Lamp(Z, B, plate;) and isService(A, Z, plate; ))
+end
+
+
+rule "is big service"
+    when
+        $car: Car($plate: plate)
+        isService("Big Service", causedBy, $plate; )
+    then
+        System.out.println("Big service needed. Plate: " + $plate);
+end
+
+//rule "is big service"
+//    when
+//        $car: Car($plate: plate)
+//        isService("Big Service", causedBy, $plate; )
+//    then
+//        System.out.println(causedBy);
+//end
+
+rule "is small service"
+    when
+        $car: Car($plate: plate)
+        isService("Small Service", "Root", $plate; )
+    then
+        System.out.println("Small service needed. Plate: " + $plate);
+end
+
+rule "is transmission service"
+    when
+        $car: Car($plate: plate)
+        isService("Transmission Service", "Root", $plate; )
+    then
+        System.out.println("Transmission service needed. Plate: " + $plate);
+end
+
+rule "is clutch service"
+    when
+        $car: Car($plate: plate)
+        isService("Clutch Service", "Root", $plate; )
+    then
+        System.out.println("Clutch service needed. Plate: " + $plate);
+end
