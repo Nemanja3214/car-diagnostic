@@ -3,6 +3,8 @@ import com.ftn.sbnz.model.models.Symptom
 import com.ftn.sbnz.model.models.Breakdown
 import com.ftn.sbnz.model.models.ElectricCar
 import com.ftn.sbnz.model.models.GasCar
+import com.ftn.sbnz.model.models.Car
+import com.ftn.sbnz.model.models.Lamp
 import com.ftn.sbnz.model.models.FaultCodes
 import com.ftn.sbnz.model.models.Util
 import com.ftn.sbnz.model.models.FaultProblems.*
@@ -169,26 +171,29 @@ end
 
 rule "engine check lamp is on"
     when
-        $car: GasCar($p: plate)
-        exists Lamp(plate == $p, lampKind=="Engine") from $breakdown.getSymptoms()
+        $car: Car($p: plate)
+        exists Lamp(plate == $p, lampKind=="Engine") from $car.getLamps()
     then
         modify($car){setPotentionalEngineIssue(true);}
+        System.out.println("LEVEL 1!");
+
 end
 
 rule "potential engine issue and strange noise during acceleration"
     when
-        $car: GasCar(potentialEngineIssue == true)
-        $breakdown : Breakdown($car == car)
+        $car: Car(potentionalEngineIssue == true)
+        $breakdown : Breakdown(car == $car)
         exists Symptom( this == Symptom.WEIRD_NOISE_ACCELERATION ) from $breakdown.getSymptoms()
     then
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
         modify((GasCar)$car){setPotentionalTurbineIssue(true);}
+        System.out.println("LEVEL 2!");
 end
 
 rule "potential engine issue and hight engine temp"
     when
-        $car: GasCar(potentialEngineIssue == true)
-        $breakdown : Breakdown($car == car)
+        $car: Car(potentionalEngineIssue == true)
+        $breakdown : Breakdown(car == $car)
         exists Symptom( this == Symptom.HIGH_ENGINE_TEMP ) from $breakdown.getSymptoms()
     then
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
@@ -197,17 +202,18 @@ end
 
 rule "potential turbine issue and white smoke"
     when
-        $car: GasCar(potentialTurbineIssue == true)
-        $breakdown : Breakdown($car == car)
+        $car: GasCar(potentionalTurbineIssue == true)
+        $breakdown : Breakdown(car == $car)
         exists Symptom( this == Symptom.WHITE_SMOKE ) from $breakdown.getSymptoms()
     then
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
         insert(new Repairment(null, 40.0, null, null, $breakdown));
+        System.out.println("LEVEL 3!");
 end
 
-rule "potential turbine issue and white smoke"
+rule "potential cooling issue and low liquid"
     when
         $car: GasCar(potentionalCoolingLeakage == true)
         $breakdown : Breakdown($car == car)

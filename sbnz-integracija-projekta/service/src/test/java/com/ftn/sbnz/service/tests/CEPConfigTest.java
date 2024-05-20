@@ -24,10 +24,16 @@ public class CEPConfigTest {
         KieContainer kContainer = ks.getKieClasspathContainer();
         KieSession ksession = kContainer.newKieSession("carKsession");
         List<Symptom> s = new ArrayList<>();
-        s.add(Symptom.HEADLIGHTS_ON);
-        s.add(Symptom.NO_START);
+        s.add(Symptom.WEIRD_NOISE_ACCELERATION);
+        s.add(Symptom.WHITE_SMOKE);
         Breakdown b = new Breakdown("kvar1", s);
         GasCar car = new GasCar();
+        car.setPlate("1");
+        Lamp l = new Lamp("Engine", "lamp", "1");
+        List<Lamp> lamps = new ArrayList<Lamp>();
+        lamps.add(l);
+        car.setLamps(lamps);
+        car.setPotentionalEngineIssue(false);
          ksession.insert(car);
         b.setCar(car);
         ksession.insert(b);
@@ -137,17 +143,24 @@ public class CEPConfigTest {
         Lamp l9 = new Lamp("Clutch Service", "Clutch", "1");
         Lamp l10 = new Lamp("Clutch", "Transmission", "1");
         ksession.insert(car);
-        ksession.insert(l1);
-        ksession.insert(l2);
-        ksession.insert(l3);
-        ksession.insert(l4);
-        ksession.insert(l5);
-        ksession.insert(l6);
-        ksession.insert(l7);
-        ksession.insert(l8);
-        ksession.insert(l9);
-        ksession.insert(l10);
-
+//        ksession.insert(l1);
+//        ksession.insert(l2);
+//        ksession.insert(l3);
+//        ksession.insert(l4);
+//        ksession.insert(l5);
+//        ksession.insert(l6);
+//        ksession.insert(l7);
+//        ksession.insert(l8);
+//        ksession.insert(l9);
+//        ksession.insert(l10);
+        Breakdown b = new Breakdown();
+        b.setCar(car);
+        List<Symptom> s = new ArrayList<>();
+        s.add(Symptom.NO_START);
+        b.setSymptoms(s);
+        ksession.insert(b);
+        Symptom sy = Symptom.NO_START;
+        ksession.insert(sy);
         ksession.fireAllRules();
 
 

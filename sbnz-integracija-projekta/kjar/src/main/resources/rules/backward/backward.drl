@@ -1,6 +1,10 @@
 package backward;
 import com.ftn.sbnz.model.models.Car
 import com.ftn.sbnz.model.models.Lamp
+import com.ftn.sbnz.model.models.Breakdown
+import com.ftn.sbnz.model.models.Symptom
+import java.util.Collection;
+
 
 query isService(A, B, plate)
     Lamp(A, B, plate; )
@@ -47,4 +51,42 @@ rule "is clutch service"
         isService("Clutch Service", "Root", $plate; )
     then
         System.out.println("Clutch service needed. Plate: " + $plate);
+end
+
+
+
+//query getCarsWithSymptom(symptom)
+//    $count : Number() from accumulate (
+//            $b: Breakdown($car: car)
+//            and exists Symptom(this == symptom) from $b.getSymptoms(),
+//            countDistinct($car)
+//        )
+//end
+
+
+query "getCarsWithSymptom"
+    $count : Number() from accumulate (
+            $b: Breakdown($car: car),
+            countDistinct($car)
+        )
+end
+
+function int countDistinct(java.util.Collection<?> collection) {
+    return new java.util.HashSet<>(collection).size();
+}
+
+//rule "Print Count of Cars With Symptom"
+//when
+////    $symptom: Symptom()
+//    Breakdown()
+//    $result : Number() from getCarsWithSymptom()
+//then
+//    System.out.println("Number of different cars with symptom: " + $result);
+//end
+
+rule "Print Count of Cars With Symptom"
+when
+    $result : Number() from getCarsWithSymptom()
+then
+    System.out.println("Number of different cars with symptom: " + $result);
 end
