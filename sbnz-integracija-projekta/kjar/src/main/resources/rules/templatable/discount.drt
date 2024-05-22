@@ -1,18 +1,31 @@
 template header
-discount
+    discount
 
 package templatetable;
 
 import com.ftn.sbnz.model.models.Repairment;
+import com.ftn.sbnz.model.models.Car;
+import com.ftn.sbnz.model.models.Breakdown;
+import java.util.List;
+
+import java.lang.Double;
+import java.lang.Double;
 
 template "discount-rules"
 
 rule "Calculate discount Discount_@{row.rowNumber}"
 no-loop true
 when
-    $c: Repairment()
+    $c: Repairment($bd: breakdown)
+    $car: Car() from $bd.getCar()
+    $sum: Number() from accumulate (
+       Repairment(this != $c, $price: price ) from $car.getRepairments(),
+       sum( $price ))
+    eval($sum.doubleValue() > Double.parseDouble("@{discount}"))
 then
-    System.out.printn("@{discount}");
+    System.out.println($sum);
+
+    System.out.println("DISCOUNT");
 end
 
 end template

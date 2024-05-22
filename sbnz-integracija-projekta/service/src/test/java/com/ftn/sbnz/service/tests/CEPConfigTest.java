@@ -1,13 +1,34 @@
 package com.ftn.sbnz.service.tests;
 
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ftn.sbnz.model.models.Breakdown;
+import com.ftn.sbnz.model.models.Car;
+import com.ftn.sbnz.model.models.Repairment;
 import org.drools.template.ObjectDataCompiler;
 import org.junit.Test;
 import org.kie.api.runtime.KieSession;
+import org.drools.template.DataProvider;
+import org.drools.template.DataProviderCompiler;
+import org.drools.template.ObjectDataCompiler;
+import org.drools.template.objects.ArrayDataProvider;
+import org.drools.template.DataProvider;
+import org.drools.template.DataProviderCompiler;
+import org.drools.template.ObjectDataCompiler;
+import org.drools.template.objects.ArrayDataProvider;
+//import org.drools.decisiontable.ExternalSpreadsheetCompiler;
+import org.junit.Test;
+import org.kie.api.builder.Message;
+import org.kie.api.builder.Results;
+import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.KieSession;
+import org.kie.internal.utils.KieHelper;
+
 
 public class CEPConfigTest {
 
@@ -212,16 +233,21 @@ public class CEPConfigTest {
 //     }
     @Test
     public void testSimpleTemplateWithObjects(){
-        
-        InputStream template = RuleTemplatesTest.class.getResourceAsStream("/templatetable/customer-classification-simple.drt");
 
-        
-        List<ClassificationTemplateModel> data = new ArrayList<ClassificationTemplateModel>();
-        
-        data.add(new ClassificationTemplateModel(18, 21, Customer.Category.NA, Customer.Category.NA));
-        data.add(new ClassificationTemplateModel(22, 30, Customer.Category.NA, Customer.Category.BRONZE));
-        data.add(new ClassificationTemplateModel(31, 40, Customer.Category.NA, Customer.Category.SILVER));
-        data.add(new ClassificationTemplateModel(41, 150, Customer.Category.NA, Customer.Category.GOLD));
+        InputStream template = null;
+        try {
+            template = new FileInputStream("D:\\Fax\\SIIT-8.Sem\\SBZ\\car-diagnostic\\sbnz-integracija-projekta\\kjar\\src\\main\\resources\\rules\\templatable\\discount.drt");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+
+//        List<Double> data = new ArrayList<Double>();
+//
+//        data.add(1.0);
+        DataProvider data = new ArrayDataProvider(new String[][]{
+                new String[]{"33"}
+        });
         
         ObjectDataCompiler converter = new ObjectDataCompiler();
         String drl = converter.compile(data, template);
@@ -229,8 +255,49 @@ public class CEPConfigTest {
         System.out.println(drl);
         
         KieSession ksession = createKieSessionFromDRL(drl);
+
+        Repairment r = new Repairment();
+        r.setPrice(100.0);
+        Car car = new Car();
+        Breakdown b = new Breakdown();
+        b.setCar(car);
+        r.setBreakdown(b);
+        List<Repairment> rrs = new ArrayList<>();
+        rrs.add(r);
+        car.setRepairments(rrs);
+
+        Repairment nr = new Repairment();
+        nr.setPrice(100.0);
+        Breakdown nb = new Breakdown();
+        nr.setBreakdown(nb);
+        nb.setCar(car);
+        ksession.insert(b);
+        ksession.insert(car);
+        ksession.fireAllRules();
+        ksession.insert(r);
+        ksession.fireAllRules();
+        ksession.insert(nr);
+        ksession.insert(nb);
+        ksession.fireAllRules();
         
-        doTest(ksession);
+    }
+
+    private KieSession createKieSessionFromDRL(String drl){
+        KieHelper kieHelper = new KieHelper();
+        kieHelper.addContent(drl, ResourceType.DRL);
+
+        Results results = kieHelper.verify();
+
+        if (results.hasMessages(Message.Level.WARNING, Message.Level.ERROR)){
+            List<Message> messages = results.getMessages(Message.Level.WARNING, Message.Level.ERROR);
+            for (Message message : messages) {
+                System.out.println("Error: "+message.getText());
+            }
+
+            throw new IllegalStateException("Compilation errors were found. Check the logs.");
+        }
+
+        return kieHelper.build().newKieSession();
     }
 
 }

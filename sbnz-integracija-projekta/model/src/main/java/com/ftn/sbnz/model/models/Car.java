@@ -2,6 +2,7 @@ package com.ftn.sbnz.model.models;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Car {
@@ -13,7 +14,9 @@ public class Car {
     protected List<Lamp> lamps;
     protected List<Repairment> repairments;
 
-    public Car() {}
+    public Car() {
+        repairments = new ArrayList<>();
+    }
 
     public Car(String plate, int yearOfProduction, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments) {
         this.plate = plate;
