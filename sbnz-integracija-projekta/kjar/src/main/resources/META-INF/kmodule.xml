@@ -8,4 +8,8 @@
     <kbase name="carKbase" eventProcessingMode="stream" packages="car">
         <ksession name="carKsession" clockType="realtime"/>
     </kbase>
+
+    <kbase name="template-simple-KBase" packages="template-dtable">
+        <ksession name="templateSimpleKsession"/>
+    </kbase>
 </kmodule>

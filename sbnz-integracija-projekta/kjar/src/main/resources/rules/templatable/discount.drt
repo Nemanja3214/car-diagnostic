@@ -1,0 +1,18 @@
+template header
+discount
+
+package templatetable;
+
+import com.ftn.sbnz.model.models.Repairment;
+
+template "discount-rules"
+
+rule "Calculate discount Discount_@{row.rowNumber}"
+no-loop true
+when
+    $c: Repairment()
+then
+    System.out.printn("@{discount}");
+end
+
+end template
