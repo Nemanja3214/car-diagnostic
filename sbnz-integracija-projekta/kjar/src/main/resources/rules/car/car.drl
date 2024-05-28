@@ -248,7 +248,7 @@ end
 rule "55. Check A fault"
 agenda-group "checking faults"
     when
-        $problem: FaultProblem()
+        $problem: FaultProblem(getClass() == FaultProblem.class, kind == FaultProblemKinds.NONE )
         $breakdown : Breakdown($car: car instanceof ElectricCar, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
         exists FaultCodes( this == FaultCodes.ELECTRICAL_CODE_A ) from $codes
          $code: FaultCodes( this == FaultCodes.ELECTRICAL_CODE_A ) from $codes
@@ -263,7 +263,7 @@ end
 rule "56. Check B fault"
 agenda-group "checking faults"
     when
-     $problem: FaultProblem()
+     $problem: FaultProblem(getClass() == FaultProblem.class, kind == FaultProblemKinds.NONE )
         $breakdown : Breakdown($car: car instanceof ElectricCar, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
         exists FaultCodes( this == FaultCodes.ELECTRICAL_CODE_B ) from $codes
          $code: FaultCodes( this == FaultCodes.ELECTRICAL_CODE_B ) from $codes
@@ -277,7 +277,7 @@ end
 rule "57. Check C fault"
 agenda-group "checking faults"
     when
-     $problem: FaultProblem()
+     $problem: FaultProblem(getClass() == FaultProblem.class, kind == FaultProblemKinds.NONE )
         $breakdown : Breakdown($car: car instanceof ElectricCar, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
         exists FaultCodes( this == FaultCodes.ELECTRICAL_CODE_C ) from $codes
          $code: FaultCodes( this == FaultCodes.ELECTRICAL_CODE_C ) from $codes
@@ -288,7 +288,45 @@ agenda-group "checking faults"
         }
 end
 
+rule "NN. Check Powertrain problems"
+agenda-group "checking faults"
+    when
+                
+        $problem: FaultProblem(kind == FaultProblemKinds.POWERTRAIN, $breakdownId: breakdownId)
+        $breakdown : Breakdown(id == $breakdownId, $car: car instanceof ElectricCar, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
+    then
+        System.out.println("Powertrain problem ");
+        insert(Util.checkPowertrain($breakdownId));
+        delete($problem);
+end
+
+rule "NN. Check AUXILIARY problems"
+agenda-group "checking faults"
+    when
+                
+        $problem: FaultProblem(kind == FaultProblemKinds.AUXILIARY, $breakdownId: breakdownId)
+        $breakdown : Breakdown($car: car instanceof ElectricCar, id == $breakdownId, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
+    then
+        System.out.println("AUXILIARY problem ");
+        insert(Util.checkAuxiliary($breakdownId));
+          delete($problem);
+end
+
+rule "NN. Check Regenerative breaking problems"
+agenda-group "checking faults"
+    when
+                
+        $problem: FaultProblem(kind == FaultProblemKinds.REGENERATIVE_BREAKING, $breakdownId: breakdownId)
+        $breakdown : Breakdown($car: car instanceof ElectricCar, id == $breakdownId, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
+    then
+        System.out.println("Regenerative breaking problem ");
+        insert(Util.checkRegenerativeBreaking($breakdownId));
+          delete($problem);
+end
+
+// Regenerative breaking problem
 rule "58. Check motor low response"
+agenda-group "checking faults"
     when
         MotorProblem(responsivness < 40)
     then
@@ -296,6 +334,7 @@ rule "58. Check motor low response"
 end
 
 rule "59. Check motor high response"
+agenda-group "checking faults"
     when
         MotorProblem(responsivness >= 40)
     then
@@ -303,6 +342,7 @@ rule "59. Check motor high response"
 end
 
 rule "60. Check invertor"
+agenda-group "checking faults"
     when
         InvertorProblem(resistance > 1000.0)
     then
@@ -310,6 +350,7 @@ rule "60. Check invertor"
 end
 
 rule "61. Check HVAC stuck"
+agenda-group "checking faults"
     when
         HVACProblem(hvacKind == HVACProblemKinds.STUCK)
     then
@@ -317,6 +358,7 @@ rule "61. Check HVAC stuck"
 end
 
 rule "62. Check HVAC leakage"
+agenda-group "checking faults"
     when
         HVACProblem(hvacKind == HVACProblemKinds.LEAKAGE)
     then
@@ -324,6 +366,7 @@ rule "62. Check HVAC leakage"
 end
 
 rule "63. Check infoteinment"
+agenda-group "checking faults"
     when
         InfotainmentProblem()
     then
@@ -331,6 +374,7 @@ rule "63. Check infoteinment"
 end
 
 rule "64. Wheel speed sensors"
+agenda-group "checking faults"
     when
         WheelSpeedProblem(matching < 80.0)
     then
@@ -338,6 +382,7 @@ rule "64. Wheel speed sensors"
 end
 
 rule "65. Breaking sensors"
+agenda-group "checking faults"
     when
         BreakingSensorsProblem()
     then

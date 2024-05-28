@@ -25,6 +25,7 @@ public class Breakdown {
     private String name;
     private Car car;
 
+
     public Breakdown(String name, List<Symptom> symptoms) {
         this.name = name;
         this.symptoms = symptoms;

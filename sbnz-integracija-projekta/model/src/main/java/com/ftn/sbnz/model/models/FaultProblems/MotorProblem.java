@@ -5,10 +5,12 @@ public class MotorProblem extends PowertrainProblems{
     private int responsivness;
 
 
-    public MotorProblem() {
+    public MotorProblem(int breakdownId) {
+        super(breakdownId);
     }
 
-    public MotorProblem(int responsivness) {
+    public MotorProblem(int responsivness, int breakdownId) {
+        this(breakdownId);
         this.responsivness = responsivness;
     }
 
