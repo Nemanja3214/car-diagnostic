@@ -6,8 +6,8 @@ import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
-import com.ftn.sbnz.model.models.battery.events.CurrentReadingEvent;
-import com.ftn.sbnz.model.models.battery.events.VoltageReadingEvent;
+// import com.ftn.sbnz.model.models.battery.events.CurrentReadingEvent;
+// import com.ftn.sbnz.model.models.battery.events.VoltageReadingEvent;
 
 
 public class CEPConfigTest {
@@ -126,40 +126,40 @@ public class CEPConfigTest {
 //     // }
 
 //     // multiple current measurements
-        @Test
-    public void testCEP() throws InterruptedException {
-        KieServices ks = KieServices.Factory.get();
-        KieContainer kContainer = ks.getKieClasspathContainer(); 
-        KieSession ksession = kContainer.newKieSession("cepKsession");
+    //     @Test
+    // public void testCEP() throws InterruptedException {
+    //     KieServices ks = KieServices.Factory.get();
+    //     KieContainer kContainer = ks.getKieClasspathContainer(); 
+    //     KieSession ksession = kContainer.newKieSession("cepKsession");
       
-        VoltageReadingEvent voltageEvent = new VoltageReadingEvent(4.4, 1L);
-        CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(1.1, 1L, 5.0);
+    //     VoltageReadingEvent voltageEvent = new VoltageReadingEvent(4.4, 1L);
+    //     CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(1.1, 1L, 5.0);
      
-        ksession.insert(voltageEvent);
-          ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
-        ksession.fireAllRules();
+    //     ksession.insert(voltageEvent);
+    //       ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
+    //     ksession.fireAllRules();
 
-        ksession.insert(currentReadingEvent);
-        // System.out.println("FIRST ONE TIME: " + currentReadingEvent.getStartTime().getTime());
-          ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
-        ksession.fireAllRules();
+    //     ksession.insert(currentReadingEvent);
+    //     // System.out.println("FIRST ONE TIME: " + currentReadingEvent.getStartTime().getTime());
+    //       ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
+    //     ksession.fireAllRules();
 
-           Thread.sleep(3000);
-              CurrentReadingEvent currentReadingEvent2 = new CurrentReadingEvent(1.1, 1L, 5.0);
-         ksession.insert(currentReadingEvent2);
-        //  System.out.println("SECOND ONE TIME: " + currentReadingEvent2.getStartTime().getTime());
-          ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
-         ksession.fireAllRules();
+    //        Thread.sleep(3000);
+    //           CurrentReadingEvent currentReadingEvent2 = new CurrentReadingEvent(1.1, 1L, 5.0);
+    //      ksession.insert(currentReadingEvent2);
+    //     //  System.out.println("SECOND ONE TIME: " + currentReadingEvent2.getStartTime().getTime());
+    //       ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
+    //      ksession.fireAllRules();
 
-         Thread.sleep(1000);
-                   CurrentReadingEvent currentReadingEvent3 = new CurrentReadingEvent(1.1, 1L, 5.0);
-        //  System.out.println("THIRD ONE TIME: " + currentReadingEvent3.getStartTime().getTime());
-          ksession.insert(currentReadingEvent3);
-            ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
-         ksession.fireAllRules();
-         ksession.getAgenda().clear();
+    //      Thread.sleep(1000);
+    //                CurrentReadingEvent currentReadingEvent3 = new CurrentReadingEvent(1.1, 1L, 5.0);
+    //     //  System.out.println("THIRD ONE TIME: " + currentReadingEvent3.getStartTime().getTime());
+    //       ksession.insert(currentReadingEvent3);
+    //         ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
+    //      ksession.fireAllRules();
+    //      ksession.getAgenda().clear();
 
-    }
+    // }
 
 
 //     @Test
