@@ -11,6 +11,8 @@ public class Repairment {
 
     private Breakdown breakdown;
 
+    private String action;
+
     private Integer id;
 
     public Repairment(LocalDateTime timeFinished, double price, Discount discount, Mechanic mechanic, Breakdown breakdown, Integer id) {
@@ -20,6 +22,24 @@ public class Repairment {
         this.mechanic = mechanic;
         this.breakdown = breakdown;
         this.id = id;
+    }
+
+    public Repairment(LocalDateTime timeFinished, double price, Discount discount, Mechanic mechanic, Breakdown breakdown, String action, Integer id) {
+        this.timeFinished = timeFinished;
+        this.price = price;
+        this.discount = discount;
+        this.mechanic = mechanic;
+        this.breakdown = breakdown;
+        this.action = action;
+        this.id = id;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
     }
 
     public Integer getId() {
