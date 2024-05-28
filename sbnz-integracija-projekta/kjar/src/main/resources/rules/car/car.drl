@@ -328,70 +328,102 @@ end
 rule "58. Check motor low response"
 agenda-group "checking faults"
     when
-        MotorProblem(responsivness < 40)
+        MotorProblem(responsivness < 40, $breakdownId: breakdownId)
+        $breakdown : Breakdown(id == $breakdownId)
     then
         System.out.println("Motor responsivness is bad ");
+        insert(new Repairment(null, 300.0, null, null, $breakdown, "Motor responsivness is bad, change motor", 0));
 end
 
 rule "59. Check motor high response"
 agenda-group "checking faults"
     when
-        MotorProblem(responsivness >= 40)
+        MotorProblem(responsivness >= 40, $breakdownId: breakdownId)
+         $breakdown : Breakdown(id == $breakdownId)
     then
         System.out.println("Invertor is bad ");
+         insert(new Repairment(null, 200.0, null, null, $breakdown, "Motor is ok, but invertor is bad, replace it ", 0));
 end
 
 rule "60. Check invertor"
 agenda-group "checking faults"
     when
-        InvertorProblem(resistance > 1000.0)
+        InvertorProblem(resistance > 1000.0, $breakdownId: breakdownId)
+         $breakdown : Breakdown(id == $breakdownId)
     then
         System.out.println("Invertor is bad ");
+         insert(new Repairment(null, 20.0, null, null, $breakdown, "Invertor resisstance is bad, replace invertor ressistor", 0));
+end
+
+rule "NN. Check invertor ressistance good"
+agenda-group "checking faults"
+    when
+        InvertorProblem(resistance <= 1000.0, $breakdownId: breakdownId)
+         $breakdown : Breakdown(id == $breakdownId)
+    then
+        System.out.println("Invertor is bad ");
+         insert(new Repairment(null, 200.0, null, null, $breakdown, "Invertor is bad, replace it", 0));
 end
 
 rule "61. Check HVAC stuck"
 agenda-group "checking faults"
     when
-        HVACProblem(hvacKind == HVACProblemKinds.STUCK)
+        HVACProblem(hvacKind == HVACProblemKinds.STUCK, $breakdownId: breakdownId)
+         $breakdown : Breakdown(id == $breakdownId)
     then
         System.out.println("Air conditioning fan is stuck ");
+         insert(new Repairment(null, 15.0, null, null, $breakdown, "Air conditioning fan is stuck, replace the fan ", 0));
 end
 
 rule "62. Check HVAC leakage"
 agenda-group "checking faults"
     when
-        HVACProblem(hvacKind == HVACProblemKinds.LEAKAGE)
+        HVACProblem(hvacKind == HVACProblemKinds.LEAKAGE, $breakdownId: breakdownId)
+         $breakdown : Breakdown(id == $breakdownId)
     then
         System.out.println("Air codnitioning system has leakage ");
+         insert(new Repairment(null, 60.0, null, null, $breakdown, "Air codnitioning system has leakage, replace tubes and fill it again", 0));
 end
 
 rule "63. Check infoteinment"
 agenda-group "checking faults"
     when
-        InfotainmentProblem()
+        InfotainmentProblem($breakdownId: breakdownId)
+         $breakdown : Breakdown(id == $breakdownId)
     then
         System.out.println("Infoteinment is bad ");
+         insert(new Repairment(null, 40.0, null, null, $breakdown, "Infoteinment has problems, check display and radio", 0));
 end
 
 rule "64. Wheel speed sensors"
 agenda-group "checking faults"
     when
-        WheelSpeedProblem(matching < 80.0)
+        WheelSpeedProblem(matching < 80.0, $breakdownId: breakdownId)
+         $breakdown : Breakdown(id == $breakdownId)
     then
         System.out.println("Wheel speed is not matching ");
+        insert(new Repairment(null, 30.0, null, null, $breakdown, "Wheel speed is not matching, look for any physical damage, such as a broken wire or sensor that is covered in debris. Clean the sensors if necessary.", 0));
+end
+
+rule "NN. Wheel speed sensors"
+agenda-group "checking faults"
+    when
+        WheelSpeedProblem(matching > 80.0, $breakdownId: breakdownId)
+         $breakdown : Breakdown(id == $breakdownId)
+    then
+        System.out.println("Wheel speed is matching");
+        insert(new Repairment(null, 50.0, null, null, $breakdown, "Wheel speed is matching but there is something wrong with regenerative breaking", 0));
 end
 
 rule "65. Breaking sensors"
 agenda-group "checking faults"
     when
-        BreakingSensorsProblem()
+        BreakingSensorsProblem($breakdownId: breakdownId)
+         $breakdown : Breakdown(id == $breakdownId)
     then
         System.out.println("Breaking sensors is bad ");
+         insert(new Repairment(null, 30.0, null, null, $breakdown, "Breaking sensors have problems, replace them", 0));
 end
-
-
-
-
 
 
 rule "27. Investigate potential engine failure"
@@ -400,6 +432,7 @@ rule "27. Investigate potential engine failure"
         exists Symptom( this == Symptom.UNUSUAL_NOISE ) from $breakdown.getSymptoms()
     then
         System.out.println("Investigate potential engine failure");
+        insert(new Repairment(null, 300.0, null, null, $breakdown, "Investigate potential engine failure", 0));
 end
 
 
@@ -409,23 +442,8 @@ rule "28. Evaluate engine management system for errors"
         exists Symptom( this == Symptom.HESITATION || this == Symptom.JERKING ) from $breakdown.getSymptoms()
     then
         System.out.println("Evaluate engine management system for errors");
+         insert(new Repairment(null, 100.0, null, null, $breakdown, "Evaluate engine management system for errors", 0));
 end
-
-// rule "29. Check charging components for errors"
-// when
-//     $breakdown : Breakdown()
-//     Vehicle(failsToChargeOrIntermittentProblems: true, name: $name)
-// then
-//     System.out.println($name + ": Check charging port, cables, and built-in charger for errors");
-// end
-
-// rule "30. Check for significantly slower charge rate"
-// when
-//     $breakdown : Breakdown()
-//     Vehicle(significantlySlowerChargeRate: true, name: $name)
-// then
-//     System.out.println($orderNumber + " " + $name + ": Check for significantly slower charge rate");
-// end
 
 
 rule "20. Patch tire"
@@ -435,6 +453,7 @@ rule "20. Patch tire"
         exists Symptom( this == Symptom.DAMAGED_TIRE ) from $breakdown.getSymptoms()
     then
         System.out.println("Patch the tire");
+        insert(new Repairment(null, 20.0, null, null, $breakdown, "Patch the tire", 0));
 end
 
 rule "21. Inflate tire"
@@ -444,6 +463,7 @@ rule "21. Inflate tire"
         not (exists Symptom( this == Symptom.DAMAGED_TIRE ) from $breakdown.getSymptoms())
     then
         System.out.println("Inflate the tire");
+        insert(new Repairment(null, 10.0, null, null, $breakdown, "Inflate the tire", 0));
 end
 
 
@@ -454,6 +474,7 @@ when
     exists Symptom( this == Symptom.TIRE_VIBRATING ) from $breakdown.getSymptoms()
 then
     System.out.println("Balance the tires");
+    insert(new Repairment(null, 20.0, null, null, $breakdown, "Balance the tires", 0));
 end
 
 
@@ -464,6 +485,7 @@ when
     exists Symptom( this == Symptom.DIFFICULT_STEERING ) from $breakdown.getSymptoms()
 then
     System.out.println("Balance the tires");
+    insert(new Repairment(null, 20.0, null, null, $breakdown, "Balance the tires", 0));
 end
 
 rule "24. Optics"
@@ -473,6 +495,7 @@ when
     exists Symptom( this == Symptom.PULLING_TO_SIDE ) from $breakdown.getSymptoms()
 then
     System.out.println("Do the optics");
+    insert(new Repairment(null, 20.0, null, null, $breakdown, "Do the optics", 0));
 end
 
 
