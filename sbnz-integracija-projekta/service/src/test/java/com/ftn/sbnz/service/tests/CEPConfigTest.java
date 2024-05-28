@@ -27,6 +27,7 @@ import org.kie.api.builder.Message;
 import org.kie.api.builder.Results;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.FactHandle;
 import org.kie.internal.utils.KieHelper;
 
 
@@ -246,7 +247,7 @@ public class CEPConfigTest {
 //
 //        data.add(1.0);
         DataProvider data = new ArrayDataProvider(new String[][]{
-                new String[]{"33"}
+                new String[]{"100", "200"}
         });
         
         ObjectDataCompiler converter = new ObjectDataCompiler();
@@ -257,7 +258,7 @@ public class CEPConfigTest {
         KieSession ksession = createKieSessionFromDRL(drl);
 
         Repairment r = new Repairment();
-        r.setPrice(100.0);
+        r.setPrice(203.0);
         Car car = new Car();
         Breakdown b = new Breakdown();
         b.setCar(car);
@@ -267,7 +268,7 @@ public class CEPConfigTest {
         car.setRepairments(rrs);
 
         Repairment nr = new Repairment();
-        nr.setPrice(100.0);
+        nr.setPrice(104.0);
         Breakdown nb = new Breakdown();
         nr.setBreakdown(nb);
         nb.setCar(car);
@@ -277,9 +278,60 @@ public class CEPConfigTest {
         ksession.insert(r);
         ksession.fireAllRules();
         ksession.insert(nr);
+        System.out.println(nr.getPrice());
         ksession.insert(nb);
         ksession.fireAllRules();
-        
+
+        System.out.println(nr.getPrice());
+    }
+
+    @Test
+    public void testServiceTemplate(){
+
+        InputStream template = null;
+        try {
+            template = new FileInputStream("D:\\Fax\\SIIT-8.Sem\\SBZ\\car-diagnostic\\sbnz-integracija-projekta\\kjar\\src\\main\\resources\\rules\\templatable\\services.drt");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        DataProvider data = new ArrayDataProvider(new String[][]{
+                new String[]{"15000", "90000", "40000", "18000"}
+        });
+
+        ObjectDataCompiler converter = new ObjectDataCompiler();
+        String drl = converter.compile(data, template);
+
+        System.out.println(drl);
+
+        KieSession ksession = createKieSessionFromDRL(drl);
+
+        Car car = new Car();
+        List<Repairment> rrs = new ArrayList<>();
+        car.setRepairments(rrs);
+        car.setKm(45000);
+        FactHandle fh = ksession.insert(car);
+        System.out.println(car.getRepairments().size());
+        ksession.fireAllRules();
+        System.out.println(car.getRepairments().size());
+        car.setKm(80000);
+        ksession.update(fh, car);
+        ksession.fireAllRules();
+        System.out.println(car.getRepairments().size());
+        car.setKm(180000);
+        ksession.update(fh, car);
+        ksession.fireAllRules();
+        System.out.println(car.getRepairments().size());
+        car.setKm(36000);
+        ksession.update(fh, car);
+
+        ksession.fireAllRules();
+        System.out.println(car.getRepairments().size());
+
+
+
+
     }
 
     private KieSession createKieSessionFromDRL(String drl){

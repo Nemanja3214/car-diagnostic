@@ -12,4 +12,8 @@
     <kbase name="template-simple-KBase" packages="template-dtable">
         <ksession name="templateSimpleKsession"/>
     </kbase>
+
+<!--    <kbase name="template-km" packages="template-dtable">-->
+<!--        <ksession name="templateSimpleKm"/>-->
+<!--    </kbase>-->
 </kmodule>

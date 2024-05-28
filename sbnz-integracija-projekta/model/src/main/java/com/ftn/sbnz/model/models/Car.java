@@ -8,6 +8,7 @@ import java.util.List;
 public class Car {
     protected String plate;
     protected int yearOfProduction;
+    protected double km;
     protected boolean potentionalEngineIssue;
     protected Client owner;
     protected CarModel model;
@@ -26,6 +27,25 @@ public class Car {
         this.model = model;
         this.lamps = lamps;
         this.repairments = repairments;
+    }
+
+    public Car(String plate, int yearOfProduction, double km, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments) {
+        this.plate = plate;
+        this.yearOfProduction = yearOfProduction;
+        this.km = km;
+        this.potentionalEngineIssue = potentionalEngineIssue;
+        this.owner = owner;
+        this.model = model;
+        this.lamps = lamps;
+        this.repairments = repairments;
+    }
+
+    public double getKm() {
+        return km;
+    }
+
+    public void setKm(double km) {
+        this.km = km;
     }
 
     public List<Repairment> getRepairments() {
