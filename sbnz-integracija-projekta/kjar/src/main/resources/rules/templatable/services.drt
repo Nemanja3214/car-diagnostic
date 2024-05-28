@@ -25,7 +25,7 @@ when
     eval($km % Double.parseDouble("@{smallService}") == 0)
 then
     System.out.println("SMALL SERVICE");
-    $r.add(new Repairment(null, 100, null, null, null));
+    $r.add(new Repairment(null, 100, null, null, null, "Potrebno je uraditi mali servis."));
 end
 
 rule "Big service Service_@{row.rowNumber}"
@@ -35,7 +35,7 @@ when
     eval($km % Double.parseDouble("@{bigService}") == 0)
 then
     System.out.println("BIG SERVICE");
-    $r.add(new Repairment(null, 800, null, null, null));
+    $r.add(new Repairment(null, 100, null, null, null, "Potrebno je uraditi veliki servis."));
 end
 
 rule "Tires Service_@{row.rowNumber}"
@@ -45,7 +45,7 @@ when
     eval($km % Double.parseDouble("@{tires}") == 0)
 then
     System.out.println("CHECK TIRES");
-    $r.add(new Repairment(null, 20, null, null, null));
+    $r.add(new Repairment(null, 100, null, null, null, "Potrebno je zamijeniti gume."));
 end
 
 rule "Brakes Service_@{row.rowNumber}"
@@ -55,7 +55,7 @@ when
     eval($km % Double.parseDouble("@{brakes}") == 0)
 then
     System.out.println("CHECK BRAKES");
-    $r.add(new Repairment(null, 300, null, null, null));
+    $r.add(new Repairment(null, 100, null, null, null, "Potrebno je provjeriti kocioni sistem."));
 end
 
 end template

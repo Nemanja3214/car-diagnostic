@@ -28,7 +28,7 @@ rule "broken battery if headlights are on and engine is not starting"
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
-        insert(new Repairment(null, 40.0, null, null, $breakdown));
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je zameniti akumulator."));
 end
 
 rule "run out of gas if headlights are on and engine is cranking and low gas "
@@ -44,7 +44,7 @@ rule "run out of gas if headlights are on and engine is cranking and low gas "
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
-        insert(new Repairment(null, 40.0, null, null, $breakdown));
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je natociti gorivo."));
 end
 
 
@@ -62,7 +62,7 @@ rule "low battery if headlights are on and engine is cranking and low gas "
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
-        insert(new Repairment(null, 40.0, null, null, $breakdown));
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je napuniti akumulator."));
 end
 
 
@@ -79,7 +79,7 @@ rule "run out of gas if headlights are on and engine is on and low gas "
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
-        insert(new Repairment(null, 40.0, null, null, $breakdown));
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je natociti gorivo."));
 end
 
 rule "undefind breakdown if headlights are on and car is cranking and tank is not empty and not fluctuating"
@@ -108,7 +108,7 @@ rule "flooded car if headlights are on and engine is on and not low gas and pres
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
-        insert(new Repairment(null, 40.0, null, null, $breakdown));
+        insert(new Repairment(null, 100, null, null, null, "Auto je bio potopljen. Potrebno je isusiti vozilo. Zatim vise puta dati kontakt prije pokusaja paljenja"));
 end
 
 rule "flooded car if headlights are on and engine is on and not low gas and present gas scent PERIODICALLY "
@@ -125,7 +125,7 @@ rule "flooded car if headlights are on and engine is on and not low gas and pres
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
-        insert(new Repairment(null, 40.0, null, null, $breakdown));
+        insert(new Repairment(null, 100, null, null, null, "Auto je bio potopljen. Potrebno je isusiti vozilo. Zatim vise puta dati kontakt prije pokusaja paljenja"));
 end
 
 rule "undefind breakdown if headlights are on and engine is on and not low gas"
@@ -165,7 +165,7 @@ rule "out of gas if headlights are on and periodically cranking and low on gas"
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
-        insert(new Repairment(null, 40.0, null, null, $breakdown));
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je natociti gorivo"));
 end
 
 rule "engine check lamp is on"
@@ -208,7 +208,7 @@ rule "potential turbine issue and white smoke"
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
-        insert(new Repairment(null, 40.0, null, null, $breakdown));
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je uraditi reparaciju turbine ili ugraditi novu tubinu."));
         System.out.println("LEVEL 3!");
 end
 
@@ -221,7 +221,7 @@ rule "potential cooling issue and low liquid"
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
-        insert(new Repairment(null, 40.0, null, null, $breakdown));
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je zameniti bocu za cuvanje rashladne tecnosti."));
 end
 
 // maybe CEP

@@ -15,13 +15,13 @@ public class Repairment {
 
     private Integer id;
 
-    public Repairment(LocalDateTime timeFinished, double price, Discount discount, Mechanic mechanic, Breakdown breakdown, Integer id) {
+    public Repairment(LocalDateTime timeFinished, double price, Discount discount, Mechanic mechanic, Breakdown breakdown, String action) {
         this.timeFinished = timeFinished;
         this.price = price;
         this.discount = discount;
         this.mechanic = mechanic;
         this.breakdown = breakdown;
-        this.id = id;
+        this.action = action;
     }
 
     public Repairment(LocalDateTime timeFinished, double price, Discount discount, Mechanic mechanic, Breakdown breakdown, String action, Integer id) {
