@@ -4,12 +4,12 @@ import java.util.Objects;
 public class HVACProblem extends AuxiliaryProblem{
     private HVACProblemKinds hvacKind;
 
-    public HVACProblem(String carId) {
-        super(carId);
+    public HVACProblem(long breakdownId) {
+        super(breakdownId);
     }
 
-    public HVACProblem(HVACProblemKinds hvacKind, String carId) {
-        this(carId);
+    public HVACProblem(HVACProblemKinds hvacKind, long breakdownId) {
+        this(breakdownId);
         this.hvacKind = hvacKind;
     }
 

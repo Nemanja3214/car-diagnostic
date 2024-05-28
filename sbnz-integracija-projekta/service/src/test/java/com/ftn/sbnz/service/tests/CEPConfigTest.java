@@ -119,6 +119,7 @@ public class CEPConfigTest {
             // s.add(Symptom.JERKING);
             // s.add(Symptom.FLAT_TIRE);
             Breakdown b = new Breakdown("kvar2", s);
+            b.setId(1L);
             ElectricCar car = new ElectricCar();
        
             b.setCar(car);
@@ -127,7 +128,7 @@ public class CEPConfigTest {
             code = FaultCodes.ELECTRICAL_CODE_B;
             car.addCode(code);
             b.setCar(car);
-            FaultProblem problem = new FaultProblem(car.getPlate());
+            FaultProblem problem = new FaultProblem(b.getId());
               ksession.insert(car);
             ksession.insert(b);
             ksession.insert(problem);

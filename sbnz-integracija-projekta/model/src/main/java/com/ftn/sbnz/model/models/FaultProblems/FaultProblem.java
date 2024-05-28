@@ -2,27 +2,28 @@ package com.ftn.sbnz.model.models.FaultProblems;
 
 public class FaultProblem {
     private FaultProblemKinds kind;
-    protected String carId;
+    protected long breakdownId;
 
 
 
-    public String getCarId() {
-        return this.carId;
+    public long getBreakdownId() {
+        return this.breakdownId;
     }
 
-    public void setCarId(String carId) {
-        this.carId = carId;
+    public void setBreakdownId(long breakdownId) {
+        this.breakdownId = breakdownId;
     }
 
 
-    public FaultProblem(String carId) {
+
+    public FaultProblem(long breakdownId) {
         this.kind = FaultProblemKinds.NONE;
-        this.carId = carId;
+        this.breakdownId = breakdownId;
     }
 
-    public FaultProblem(FaultProblemKinds kind, String carId) {
+    public FaultProblem(FaultProblemKinds kind, long breakdownId) {
         this.kind = kind;
-        this.carId = carId;
+        this.breakdownId = breakdownId;
     }
 
     public FaultProblemKinds getKind() {

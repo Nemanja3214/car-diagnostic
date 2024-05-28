@@ -5,8 +5,8 @@ public class InvertorProblem  extends PowertrainProblems{
     private double resistance;
 
 
-    public InvertorProblem(double resistance, String carId) {
-        this(carId );
+    public InvertorProblem(double resistance, long breakdownId) {
+        this(breakdownId );
         this.resistance = resistance;
 
     }
@@ -20,8 +20,8 @@ public class InvertorProblem  extends PowertrainProblems{
     }
 
 
-    public InvertorProblem(String carId) {
-        super(carId);
+    public InvertorProblem(long breakdownId) {
+        super(breakdownId);
     }
 
     @Override

@@ -292,12 +292,11 @@ rule "NN. Check Powertrain problems"
 agenda-group "checking faults"
     when
                 
-        $problem: FaultProblem(kind == FaultProblemKinds.POWERTRAIN, $carId: carId)
-        $breakdown : Breakdown($car: car instanceof ElectricCar, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
-         eval($car.getPlate() == $carId)
+        $problem: FaultProblem(kind == FaultProblemKinds.POWERTRAIN, $breakdownId: breakdownId)
+        $breakdown : Breakdown(id == $breakdownId, $car: car instanceof ElectricCar, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
     then
         System.out.println("Powertrain problem ");
-        insert(Util.checkPowertrain($car.getPlate()));
+        insert(Util.checkPowertrain($breakdownId));
         delete($problem);
 end
 
@@ -305,12 +304,11 @@ rule "NN. Check AUXILIARY problems"
 agenda-group "checking faults"
     when
                 
-        $problem: FaultProblem(kind == FaultProblemKinds.AUXILIARY, $carId: carId)
-        $breakdown : Breakdown($car: car instanceof ElectricCar, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
-         eval($car.getPlate() == $carId)
+        $problem: FaultProblem(kind == FaultProblemKinds.AUXILIARY, $breakdownId: breakdownId)
+        $breakdown : Breakdown($car: car instanceof ElectricCar, id == $breakdownId, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
     then
         System.out.println("AUXILIARY problem ");
-        insert(Util.checkAuxiliary($car.getPlate()));
+        insert(Util.checkAuxiliary($breakdownId));
           delete($problem);
 end
 
@@ -318,12 +316,11 @@ rule "NN. Check Regenerative breaking problems"
 agenda-group "checking faults"
     when
                 
-        $problem: FaultProblem(kind == FaultProblemKinds.REGENERATIVE_BREAKING, $carId: carId)
-        $breakdown : Breakdown($car: car instanceof ElectricCar, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
-        eval($car.getPlate() == $carId)
+        $problem: FaultProblem(kind == FaultProblemKinds.REGENERATIVE_BREAKING, $breakdownId: breakdownId)
+        $breakdown : Breakdown($car: car instanceof ElectricCar, id == $breakdownId, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
     then
         System.out.println("Regenerative breaking problem ");
-        insert(Util.checkRegenerativeBreaking($car.getPlate()));
+        insert(Util.checkRegenerativeBreaking($breakdownId));
           delete($problem);
 end
 
