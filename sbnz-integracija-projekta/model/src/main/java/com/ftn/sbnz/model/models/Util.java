@@ -29,24 +29,24 @@ public class Util {
       return vals.get(RANDOM.nextInt(vals.size()));
   }
 
-  public static PowertrainProblems checkPowertrain(){
+  public static PowertrainProblems checkPowertrain(String carId){
     if(RANDOM.nextBoolean())
-        return new MotorProblem(RANDOM.nextInt(100));
+        return new MotorProblem(RANDOM.nextInt(100), carId);
     else
-        return new InvertorProblem(RANDOM.nextDouble()*4000.0);
+        return new InvertorProblem(RANDOM.nextDouble()*4000.0, carId);
   }
 
-public static FaultProblem checkAuxiliary() {
+public static FaultProblem checkAuxiliary(String carId) {
      if(RANDOM.nextBoolean())
-        return new HVACProblem(randomHVACProblem());
+        return new HVACProblem(randomHVACProblem(), carId);
     else
-        return new InfotainmentProblem();
+        return new InfotainmentProblem(carId);
 }
 
-public static FaultProblem checkRegenerativeBreaking() {
+public static FaultProblem checkRegenerativeBreaking(String carId) {
      if(RANDOM.nextBoolean())
-        return new WheelSpeedProblem(RANDOM.nextDouble()*100.0);
+        return new WheelSpeedProblem(RANDOM.nextDouble()*100.0, carId);
     else
-        return new BreakingSensorsProblem();
+        return new BreakingSensorsProblem(carId);
 }
 }

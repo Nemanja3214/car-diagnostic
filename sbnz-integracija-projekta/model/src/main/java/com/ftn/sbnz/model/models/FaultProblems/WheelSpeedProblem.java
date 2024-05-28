@@ -4,10 +4,12 @@ import java.util.Objects;
 public class WheelSpeedProblem extends RegenerativeBreakingProblem{
     private double matching;
 
-    public WheelSpeedProblem() {
+    public WheelSpeedProblem(String carId) {
+        super(carId);
     }
 
-    public WheelSpeedProblem(double matching) {
+    public WheelSpeedProblem(double matching, String carId) {
+        this(carId);
         this.matching = matching;
     }
 
