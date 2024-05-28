@@ -2,9 +2,17 @@ package com.ftn.sbnz.model.models;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class GasCar extends Car{
     private boolean potentionalTurbineIssue;
     private boolean potentionalCoolingLeakage;
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     public GasCar(Integer id, String plate, int yearOfProduction, double km, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments, boolean potentionalTurbineIssue, boolean potentionalCoolingLeakage, Integer id1) {
