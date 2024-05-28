@@ -4,6 +4,21 @@ public class Mechanic {
 
     private String username;
     private String password;
+    private Integer id;
+
+    public Mechanic(String username, String password, Integer id) {
+        this.username = username;
+        this.password = password;
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Mechanic() {}
 

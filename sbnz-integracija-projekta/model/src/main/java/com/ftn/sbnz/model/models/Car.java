@@ -6,6 +6,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Car {
+    private Integer id;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Car(Integer id, String plate, int yearOfProduction, double km, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments) {
+        this.id = id;
+        this.plate = plate;
+        this.yearOfProduction = yearOfProduction;
+        this.km = km;
+        this.potentionalEngineIssue = potentionalEngineIssue;
+        this.owner = owner;
+        this.model = model;
+        this.lamps = lamps;
+        this.repairments = repairments;
+    }
+
     protected String plate;
     protected int yearOfProduction;
     protected double km;
