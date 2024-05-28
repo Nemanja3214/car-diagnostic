@@ -120,13 +120,13 @@ public class CEPConfigTest {
             // s.add(Symptom.JERKING);
             // s.add(Symptom.FLAT_TIRE);
             Breakdown b = new Breakdown("kvar2", s);
-            b.setId(1L);
+            b.setId(1);
             ElectricCar car = new ElectricCar();
        
             b.setCar(car);
             car.setFaultCheck(true);
             FaultCodes code = Util.randomCode(); 
-            code = FaultCodes.ELECTRICAL_CODE_B;
+            code = FaultCodes.ELECTRICAL_CODE_A;
             car.addCode(code);
             b.setCar(car);
             FaultProblem problem = new FaultProblem(b.getId());
@@ -249,10 +249,10 @@ public class CEPConfigTest {
                 new String[]{"100", "200"}
         });
         
-//         ObjectDataCompiler converter = new ObjectDataCompiler();
-//         String drl = converter.compile(data, template);
+        ObjectDataCompiler converter = new ObjectDataCompiler();
+        String drl = converter.compile(data, template);
         
-//         System.out.println(drl);
+        System.out.println(drl);
         
         KieSession ksession = createKieSessionFromDRL(drl);
 
@@ -333,22 +333,22 @@ public class CEPConfigTest {
 
     }
 
-//     private KieSession createKieSessionFromDRL(String drl){
-//         KieHelper kieHelper = new KieHelper();
-//         kieHelper.addContent(drl, ResourceType.DRL);
+    private KieSession createKieSessionFromDRL(String drl){
+        KieHelper kieHelper = new KieHelper();
+        kieHelper.addContent(drl, ResourceType.DRL);
 
-//         Results results = kieHelper.verify();
+        Results results = kieHelper.verify();
 
-//         if (results.hasMessages(Message.Level.WARNING, Message.Level.ERROR)){
-//             List<Message> messages = results.getMessages(Message.Level.WARNING, Message.Level.ERROR);
-//             for (Message message : messages) {
-//                 System.out.println("Error: "+message.getText());
-//             }
+        if (results.hasMessages(Message.Level.WARNING, Message.Level.ERROR)){
+            List<Message> messages = results.getMessages(Message.Level.WARNING, Message.Level.ERROR);
+            for (Message message : messages) {
+                System.out.println("Error: "+message.getText());
+            }
 
-//             throw new IllegalStateException("Compilation errors were found. Check the logs.");
-//         }
+            throw new IllegalStateException("Compilation errors were found. Check the logs.");
+        }
 
-//         return kieHelper.build().newKieSession();
-//     }
+        return kieHelper.build().newKieSession();
+    }
 
 }
