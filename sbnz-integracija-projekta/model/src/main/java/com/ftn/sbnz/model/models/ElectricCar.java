@@ -12,6 +12,52 @@ public class ElectricCar extends Car{
     private int percentageBattery;
     private boolean faultCheck;
      private List<FaultCodes> codes;
+     private Integer id;
+
+    public ElectricCar(Integer id, String plate, int yearOfProduction, double km, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments, boolean potentionalBatteryProblem, int percentageBattery, boolean faultCheck, List<FaultCodes> codes, Integer id1) {
+        super(id, plate, yearOfProduction, km, potentionalEngineIssue, owner, model, lamps, repairments);
+        this.potentionalBatteryProblem = potentionalBatteryProblem;
+        this.percentageBattery = percentageBattery;
+        this.faultCheck = faultCheck;
+        this.codes = codes;
+        this.id = id1;
+    }
+
+    public ElectricCar(boolean potentionalBatteryProblem, int percentageBattery, boolean faultCheck, List<FaultCodes> codes, Integer id) {
+        this.potentionalBatteryProblem = potentionalBatteryProblem;
+        this.percentageBattery = percentageBattery;
+        this.faultCheck = faultCheck;
+        this.codes = codes;
+        this.id = id;
+    }
+
+    public ElectricCar(String plate, int yearOfProduction, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments, boolean potentionalBatteryProblem, int percentageBattery, boolean faultCheck, List<FaultCodes> codes, Integer id) {
+        super(plate, yearOfProduction, potentionalEngineIssue, owner, model, lamps, repairments);
+        this.potentionalBatteryProblem = potentionalBatteryProblem;
+        this.percentageBattery = percentageBattery;
+        this.faultCheck = faultCheck;
+        this.codes = codes;
+        this.id = id;
+    }
+
+    public ElectricCar(String plate, int yearOfProduction, double km, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments, boolean potentionalBatteryProblem, int percentageBattery, boolean faultCheck, List<FaultCodes> codes, Integer id) {
+        super(plate, yearOfProduction, km, potentionalEngineIssue, owner, model, lamps, repairments);
+        this.potentionalBatteryProblem = potentionalBatteryProblem;
+        this.percentageBattery = percentageBattery;
+        this.faultCheck = faultCheck;
+        this.codes = codes;
+        this.id = id;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public void addCode(FaultCodes code){
         this.codes.add(code);

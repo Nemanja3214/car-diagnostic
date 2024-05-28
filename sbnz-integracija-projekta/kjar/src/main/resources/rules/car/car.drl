@@ -12,7 +12,6 @@ import com.ftn.sbnz.model.models.FaultProblems.MotorProblem
 import com.ftn.sbnz.model.models.FaultProblems.PowertrainProblems
 import com.ftn.sbnz.model.models.FaultProblems.InvertorProblem
 import com.ftn.sbnz.model.models.FaultProblems.FaultProblemKinds
-
 import java.util.ArrayList;
 import java.util.List;
 import com.ftn.sbnz.model.models.Repairment

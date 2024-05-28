@@ -11,6 +11,25 @@ public class Repairment {
 
     private Breakdown breakdown;
 
+    private Integer id;
+
+    public Repairment(LocalDateTime timeFinished, double price, Discount discount, Mechanic mechanic, Breakdown breakdown, Integer id) {
+        this.timeFinished = timeFinished;
+        this.price = price;
+        this.discount = discount;
+        this.mechanic = mechanic;
+        this.breakdown = breakdown;
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Repairment() {}
 
     public Repairment(LocalDateTime timeFinished, double price, Discount discount, Mechanic mechanic, Breakdown breakdown) {

@@ -1,0 +1,65 @@
+template header
+    lower
+    upper
+
+package templatetable;
+
+import com.ftn.sbnz.model.models.Repairment;
+import com.ftn.sbnz.model.models.Car;
+import com.ftn.sbnz.model.models.Breakdown;
+import com.ftn.sbnz.model.models.Discount;
+
+import java.util.List;
+
+import java.lang.Double;
+import java.lang.Double;
+
+template "discount-rules"
+
+rule "Calculate discount over upper Discount_@{row.rowNumber}"
+no-loop true
+when
+    $c: Repairment($bd: breakdown, $p: price)
+    $car: Car() from $bd.getCar()
+    $sum: Number() from accumulate (
+       Repairment(this != $c, $price: price ) from $car.getRepairments(),
+       sum( $price ))
+    eval($sum.doubleValue() > Double.parseDouble("@{upper}"))
+then
+    System.out.println("UPPER");
+    modify($c){ setDiscount(new Discount(10.0)); }
+    modify($c){ setPrice($p - 0.15 * $p); }
+end
+
+rule "Calculate discount mid Discount_@{row.rowNumber}"
+no-loop true
+when
+    $c: Repairment($bd: breakdown, $p: price)
+    $car: Car() from $bd.getCar()
+    $sum: Number() from accumulate (
+       Repairment(this != $c, $price: price ) from $car.getRepairments(),
+       sum( $price ))
+    eval($sum.doubleValue() >= Double.parseDouble("@{lower}") && $sum.doubleValue() <= Double.parseDouble("@{upper}"))
+then
+    System.out.println("MID");
+    modify($c){ setDiscount(new Discount(10.0)); }
+    modify($c){ setPrice($p - 0.1 * $p); }
+
+end
+
+rule "Calculate discount under lower Discount_@{row.rowNumber}"
+no-loop true
+when
+    $c: Repairment($bd: breakdown)
+    $car: Car() from $bd.getCar()
+    $sum: Number() from accumulate (
+       Repairment(this != $c, $price: price ) from $car.getRepairments(),
+       sum( $price ))
+    eval($sum.doubleValue() < Double.parseDouble("@{lower}"))
+then
+    System.out.println($sum);
+
+    System.out.println("LOWER");
+end
+
+end template

@@ -5,6 +5,23 @@ import java.util.List;
 
 public class Breakdown {
 
+    private Integer id;
+
+    public Breakdown(Integer id, String name, Car car, List<Symptom> symptoms) {
+        this.id = id;
+        this.name = name;
+        this.car = car;
+        this.symptoms = symptoms;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     private String name;
     private Car car;
 

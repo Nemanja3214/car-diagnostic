@@ -12,6 +12,23 @@ public class Lamp {
     @Position(1)
     private String causedByLamp;
 
+    private Integer id;
+
+    public Lamp(String lampKind, String plate, String causedByLamp, Integer id) {
+        this.lampKind = lampKind;
+        this.plate = plate;
+        this.causedByLamp = causedByLamp;
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Lamp() {}
 
     public String getLampKind() {

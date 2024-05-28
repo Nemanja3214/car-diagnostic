@@ -2,18 +2,44 @@ package com.ftn.sbnz.model.models;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Car {
+    private Integer id;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Car(Integer id, String plate, int yearOfProduction, double km, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments) {
+        this.id = id;
+        this.plate = plate;
+        this.yearOfProduction = yearOfProduction;
+        this.km = km;
+        this.potentionalEngineIssue = potentionalEngineIssue;
+        this.owner = owner;
+        this.model = model;
+        this.lamps = lamps;
+        this.repairments = repairments;
+    }
+
     protected String plate;
     protected int yearOfProduction;
+    protected double km;
     protected boolean potentionalEngineIssue;
     protected Client owner;
     protected CarModel model;
     protected List<Lamp> lamps;
     protected List<Repairment> repairments;
 
-    public Car() {}
+    public Car() {
+        repairments = new ArrayList<>();
+    }
 
     public Car(String plate, int yearOfProduction, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments) {
         this.plate = plate;
@@ -23,6 +49,25 @@ public class Car {
         this.model = model;
         this.lamps = lamps;
         this.repairments = repairments;
+    }
+
+    public Car(String plate, int yearOfProduction, double km, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments) {
+        this.plate = plate;
+        this.yearOfProduction = yearOfProduction;
+        this.km = km;
+        this.potentionalEngineIssue = potentionalEngineIssue;
+        this.owner = owner;
+        this.model = model;
+        this.lamps = lamps;
+        this.repairments = repairments;
+    }
+
+    public double getKm() {
+        return km;
+    }
+
+    public void setKm(double km) {
+        this.km = km;
     }
 
     public List<Repairment> getRepairments() {
