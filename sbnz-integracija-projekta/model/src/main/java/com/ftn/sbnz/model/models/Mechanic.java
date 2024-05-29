@@ -1,9 +1,17 @@
 package com.ftn.sbnz.model.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Mechanic {
 
     private String username;
     private String password;
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     public Mechanic(String username, String password, Integer id) {

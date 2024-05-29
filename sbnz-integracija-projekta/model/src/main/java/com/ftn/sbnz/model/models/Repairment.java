@@ -2,6 +2,12 @@ package com.ftn.sbnz.model.models;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Repairment {
     private LocalDateTime timeFinished;
     private double price;
@@ -13,6 +19,8 @@ public class Repairment {
 
     private String action;
 
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     public Repairment(LocalDateTime timeFinished, double price, Discount discount, Mechanic mechanic, Breakdown breakdown, String action) {

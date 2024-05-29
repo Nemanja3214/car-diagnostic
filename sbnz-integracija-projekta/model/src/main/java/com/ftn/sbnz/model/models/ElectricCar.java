@@ -5,6 +5,12 @@ package com.ftn.sbnz.model.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class ElectricCar extends Car{
     private boolean potentionalBatteryProblem;
 
@@ -12,6 +18,8 @@ public class ElectricCar extends Car{
     private int percentageBattery;
     private boolean faultCheck;
      private List<FaultCodes> codes;
+      @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
      private Integer id;
 
     public ElectricCar(Integer id, String plate, int yearOfProduction, double km, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments, boolean potentionalBatteryProblem, int percentageBattery, boolean faultCheck, List<FaultCodes> codes, Integer id1) {
