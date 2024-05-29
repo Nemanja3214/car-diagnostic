@@ -60,7 +60,11 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
-        http.authorizeHttpRequests().antMatchers("/**").permitAll().anyRequest().authenticated();
+        http.authorizeHttpRequests().antMatchers("/**").permitAll()
+                .antMatchers("/h2-console/**").permitAll().anyRequest().authenticated().and().csrf().ignoringAntMatchers("/h2-console/**")
+// Allow pages to be loaded in frames from
+// the same origin; needed for H2-Console
+.and().headers().frameOptions().sameOrigin();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //        http.addFilterBefore(new JwtRequestFilter(tokenUtils, userDetailsService()), UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
@@ -75,6 +79,6 @@ public class WebSecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
     	// Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
-    	return (web) -> web.ignoring().antMatchers(HttpMethod.POST, "/api/user/login");
+    	return (web) -> web.ignoring().antMatchers(HttpMethod.POST, "/api/user/login").antMatchers("/h2-console/**");
     }
 }

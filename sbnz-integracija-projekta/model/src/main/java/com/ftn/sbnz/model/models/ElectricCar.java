@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.*;
 
 @Entity
+@Table
 public class ElectricCar extends Car{
     private boolean potentionalBatteryProblem;
 

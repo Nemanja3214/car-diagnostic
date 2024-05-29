@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import javax.persistence.*;
 
 @Entity
+@Table
 public class Repairment {
     private LocalDateTime timeFinished;
     private double price;
