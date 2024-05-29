@@ -1,7 +1,6 @@
 package com.ftn.sbnz.repositories;
 
-import ch.qos.logback.core.net.server.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import com.ftn.sbnz.model.models.Client;
 public interface IClientRepository extends JpaRepository<Client, Integer> {
 }

@@ -1,9 +1,15 @@
 package com.ftn.sbnz.services.interfaces;
 
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ftn.sbnz.dtos.car.CarDTO;
+import com.ftn.sbnz.dtos.car.ElectricCarDTO;
+import com.ftn.sbnz.dtos.car.GasCarDTO;
+import com.ftn.sbnz.exceptions.NotFoundException;
 
 public interface ICarService {
+    void createElectric(ElectricCarDTO carDTO) throws NotFoundException;
+
+    CarDTO get(Integer id);
+
+    void createGas(GasCarDTO carDTO) throws NotFoundException;
 }
