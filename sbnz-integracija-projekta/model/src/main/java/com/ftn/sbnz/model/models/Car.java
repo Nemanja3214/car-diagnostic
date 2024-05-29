@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Car {
      @Id
      @GeneratedValue(strategy = GenerationType.IDENTITY)

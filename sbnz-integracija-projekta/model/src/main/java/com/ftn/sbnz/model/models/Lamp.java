@@ -2,8 +2,9 @@ package com.ftn.sbnz.model.models;
 
 import java.util.List;
 import org.kie.api.definition.type.Position;
+import javax.persistence.Entity;
 
-
+@Entity
 public class Lamp {
     @Position(0)
     private String lampKind;
