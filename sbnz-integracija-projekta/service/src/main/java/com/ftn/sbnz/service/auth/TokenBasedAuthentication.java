@@ -1,4 +1,4 @@
-package auth;
+package com.ftn.sbnz.service.auth;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,10 +1,9 @@
-package auth;
+package com.ftn.sbnz.service.auth;
 
 import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,6 +38,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 		String email;
 		System.out.println(request.getRequestURI());
 		String authToken = tokenUtils.getToken(request);
+		System.out.println("FILTER");
 
 		try {
 

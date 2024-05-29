@@ -1,8 +1,9 @@
-package auth;
+package com.ftn.sbnz.service.auth;
 
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class TokenUtils {
 
-	@Value("Certificate_manager")
+	@Value("SBZ")
 	private String APP_NAME;
 
 	@Value("somesecret")

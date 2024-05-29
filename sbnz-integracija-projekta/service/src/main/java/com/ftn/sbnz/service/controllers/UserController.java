@@ -1,6 +1,6 @@
-package controllers;
+package com.ftn.sbnz.service.controllers;
 
-import auth.TokenUtils;
+import com.ftn.sbnz.service.auth.TokenUtils;
 import com.ftn.sbnz.model.dtos.CredentialsDTO;
 import com.ftn.sbnz.model.dtos.TokenDTO;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin(origins = "https://localhost:4200")
+//@CrossOrigin(origins = "https://localhost:4200")
 public class UserController {
 
     @Autowired
@@ -29,13 +29,14 @@ public class UserController {
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> login(@RequestBody CredentialsDTO credentials) {
-		System.out.println(credentials);
+		System.out.println(credentials.getEmail());
 
 		Authentication authentication;
 		try {
 			authentication = authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword()));
 		} catch (BadCredentialsException e) {
+			System.out.println(e);
 			return new ResponseEntity<String>("Wrong username or password!", HttpStatus.BAD_REQUEST);
 		} catch (Exception ex) {
 			System.out.println(ex.getStackTrace());
