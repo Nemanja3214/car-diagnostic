@@ -1,5 +1,7 @@
 package com.ftn.sbnz.model.models;
 
+import javax.persistence.Entity;
+
 public enum Symptom {
     HEADLIGHTS_ON,
     HEADLIGHTS_FLUCTUATE,

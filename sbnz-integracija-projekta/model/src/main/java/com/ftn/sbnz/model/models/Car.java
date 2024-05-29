@@ -5,10 +5,7 @@ package com.ftn.sbnz.model.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -41,9 +38,13 @@ public class Car {
     protected int yearOfProduction;
     protected double km;
     protected boolean potentionalEngineIssue;
+    @ManyToOne
     protected Client owner;
+    @ManyToOne
     protected CarModel model;
+    @OneToMany
     protected List<Lamp> lamps;
+    @OneToMany
     protected List<Repairment> repairments;
 
     public Car() {

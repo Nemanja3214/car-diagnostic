@@ -2,19 +2,20 @@ package com.ftn.sbnz.model.models;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Repairment {
     private LocalDateTime timeFinished;
     private double price;
 
+    @OneToOne
     private Discount discount;
+
+    @ManyToOne
     private Mechanic mechanic;
 
+    @OneToOne
     private Breakdown breakdown;
 
     private String action;

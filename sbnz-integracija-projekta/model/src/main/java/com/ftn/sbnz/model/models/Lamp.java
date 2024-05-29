@@ -3,6 +3,9 @@ package com.ftn.sbnz.model.models;
 import java.util.List;
 import org.kie.api.definition.type.Position;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Lamp {
@@ -13,6 +16,8 @@ public class Lamp {
     @Position(1)
     private String causedByLamp;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     public Lamp(String lampKind, String plate, String causedByLamp, Integer id) {

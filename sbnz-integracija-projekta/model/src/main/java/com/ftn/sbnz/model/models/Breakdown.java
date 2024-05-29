@@ -3,10 +3,7 @@ package com.ftn.sbnz.model.models;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Breakdown {
@@ -31,6 +28,7 @@ public class Breakdown {
     }
 
     private String name;
+    @ManyToOne
     private Car car;
 
 
@@ -68,7 +66,7 @@ public class Breakdown {
     public void setCar(Car car){
         this.car = car;
     }
-
+    @ElementCollection(targetClass = Symptom.class)
     private List<Symptom> symptoms;
 
     public Breakdown() {}
