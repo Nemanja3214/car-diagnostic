@@ -1,4 +1,4 @@
-package com.ftn.sbnz.service.dtos;
+package com.ftn.sbnz.service.dtos.breakdown;
 
 
 import com.ftn.sbnz.service.dtos.car.CarDTO;
@@ -19,6 +19,8 @@ public class BreakdownDTO {
         List<Symptom> symptoms;
 
     public static BreakdownDTO toDTO(Breakdown a) {
+        if(a == null)
+            return null;
         BreakdownDTO dto = new BreakdownDTO();
         dto.setCar(CarDTO.toDTO(a.getCar()));
         dto.setSymptoms(a.getSymptoms());
