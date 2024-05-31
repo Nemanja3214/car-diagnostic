@@ -28,12 +28,30 @@ public class Client {
     private String lastName;
     private String phone;
 
+    private Role role;
+
     public Client() {}
 
     public Client(String name, String lastName, String phone) {
         this.name = name;
         this.lastName = lastName;
         this.phone = phone;
+    }
+
+    public Client(Integer id, String name, String lastName, String phone, Role role) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.role = role;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getName() {

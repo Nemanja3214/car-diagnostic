@@ -1,17 +1,24 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormField, MatFormFieldModule, MatFormFieldControl } from '@angular/material/form-field';
 import { AuthService } from './../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
+import { JwtModule, JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
+
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
-    FormsModule, MatFormField, MatFormFieldModule, ReactiveFormsModule, HttpClientModule
+    FormsModule, MatFormFieldModule, ReactiveFormsModule, HttpClientModule, MatInputModule, CommonModule, JwtModule
   ],
   providers:[AuthService],
   templateUrl: './login.component.html',

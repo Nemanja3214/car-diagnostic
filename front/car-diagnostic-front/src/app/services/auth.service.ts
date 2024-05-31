@@ -118,6 +118,7 @@ export class AuthService {
       const accessToken: any = localStorage.getItem('user');
       const helper = new JwtHelperService();
       const decodedToken = helper.decodeToken(accessToken);
+      // const role = '';
       const role = decodedToken.role[0].authority;
       const email = decodedToken.sub;
       const id = decodedToken.id;
