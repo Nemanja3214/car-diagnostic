@@ -1,8 +1,8 @@
 package com.ftn.sbnz.service.controllers;
 
 import com.ftn.sbnz.service.auth.TokenUtils;
-import com.ftn.sbnz.model.dtos.CredentialsDTO;
-import com.ftn.sbnz.model.dtos.TokenDTO;
+import com.ftn.sbnz.service.dtos.users.CredentialsDTO;
+import com.ftn.sbnz.service.dtos.users.TokenDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
