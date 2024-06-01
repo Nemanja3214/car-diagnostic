@@ -6,7 +6,6 @@ import {MatSelectModule} from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { BreakdownService } from './../services/breakdown.service';
-import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 
