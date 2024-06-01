@@ -14,3 +14,9 @@ export class BreakdownService {
     return this.http.get<string[]>(environment.serverOrigin + '/breakdown/symptoms');
 }
 }
+
+export interface CreateBreakdown{
+  name: string,
+  carId: number,
+  symptoms: string[]
+}

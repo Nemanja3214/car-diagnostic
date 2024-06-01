@@ -5,7 +5,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatSelectModule} from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
-import { BreakdownService } from './../services/breakdown.service';
+import { BreakdownService, CreateBreakdown } from './../services/breakdown.service';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 
@@ -20,6 +20,14 @@ import { JwtModule } from '@auth0/angular-jwt';
 })
 export class BreakdownComponent implements OnInit{
   private selectedIndexes: Array<number> = [];
+
+
+  createForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    symptoms: new FormControl('', [Validators.required]),
+  });
+
+  
   constructor(private breakdownService: BreakdownService){
   }
   ngOnInit(): void {
@@ -35,32 +43,16 @@ export class BreakdownComponent implements OnInit{
     );;
   }
 
-  form = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    symptoms: new FormControl('', [Validators.required]),
-  });
 
   availableItems: string[] = []; // Sample available items
-  selectedItems: string[] = []; // Initially, selected items are empty
 
-  addItem() {
-    // Loop through available items and check if they are selected
-    this.availableItems.forEach(item => {
-      const index = this.selectedItems.indexOf(item);
-      // If item is selected and not already in the selectedItems array, add it
-      if (index !== -1 && !this.selectedItems.includes(item)) {
-        this.selectedItems.push(item);
-      }
-    });
-    console.log(this.selectedItems);
-  }
-
-
-  onSelectionChange(event: any) {
-    this.selectedItems = event.value;
-    console.log(this.selectedItems);
-    // this.selectedItems.push(item);
-    // console.log('Selected Items:', this.selectedItems);
+  createBreakdown(){
+    console.log(this.createForm.value.symptoms!)
+    // const breakdown: CreateBreakdown = {
+      // name: this.form.value.name,
+      // carId: 1,
+      // symptoms: this.form.value.symptoms!
+    // }
   }
 
   // onSubmit() {

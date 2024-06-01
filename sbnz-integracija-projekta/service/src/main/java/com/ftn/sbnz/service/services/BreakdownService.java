@@ -37,7 +37,11 @@ public class BreakdownService implements IBreakdownService {
             throw new NotFoundException();
 
         breakdown.setName(dto.getName());
-        breakdown.setSymptoms(dto.getSymptoms());
+        boolean hasInvalidSymptom = dto.getSymptoms().stream()
+                .anyMatch(str -> Symptom.fromString(str) == null);
+        if(hasInvalidSymptom)
+            throw new NotFoundException();
+        breakdown.setSymptoms(dto.getSymptoms().stream().map(Symptom::fromString).collect(Collectors.toList()));
 
         breakdownRepository.save(breakdown);
 

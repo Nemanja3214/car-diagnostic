@@ -40,6 +40,15 @@ public enum Symptom {
         return show;
     }
 
+    public static Symptom fromString(String text) {
+        for (Symptom symptom : Symptom.values()) {
+            if (symptom.stringValue.equalsIgnoreCase(text)) {
+                return symptom;
+            }
+        }
+        return null; // Or throw an exception if the string doesn't match any enum constant
+    }
+
     Symptom(String stringValue, boolean show) {
         this.stringValue = stringValue;
         this.show = show;
