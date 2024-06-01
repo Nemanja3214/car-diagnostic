@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormField,  MatFormFieldModule, MatFormFieldControl } from '@angular/material/form-field';
 import {MatCardModule} from '@angular/material/card';
@@ -15,10 +15,24 @@ import { JwtModule } from '@auth0/angular-jwt';
   imports: [FormsModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, CommonModule, MatCardModule, MatSelectModule,
     HttpClientModule, JwtModule],
   templateUrl: './breakdown.component.html',
+  providers:[BreakdownService],
   styleUrl: './breakdown.component.css'
 })
-export class BreakdownComponent {
+export class BreakdownComponent implements OnInit{
+  private selectedIndexes: Array<number> = [];
   constructor(private breakdownService: BreakdownService){
+  }
+  ngOnInit(): void {
+    this.breakdownService.getSymptoms() .subscribe(
+      (response) => {
+        // Handle the successful response
+        this.availableItems = response
+      },
+      (error) => {
+        // This block will only execute if catchError is used
+        console.error('Error handler:', error);
+      }
+    );;
   }
 
   form = new FormGroup({
@@ -26,27 +40,27 @@ export class BreakdownComponent {
     symptoms: new FormControl('', [Validators.required]),
   });
 
-  availableItems: string[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
-  selectedItems: string[] = [];
+  availableItems: string[] = []; // Sample available items
+  selectedItems: string[] = []; // Initially, selected items are empty
 
   addItem() {
-    const availableList = document.querySelector('#availableList') as HTMLSelectElement;
-    const selectedList = document.querySelector('#selectedList') as HTMLSelectElement;
+    // Loop through available items and check if they are selected
+    this.availableItems.forEach(item => {
+      const index = this.selectedItems.indexOf(item);
+      // If item is selected and not already in the selectedItems array, add it
+      if (index !== -1 && !this.selectedItems.includes(item)) {
+        this.selectedItems.push(item);
+      }
+    });
+    console.log(this.selectedItems);
+  }
 
-    if (availableList && selectedList) {
-      const selectedOptions = Array.from(availableList.selectedOptions);
-      selectedOptions.forEach(option => {
-        const value = option.value;
-        this.selectedItems.push(value);
-        const index = this.availableItems.indexOf(value);
-        if (index !== -1) {
-          this.availableItems.splice(index, 1);
-        }
-      });
 
-      // Clear selected options
-      availableList.selectedIndex = -1;
-    }
+  onSelectionChange(event: any) {
+    this.selectedItems = event.value;
+    console.log(this.selectedItems);
+    // this.selectedItems.push(item);
+    // console.log('Selected Items:', this.selectedItems);
   }
 
   // onSubmit() {

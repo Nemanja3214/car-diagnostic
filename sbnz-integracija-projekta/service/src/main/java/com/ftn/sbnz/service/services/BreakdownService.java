@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service.services;
 
 import com.ftn.sbnz.model.models.Breakdown;
+import com.ftn.sbnz.model.models.Symptom;
 import com.ftn.sbnz.service.dtos.breakdown.BreakdownDTO;
 import com.ftn.sbnz.service.dtos.breakdown.CreateBreakdownDTO;
 import com.ftn.sbnz.service.exceptions.NotFoundException;
@@ -45,5 +46,16 @@ public class BreakdownService implements IBreakdownService {
     @Override
     public BreakdownDTO get(Integer id) {
         return BreakdownDTO.toDTO(breakdownRepository.findById(id).orElse(null));
+    }
+
+    @Override
+    public List<String> getSymptoms() {
+
+        List<String> stringValues = new ArrayList<>();
+        for (Symptom symptom : Symptom.values()) {
+            if(symptom.isShow())
+                stringValues.add(symptom.getStringValue());
+        }
+        return stringValues;
     }
 }

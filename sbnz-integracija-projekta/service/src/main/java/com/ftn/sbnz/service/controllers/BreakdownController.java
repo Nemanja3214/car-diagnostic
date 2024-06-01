@@ -40,4 +40,11 @@ public class BreakdownController {
         BreakdownDTO dto = breakdownService.get(id);
         return ResponseEntity.ok(dto);
     }
+
+    @PermitAll
+    @GetMapping("symptoms")
+    public ResponseEntity<?> getSymptoms() throws NotFoundException {
+        List<String> symptoms = breakdownService.getSymptoms();
+        return ResponseEntity.ok(symptoms);
+    }
 }

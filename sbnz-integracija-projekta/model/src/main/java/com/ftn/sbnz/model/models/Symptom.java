@@ -3,33 +3,49 @@ package com.ftn.sbnz.model.models;
 import javax.persistence.Entity;
 
 public enum Symptom {
-    HEADLIGHTS_ON,
-    HEADLIGHTS_FLUCTUATE,
-    NO_START,
-    START,
-    CRANKING,
-    PERIODICALLY_CRANKING,
-    EMPTY_TANK,
-    NOT_EMPTY_TANK,
-    UNCERTAIN_AMOUNT_OF_GAS,
-    FLOODED,
-    FUEL_SCENT,
-    PERIODICALLY_FUEL_SCENT,
-    FLAT_TIRE,
-    DAMAGED_TIRE,
-    TIRE_VIBRATING,
-    DIFFICULT_STEERING,
-    PULLING_TO_SIDE,
-    WEIRD_NOISE_ACCELERATION,
-    HIGH_ENGINE_TEMP,
-    WHITE_SMOKE,
-    LOW_COOLING_LIQUID,
-    UNUSUAL_NOISE,
-    HESITATION,
-    JERKING,
+    HEADLIGHTS_ON("Headlights are on", true),
+    HEADLIGHTS_FLUCTUATE("Headlights fluctuate", true),
+    NO_START("Car is not starting", true),
+    START("Car is starting", true),
+    CRANKING("Cranking but no starting", true),
+    PERIODICALLY_CRANKING("Periodicaly cranking", true),
+    EMPTY_TANK("Empty tank", true),
+    NOT_EMPTY_TANK("Tank is not empty", true),
+    UNCERTAIN_AMOUNT_OF_GAS("Ammount of gas is not known", true),
+    FLOODED("Car is flooded", true),
+    FUEL_SCENT("Fuel scent", true),
+    PERIODICALLY_FUEL_SCENT("Periodical fuel scent", true),
+    FLAT_TIRE("Tire is flat", true),
+    DAMAGED_TIRE("Tire is damaged", true),
+    TIRE_VIBRATING("Tire is vibrating", true),
+    DIFFICULT_STEERING("Difficuties with steering", true),
+    PULLING_TO_SIDE("Car is pulling to side", true),
+    WEIRD_NOISE_ACCELERATION("Weird noice while acceleration", true),
+    HIGH_ENGINE_TEMP("High engine temperature", true),
+    WHITE_SMOKE("White smoke coming out", true),
+    LOW_COOLING_LIQUID("Low cooling liquid", true),
+    UNUSUAL_NOISE("Unusual noise coming out", true),
+    HESITATION("Hesitation", true),
+    JERKING("Jerking", true),
 
-   ELECTRICAL_CODE_A,
-    ELECTRICAL_CODE_B,
-    ELECTRICAL_CODE_C,
-    ELECTRICAL_CODE_D
+   ELECTRICAL_CODE_A("", false),
+    ELECTRICAL_CODE_B("", false),
+    ELECTRICAL_CODE_C("", false),
+    ELECTRICAL_CODE_D("", false);
+
+    private final String stringValue;
+    private final boolean show;
+
+    public boolean isShow(){
+        return show;
+    }
+
+    Symptom(String stringValue, boolean show) {
+        this.stringValue = stringValue;
+        this.show = show;
+    }
+
+    public String getStringValue() {
+        return stringValue;
+    }
 }
