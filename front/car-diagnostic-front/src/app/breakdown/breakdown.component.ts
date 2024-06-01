@@ -13,7 +13,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 @Component({
   selector: 'app-breakdown',
   standalone: true,
-  imports: [FormsModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, CommonModule, MatCardModule, MatSelectModule, BrowserModule,
+  imports: [FormsModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, CommonModule, MatCardModule, MatSelectModule,
     HttpClientModule, JwtModule],
   templateUrl: './breakdown.component.html',
   styleUrl: './breakdown.component.css'
