@@ -1,0 +1,55 @@
+<div id="mainContainer">
+    <div id="carInfo" style="display: flex; flex-direction: row;">
+        <div style="width: 60%; margin-right: auto;">
+            <img src="../../assets/car.svg">
+        </div>
+        <div class="info" style="display: flex; flex-direction: column; margin: auto;">
+            <h1>{{car.model}}</h1>
+            <div class="info-box">
+                <div style="display: flex; flex-direction: row;">
+                    <p class="key">Plate:</p>
+                    <p class="value">{{car.plate}}</p>
+                </div>
+                <div style="display: flex; flex-direction: row;">
+                    <p class="key">Kilometers:</p>
+                    <p class="value">{{car.km}}</p>
+                    <!-- <input class="value" (ngModel)="car.km"> -->
+                </div>
+                <div style="display: flex; flex-direction: row;">
+                    <p class="key">Year of production:</p>
+                    <p class="value">{{car.yearOfProduction}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-div">
+        <h1>Repairments</h1>
+        <table [dataSource]="allRepairments" mat-table matSort class="mat-elevation-z8" >
+
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef> Action </th>
+              <td mat-cell *matCellDef="let rep"> {{rep.action}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="price">
+              <th mat-header-cell *matHeaderCellDef> Price(BAM) </th>
+              <td mat-cell *matCellDef="let rep"> {{rep.price}} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="discount">
+                <th mat-header-cell *matHeaderCellDef> Discount(%) </th>
+                <td mat-cell *matCellDef="let rep"> {{rep.discount}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mechanic">
+                <th mat-header-cell *matHeaderCellDef> Mechanic </th>
+                <td mat-cell *matCellDef="let rep"> {{rep.mechanic}} </td>
+              </ng-container>
+  
+            
+          
+            <tr mat-header-row *matHeaderRowDef="allRepairmentsDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: allRepairmentsDisplayedColumns;"></tr>
+          </table>
+    </div>
+</div>
