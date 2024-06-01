@@ -1,0 +1,33 @@
+<div>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Available Toppings</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field>
+          <mat-label>Select Toppings</mat-label>
+          <mat-select #availableSelect multiple>
+            <mat-option *ngFor="let topping of availableItems" [value]="topping">
+              {{topping}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Selected Toppings</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field>
+          <mat-label>Selected Toppings</mat-label>
+          <mat-select #selectedSelect multiple>
+            <mat-option *ngFor="let topping of selectedItems" [value]="topping">
+              {{topping}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+    <button mat-raised-button color="primary" (click)="addItem()">Add</button>
+  </div>
