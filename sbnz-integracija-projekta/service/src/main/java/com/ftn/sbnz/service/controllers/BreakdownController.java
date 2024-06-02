@@ -7,6 +7,7 @@ import com.ftn.sbnz.service.services.interfaces.IBreakdownService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
@@ -27,11 +28,11 @@ public class BreakdownController {
         return ResponseEntity.ok(breakdownDTOS);
     }
 
-    @PermitAll
-    @PostMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_CLIENT')")
+    @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody CreateBreakdownDTO dto) throws NotFoundException {
         breakdownService.create(dto);
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok("OK");
     }
 
     @PermitAll

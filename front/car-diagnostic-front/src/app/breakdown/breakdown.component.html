@@ -2,7 +2,7 @@
     <form (ngSubmit)="createBreakdown()" [formGroup]="createForm">
         <mat-card>
         <mat-card-header>
-            <mat-card-title>Available Toppings</mat-card-title>
+            <mat-card-title>Create breakdown</mat-card-title>
         </mat-card-header>
         <mat-card-content>
             <mat-form-field >
@@ -11,13 +11,15 @@
             </mat-form-field>
             <br>
             <mat-form-field>
-            <mat-label>Select </mat-label>
+            <mat-label>Select symptoms</mat-label>
             <mat-select #availableSelect multiple formControlName="symptoms">
                 <mat-option *ngFor="let topping of availableItems" [value]="topping">
                 {{topping}}
                 </mat-option>
             </mat-select>
             </mat-form-field>
+            <br>
+            <button  mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">Submit</button>
         </mat-card-content>
         </mat-card>
     </form>

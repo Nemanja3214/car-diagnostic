@@ -43,6 +43,8 @@ public class BreakdownService implements IBreakdownService {
             throw new NotFoundException();
         breakdown.setSymptoms(dto.getSymptoms().stream().map(Symptom::fromString).collect(Collectors.toList()));
 
+//        TODO add cars
+
         breakdownRepository.save(breakdown);
 
     }

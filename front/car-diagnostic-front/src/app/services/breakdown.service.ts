@@ -13,10 +13,18 @@ export class BreakdownService {
   getSymptoms(): Observable<string[]> {
     return this.http.get<string[]>(environment.serverOrigin + '/breakdown/symptoms');
 }
+
+createBreakdown(createBreakdown: CreateBreakdown): Observable<string> {
+  return this.http.post<string>(environment.serverOrigin + '/breakdown/create', createBreakdown, {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    })
+  });
+}
 }
 
 export interface CreateBreakdown{
   name: string,
-  carId: number,
+  // carId: number,
   symptoms: string[]
 }

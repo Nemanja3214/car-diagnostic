@@ -8,12 +8,13 @@ import { MatInputModule } from '@angular/material/input';
 import { BreakdownService, CreateBreakdown } from './../services/breakdown.service';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-breakdown',
   standalone: true,
   imports: [FormsModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, CommonModule, MatCardModule, MatSelectModule,
-    HttpClientModule, JwtModule],
+    HttpClientModule, JwtModule, MatButtonModule],
   templateUrl: './breakdown.component.html',
   providers:[BreakdownService],
   styleUrl: './breakdown.component.css'
@@ -24,10 +25,10 @@ export class BreakdownComponent implements OnInit{
 
   createForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    symptoms: new FormControl('', [Validators.required]),
+    symptoms: new FormControl([], [Validators.required]),
   });
 
-  
+
   constructor(private breakdownService: BreakdownService){
   }
   ngOnInit(): void {
@@ -40,19 +41,29 @@ export class BreakdownComponent implements OnInit{
         // This block will only execute if catchError is used
         console.error('Error handler:', error);
       }
-    );;
+    );
   }
 
 
   availableItems: string[] = []; // Sample available items
 
   createBreakdown(){
-    console.log(this.createForm.value.symptoms!)
-    // const breakdown: CreateBreakdown = {
-      // name: this.form.value.name,
-      // carId: 1,
-      // symptoms: this.form.value.symptoms!
-    // }
+    if (!this.createForm.valid) {
+      return;
+    }
+    const dto: CreateBreakdown = {
+      name: this.createForm.value.name!,
+      symptoms: this.createForm.value.symptoms!
+    };
+    console.log(dto);
+    this.breakdownService.createBreakdown(dto).subscribe(
+      (response) => {
+      },
+      (error) => {
+        // This block will only execute if catchError is used
+        console.error('Error handler:', error);
+      }
+    );
   }
 
   // onSubmit() {
