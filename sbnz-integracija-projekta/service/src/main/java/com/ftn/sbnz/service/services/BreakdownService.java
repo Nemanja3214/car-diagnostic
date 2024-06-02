@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service.services;
 
 import com.ftn.sbnz.model.models.Breakdown;
+import com.ftn.sbnz.model.models.Car;
 import com.ftn.sbnz.model.models.Symptom;
 import com.ftn.sbnz.service.dtos.breakdown.BreakdownDTO;
 import com.ftn.sbnz.service.dtos.breakdown.CreateBreakdownDTO;
@@ -43,7 +44,8 @@ public class BreakdownService implements IBreakdownService {
             throw new NotFoundException();
         breakdown.setSymptoms(dto.getSymptoms().stream().map(Symptom::fromString).collect(Collectors.toList()));
 
-//        TODO add cars
+        Car car = carRepository.findById(dto.getCarId()).orElseThrow(NotFoundException::new);
+        breakdown.setCar(car);
 
         breakdownRepository.save(breakdown);
 
