@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ClientDTO {
+    private Integer id;
     private String name;
     private String lastName;
     private String phone;
@@ -15,6 +16,6 @@ public class ClientDTO {
     public static ClientDTO toDTO(Client client) {
         if(client == null)
             return null;
-        return new ClientDTO(client.getName(), client.getLastName(), client.getPhone());
+        return new ClientDTO(client.getId(), client.getName(), client.getLastName(), client.getPhone());
     }
 }

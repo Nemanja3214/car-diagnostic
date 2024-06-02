@@ -6,6 +6,8 @@ import {MatSelectModule} from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { BreakdownService, CreateBreakdown } from './../services/breakdown.service';
+import {Client, ClientService} from "../services/client.service"
+import {Car, CarService} from "../services/car.service"
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,26 +18,40 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [FormsModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, CommonModule, MatCardModule, MatSelectModule,
     HttpClientModule, JwtModule, MatButtonModule],
   templateUrl: './breakdown.component.html',
-  providers:[BreakdownService],
+  providers:[BreakdownService, ClientService, CarService],
   styleUrl: './breakdown.component.css'
 })
 export class BreakdownComponent implements OnInit{
-  private selectedIndexes: Array<number> = [];
-
+  availableCars: Car[] = [];
+  availableClients: Client[] = [];
 
   createForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     symptoms: new FormControl([], [Validators.required]),
+    car: new FormControl(null, [Validators.required]),
   });
 
 
-  constructor(private breakdownService: BreakdownService){
+
+
+  constructor(private breakdownService: BreakdownService, private clientService: ClientService, private carService: CarService){
   }
   ngOnInit(): void {
     this.breakdownService.getSymptoms() .subscribe(
       (response) => {
         // Handle the successful response
         this.availableItems = response
+      },
+      (error) => {
+        // This block will only execute if catchError is used
+        console.error('Error handler:', error);
+      }
+    );
+
+    this.clientService.getClients() .subscribe(
+      (response) => {
+        // Handle the successful response
+        this.availableClients = response
       },
       (error) => {
         // This block will only execute if catchError is used
@@ -58,6 +74,21 @@ export class BreakdownComponent implements OnInit{
     console.log(dto);
     this.breakdownService.createBreakdown(dto).subscribe(
       (response) => {
+      },
+      (error) => {
+        // This block will only execute if catchError is used
+        console.error('Error handler:', error);
+      }
+    );
+  }
+
+  onClientChange(event: any) {
+    // Update the selected option when the selection changes
+    let selectedOption = event.value;
+    this.carService.getByClient(event.value.id) .subscribe(
+      (response) => {
+        // Handle the successful response
+        this.availableCars = response
       },
       (error) => {
         // This block will only execute if catchError is used

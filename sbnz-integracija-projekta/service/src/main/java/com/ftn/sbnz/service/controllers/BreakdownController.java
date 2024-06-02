@@ -28,7 +28,7 @@ public class BreakdownController {
         return ResponseEntity.ok(breakdownDTOS);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_CLIENT')")
+    @PreAuthorize("hasAnyAuthority('ROLE_CLIENT')")
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody CreateBreakdownDTO dto) throws NotFoundException {
         breakdownService.create(dto);
