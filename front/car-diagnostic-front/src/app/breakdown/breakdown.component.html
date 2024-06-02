@@ -12,7 +12,7 @@
             <br>
             <mat-form-field>
                 <mat-label>Select client</mat-label>
-                <mat-select #availableClientSelect formControlName="client" (selectionChange)="onClientChange($event)">
+                <mat-select #availableClientSelect (selectionChange)="onClientChange($event)">
                     <mat-option *ngFor="let topping of availableClients" [value]="topping">
                     {{topping.name + " " + topping.lastName + " " + topping.phone}}
                     </mat-option>

@@ -7,10 +7,18 @@ import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { BreakdownService, CreateBreakdown } from './../services/breakdown.service';
 import {Client, ClientService} from "../services/client.service"
+import {SnackbarService} from "../services/snackbar.service"
 import {Car, CarService} from "../services/car.service"
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { MatButtonModule } from '@angular/material/button';
+import {
+  MatSnackBar,
+  MatSnackBarAction,
+  MatSnackBarActions,
+  MatSnackBarLabel,
+  MatSnackBarRef,
+} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-breakdown',
@@ -28,14 +36,17 @@ export class BreakdownComponent implements OnInit{
   createForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     symptoms: new FormControl([], [Validators.required]),
-    car: new FormControl(null, [Validators.required]),
+    car: new FormControl<Car | null>(null, [Validators.required]),
   });
 
 
 
 
-  constructor(private breakdownService: BreakdownService, private clientService: ClientService, private carService: CarService){
+  constructor(private breakdownService: BreakdownService, private clientService: ClientService, private carService: CarService,
+    private snackBarService: SnackbarService){
   }
+
+
   ngOnInit(): void {
     this.breakdownService.getSymptoms() .subscribe(
       (response) => {
@@ -69,11 +80,14 @@ export class BreakdownComponent implements OnInit{
     }
     const dto: CreateBreakdown = {
       name: this.createForm.value.name!,
-      symptoms: this.createForm.value.symptoms!
+      symptoms: this.createForm.value.symptoms!,
+      carId: this.createForm.value.car!.id
     };
     console.log(dto);
     this.breakdownService.createBreakdown(dto).subscribe(
       (response) => {
+        console.log(response);
+        this.snackBarService.showSnackbar("Success");
       },
       (error) => {
         // This block will only execute if catchError is used

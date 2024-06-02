@@ -25,6 +25,6 @@ createBreakdown(createBreakdown: CreateBreakdown): Observable<string> {
 
 export interface CreateBreakdown{
   name: string,
-  // carId: number,
+  carId: number,
   symptoms: string[]
 }
