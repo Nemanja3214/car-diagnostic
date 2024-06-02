@@ -9,6 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "cars")
 public class Car {
      @Id
      @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +39,7 @@ public class Car {
     protected int yearOfProduction;
     protected double km;
     protected boolean potentionalEngineIssue;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     protected Client owner;
     @ManyToOne
     protected CarModel model;

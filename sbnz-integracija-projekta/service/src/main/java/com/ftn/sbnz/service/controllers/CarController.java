@@ -41,4 +41,11 @@ public class CarController {
         CarDTO carDTO = carService.get(id);
         return ResponseEntity.ok(carDTO);
     }
+
+    @PermitAll
+    @GetMapping("/info/{id}")
+    public ResponseEntity<?> getCarInfo(@PathVariable Integer id) throws NotFoundException {
+        CarDTO carDTO = carService.get(id);
+        return ResponseEntity.ok(carDTO);
+    }
 }
