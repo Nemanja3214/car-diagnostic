@@ -3,13 +3,17 @@ package com.ftn.sbnz.service.services;
 
 import com.ftn.sbnz.service.dtos.car.CarDTO;
 import com.ftn.sbnz.service.dtos.car.CarRetDTO;
-import com.ftn.sbnz.service.dtos.car.ElectricCarDTO;
+import com.ftn.sbnz.service.dtos.car.CreateElectricCarDTO;
+import com.ftn.sbnz.service.dtos.car.CreateGasCarDTO;
 import com.ftn.sbnz.service.dtos.car.GasCarDTO;
 import com.ftn.sbnz.service.exceptions.NotFoundException;
 import com.ftn.sbnz.model.models.Car;
+import com.ftn.sbnz.model.models.CarModel;
 import com.ftn.sbnz.model.models.Client;
 import com.ftn.sbnz.model.models.ElectricCar;
 import com.ftn.sbnz.model.models.GasCar;
+import com.ftn.sbnz.model.models.battery.Battery;
+import com.ftn.sbnz.service.repositories.IBatteryRepository;
 import com.ftn.sbnz.service.repositories.ICarModelRepository;
 import com.ftn.sbnz.service.repositories.ICarRepository;
 import com.ftn.sbnz.service.repositories.IClientRepository;
@@ -32,25 +36,29 @@ public class CarService implements ICarService {
     @Autowired
     IClientRepository clientRepository;
 
+    @Autowired
+    IBatteryRepository batteryRepository;
+
     @Override
-    public void createElectric(ElectricCarDTO carDTO) throws NotFoundException {
+    public void createElectric(CreateElectricCarDTO carDTO) throws NotFoundException {
         ElectricCar car = new ElectricCar();
         car.setKm(car.getKm());
 
-//         if(carModelRepository.existsById(carDTO.getCarModelId()))
-//             throw new NotFoundException();
+        if(!carModelRepository.existsById(carDTO.getCarModelId()))
+            throw new NotFoundException();
 
-//         car.setModel(carModelRepository.findById(carDTO.getCarModelId()).get());
+        car.setModel(carModelRepository.findById(carDTO.getCarModelId()).get());
 
-//         car.setOwner(clientRepository.findById(carDTO.getOwnerId()).get());
+        car.setOwner(clientRepository.findById(carDTO.getOwnerId()).get());
 
-//         car.setPlate(carDTO.getPlate());
-//         car.setYearOfProduction(carDTO.getYearOfProduction());
-// //        TODO lamps
-//         car.setRepairments(new ArrayList<>());
+        car.setPlate(carDTO.getPlate());
+        car.setYearOfProduction(carDTO.getYearOfProduction());
 
-        carRepository.save(car);
+        Battery battery = new Battery(carDTO.getNominalMaxCharge(), carDTO.getNominalMaxVoltage());
+        battery = batteryRepository.save(battery);
 
+        car.setBattery(battery);
+        car = carRepository.save(car);
     }
 
     @Override
@@ -64,11 +72,11 @@ public class CarService implements ICarService {
     }
 
     @Override
-    public void createGas(GasCarDTO carDTO) throws NotFoundException {
+    public void createGas(CreateGasCarDTO carDTO) throws NotFoundException {
         GasCar car = new GasCar();
-        car.setKm(car.getKm());
+        car.setKm(carDTO.getKm());
 
-        if(carModelRepository.existsById(carDTO.getCarModelId()))
+        if(!carModelRepository.existsById(carDTO.getCarModelId()))
             throw new NotFoundException();
 
         car.setModel(carModelRepository.findById(carDTO.getCarModelId()).get());
@@ -77,7 +85,6 @@ public class CarService implements ICarService {
 
         car.setPlate(carDTO.getPlate());
         car.setYearOfProduction(carDTO.getYearOfProduction());
-//        TODO lamps
         car.setRepairments(new ArrayList<>());
 
         carRepository.save(car);
