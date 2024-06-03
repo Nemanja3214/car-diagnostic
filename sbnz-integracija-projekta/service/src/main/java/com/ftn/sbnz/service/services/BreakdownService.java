@@ -2,12 +2,15 @@ package com.ftn.sbnz.service.services;
 
 import com.ftn.sbnz.model.models.Breakdown;
 import com.ftn.sbnz.model.models.Car;
+import com.ftn.sbnz.model.models.Lamp;
+import com.ftn.sbnz.model.models.LampKind;
 import com.ftn.sbnz.model.models.Symptom;
 import com.ftn.sbnz.service.dtos.breakdown.BreakdownDTO;
 import com.ftn.sbnz.service.dtos.breakdown.CreateBreakdownDTO;
 import com.ftn.sbnz.service.exceptions.NotFoundException;
 import com.ftn.sbnz.service.repositories.IBreakdownRepository;
 import com.ftn.sbnz.service.repositories.ICarRepository;
+import com.ftn.sbnz.service.repositories.ILampRepository;
 import com.ftn.sbnz.service.services.interfaces.IBreakdownService;
 
 import org.kie.api.KieServices;
@@ -27,6 +30,9 @@ public class BreakdownService implements IBreakdownService {
 
     @Autowired
     private IBreakdownRepository breakdownRepository;
+
+    @Autowired
+    private ILampRepository lampRepository;
 
     // @Autowired
     // private KieContainer container;
@@ -54,7 +60,15 @@ public class BreakdownService implements IBreakdownService {
         Car car = carRepository.findById(dto.getCarId()).orElseThrow(NotFoundException::new);
         breakdown.setCar(car);
 
-        // TODO add lamps
+        if(dto.isEngineLamp()){
+            // System.out.println("ENGINE LAMP ON");
+            String lampStr = LampKind.ENGINE.getStringValue();
+            if(lampStr == null)
+                throw new NotFoundException();
+            Lamp lamp = new Lamp();
+            lamp.setLampKind(lampStr);
+            lampRepository.save(lamp);
+        }
 
         breakdown = breakdownRepository.save(breakdown);
 

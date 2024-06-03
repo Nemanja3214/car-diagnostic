@@ -37,6 +37,8 @@
             </mat-select>
             </mat-form-field>
             <br>
+            <mat-checkbox [formControl]="engineLamp" ngDefaultControl>Hide required marker</mat-checkbox>
+            <br>
             <button  mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">Submit</button>
         </mat-card-content>
         </mat-card>

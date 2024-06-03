@@ -12,6 +12,7 @@ import {Car, CarService} from "../services/car.service"
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { MatButtonModule } from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {
   MatSnackBar,
   MatSnackBarAction,
@@ -24,7 +25,7 @@ import {
   selector: 'app-breakdown',
   standalone: true,
   imports: [FormsModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, CommonModule, MatCardModule, MatSelectModule,
-    HttpClientModule, JwtModule, MatButtonModule],
+    HttpClientModule, JwtModule, MatButtonModule, MatCheckboxModule],
   templateUrl: './breakdown.component.html',
   providers:[BreakdownService, ClientService, CarService],
   styleUrl: './breakdown.component.css'
@@ -33,10 +34,14 @@ export class BreakdownComponent implements OnInit{
   availableCars: Car[] = [];
   availableClients: Client[] = [];
 
+  @Input()
+  engineLamp = new FormControl(false);
+
   createForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     symptoms: new FormControl([], [Validators.required]),
     car: new FormControl<Car | null>(null, [Validators.required]),
+    engineLamp: this.engineLamp
   });
 
 
@@ -45,6 +50,7 @@ export class BreakdownComponent implements OnInit{
   constructor(private breakdownService: BreakdownService, private clientService: ClientService, private carService: CarService,
     private snackBarService: SnackbarService){
   }
+
 
 
   ngOnInit(): void {
@@ -72,7 +78,7 @@ export class BreakdownComponent implements OnInit{
   }
 
 
-  availableItems: string[] = []; // Sample available items
+  availableItems: string[] = []; 
 
   createBreakdown(){
     if (!this.createForm.valid) {
@@ -81,7 +87,8 @@ export class BreakdownComponent implements OnInit{
     const dto: CreateBreakdown = {
       name: this.createForm.value.name!,
       symptoms: this.createForm.value.symptoms!,
-      carId: this.createForm.value.car!.id
+      carId: this.createForm.value.car!.id,
+      engineLamp: this.createForm.value.engineLamp!
     };
     console.log(dto);
     this.breakdownService.createBreakdown(dto).subscribe(
@@ -110,27 +117,4 @@ export class BreakdownComponent implements OnInit{
       }
     );
   }
-
-  // onSubmit() {
-  //   // this.submited = true;
-
-  //   const credentials = {
-  //     email: this.loginForm.value.email,
-  //     password: this.loginForm.value.password
-  //   };
-
-  //   this.breakdownService.create(credentials).subscribe({
-  //     next: (result) => {
-  //       this.processLogin(result);
-  //     },
-  //       error: (error) => {
-  //       console.log(error);
-  //       console.log("tu")
-  //       console.log(error.error)
-  //     //   this.snackBar.open("Bad credentials. Please try again!", "", {
-  //     //     duration: 2700, panelClass: ['snack-bar-server-error']
-  //     //  });
-  //     },
-  //   });
-  // }
 }

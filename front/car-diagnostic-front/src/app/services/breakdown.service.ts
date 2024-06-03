@@ -26,5 +26,6 @@ createBreakdown(createBreakdown: CreateBreakdown): Observable<string> {
 export interface CreateBreakdown{
   name: string,
   carId: number,
-  symptoms: string[]
+  symptoms: string[],
+  engineLamp: boolean
 }

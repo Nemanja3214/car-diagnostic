@@ -13,4 +13,5 @@ public class CreateBreakdownDTO {
     private String name;
     private Integer carId;
     List<String> symptoms;
+    private boolean engineLamp;
 }
