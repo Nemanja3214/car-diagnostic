@@ -3,7 +3,7 @@ package com.ftn.sbnz.model.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "models")
+@Table
 public class CarModel {
      @Id
      @GeneratedValue(strategy = GenerationType.IDENTITY)

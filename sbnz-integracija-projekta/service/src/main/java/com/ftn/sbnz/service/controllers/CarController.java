@@ -2,17 +2,20 @@ package com.ftn.sbnz.service.controllers;
 
 
 import com.ftn.sbnz.service.dtos.car.CarDTO;
+import com.ftn.sbnz.service.dtos.car.CarRetDTO;
 import com.ftn.sbnz.service.dtos.car.ElectricCarDTO;
 import com.ftn.sbnz.service.dtos.car.GasCarDTO;
 import com.ftn.sbnz.service.exceptions.NotFoundException;
 import com.ftn.sbnz.service.services.interfaces.ICarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
 
+//@CrossOrigin(origins = "http://localhost:4200")
 @CrossOrigin
 @RestController
 @RequestMapping("/api/car")
@@ -44,8 +47,8 @@ public class CarController {
 
     @PermitAll
     @GetMapping("/info/{id}")
-    public ResponseEntity<?> getCarInfo(@PathVariable Integer id) throws NotFoundException {
-        CarDTO carDTO = carService.get(id);
+    public ResponseEntity<CarRetDTO> getCarInfo(@PathVariable Integer id) throws NotFoundException {
+        CarRetDTO carDTO = carService.getRetCar(id);
         return ResponseEntity.ok(carDTO);
     }
 }

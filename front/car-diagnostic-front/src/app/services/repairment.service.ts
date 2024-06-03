@@ -24,4 +24,12 @@ export class RepairmentService {
         })
     });
     }
+
+    getRepairmentsByCarId(id: number): Observable<any> {
+      return this.http.get<any>(environment.serverOrigin + "/repairment/getAll/" + id, {
+          headers: new HttpHeaders({
+              'Content-Type': 'application/json',
+          })
+      });
+      }
 } 

@@ -3,7 +3,7 @@ package com.ftn.sbnz.model.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name="discounts")
+@Table
 public class Discount {
     private double percent;
      @Id

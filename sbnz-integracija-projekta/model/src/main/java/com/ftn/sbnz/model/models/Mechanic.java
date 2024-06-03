@@ -3,7 +3,7 @@ package com.ftn.sbnz.model.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "mechanics")
+@Table
 public class Mechanic {
 
     private String username;

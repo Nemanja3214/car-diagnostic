@@ -4,19 +4,33 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule, matSortAnimations } from '@angular/material/sort';
 import { RepairmentService } from '../services/repairment.service';
 import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptor } from '../interceptor/token-interceptor';
 
 @Component({
   selector: 'app-repairments',
   standalone: true,
   imports: [MatTableModule, MatPaginatorModule, MatSortModule, HttpClientModule],
-  providers:[RepairmentService],
+  providers:[RepairmentService, {
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptor,
+    multi: true
+  }, ],
   templateUrl: './repairments.component.html',
   styleUrl: './repairments.component.css'
 })
 export class RepairmentsComponent {
 
-  car: Car = {id: 1, owner: "Miki Mikic", plate:"NS234212", yearOfProduction:"2000", model: "AUDI A4", km: 322322};
-  allRepairments : RepairmentDTO[] = [{id: 1, action: "Promijenite akumulator.", "price": 200, discount: 10, mechanic: "Milan Maric"}];
+  car: Car = {
+    id: 0,
+    plate: '',
+    yearOfProduction: '',
+    model: '',
+    km: 0,
+    owner: ''
+  };
+  // allRepairments : RepairmentDTO[] = [{id: 1, action: "Promijenite akumulator.", "price": 200, discount: 10, mechanic: "Milan Maric"}];
+  allRepairments : RepairmentDTO[] = [];
   allRepairmentsDisplayedColumns = ['action', 'price', 'discount', 'mechanic']
 
   constructor(private repairmentService: RepairmentService){
@@ -25,6 +39,7 @@ export class RepairmentsComponent {
 
   ngOnInit(): void {
     this.getCarInfo(1);
+    this.getRepairments(1);
   }
 
   getCarInfo(id: number) {
@@ -32,6 +47,18 @@ export class RepairmentsComponent {
       next: (value) => {
         console.log("succ\n" + JSON.stringify(value));
         this.car = value;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+  }
+
+  getRepairments(id: number) {
+    this.repairmentService.getRepairmentsByCarId(id).subscribe({
+      next: (value) => {
+        console.log("succ\n" + JSON.stringify(value));
+        this.allRepairments = value;
       },
       error: (err) => {
         console.log(err);
