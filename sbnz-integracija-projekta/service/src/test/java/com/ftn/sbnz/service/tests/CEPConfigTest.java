@@ -312,18 +312,18 @@ public class CEPConfigTest {
 //     private KieSession createKieSessionFromDRL(String drl){
 //         KieHelper kieHelper = new KieHelper();
 //         kieHelper.addContent(drl, ResourceType.DRL);
-
+//
 //         Results results = kieHelper.verify();
-
+//
 //         if (results.hasMessages(Message.Level.WARNING, Message.Level.ERROR)){
 //             List<Message> messages = results.getMessages(Message.Level.WARNING, Message.Level.ERROR);
 //             for (Message message : messages) {
 //                 System.out.println("Error: "+message.getText());
 //             }
-
+//
 //             throw new IllegalStateException("Compilation errors were found. Check the logs.");
 //         }
-
+//
 //         return kieHelper.build().newKieSession();
 //     }
 
