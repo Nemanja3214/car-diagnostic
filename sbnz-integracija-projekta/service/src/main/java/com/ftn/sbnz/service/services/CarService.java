@@ -81,11 +81,12 @@ public class CarService implements ICarService {
     public List<CarDTO> getByClient(Integer clientId) throws NotFoundException {
         Client client = clientRepository.findById(clientId).orElseThrow(NotFoundException::new);
         return this.carRepository.findAllByOwner(client).stream().map(CarDTO::toDTO).toList();
+        // return null;
     }
 
     @Override
     public List<CarDTO> getAll() {
-        List<Car> cars = carRepository.findAll();
         return carRepository.findAll().stream().map(CarDTO::toDTO).toList();
+        // return null;
     }
 }

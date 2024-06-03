@@ -9,6 +9,10 @@ import com.ftn.sbnz.service.exceptions.NotFoundException;
 import com.ftn.sbnz.service.repositories.IBreakdownRepository;
 import com.ftn.sbnz.service.repositories.ICarRepository;
 import com.ftn.sbnz.service.services.interfaces.IBreakdownService;
+
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +27,9 @@ public class BreakdownService implements IBreakdownService {
 
     @Autowired
     private IBreakdownRepository breakdownRepository;
+
+    // @Autowired
+    // private KieContainer container;
 
     @Override
     public List<BreakdownDTO> getAll() {
@@ -47,7 +54,16 @@ public class BreakdownService implements IBreakdownService {
         Car car = carRepository.findById(dto.getCarId()).orElseThrow(NotFoundException::new);
         breakdown.setCar(car);
 
-        breakdownRepository.save(breakdown);
+        // TODO add lamps
+
+        breakdown = breakdownRepository.save(breakdown);
+
+        KieContainer container = KieServices.Factory.get().getKieClasspathContainer();
+        // System.out.println(container);
+        KieSession ksession = container.newKieSession("carKsession");
+        ksession.insert(breakdown);
+        int ruleCount = ksession.fireAllRules();
+        System.out.println(ruleCount);
 
     }
 

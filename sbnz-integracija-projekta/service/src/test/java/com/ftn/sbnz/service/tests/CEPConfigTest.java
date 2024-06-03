@@ -13,30 +13,30 @@ import org.kie.api.runtime.KieSession;
 public class CEPConfigTest {
 
 
-//     @Test
-//     public void test() {
-//         // KieServices ks = KieServices.Factory.get();
-//         // KieContainer kContainer = ks.getKieClasspathContainer(); 
-//         // KieSession ksession = kContainer.newKieSession("cepKsession");
-//         KieServices ks = KieServices.Factory.get();
-//         KieContainer kContainer = ks.getKieClasspathContainer();
-//         KieSession ksession = kContainer.newKieSession("carKsession");
-//         List<Symptom> s = new ArrayList<>();
-//         s.add(Symptom.WEIRD_NOISE_ACCELERATION);
-//         s.add(Symptom.WHITE_SMOKE);
-//         Breakdown b = new Breakdown("kvar1", s);
-//         GasCar car = new GasCar();
-//         car.setPlate("1");
-//         Lamp l = new Lamp("Engine", "lamp", "1");
-//         List<Lamp> lamps = new ArrayList<Lamp>();
-//         lamps.add(l);
-//         car.setLamps(lamps);
-//         car.setPotentionalEngineIssue(false);
-//          ksession.insert(car);
-//         b.setCar(car);
-//         ksession.insert(b);
-//         int ruleCount = ksession.fireAllRules();
-//     }
+    // @Test
+    // public void test() {
+    //     // KieServices ks = KieServices.Factory.get();
+    //     // KieContainer kContainer = ks.getKieClasspathContainer(); 
+    //     // KieSession ksession = kContainer.newKieSession("cepKsession");
+    //     KieServices ks = KieServices.Factory.get();
+    //     KieContainer kContainer = ks.getKieClasspathContainer();
+    //     KieSession ksession = kContainer.newKieSession("carKsession");
+    //     List<Symptom> s = new ArrayList<>();
+    //     s.add(Symptom.WEIRD_NOISE_ACCELERATION);
+    //     s.add(Symptom.WHITE_SMOKE);
+    //     Breakdown b = new Breakdown("kvar1", s);
+    //     GasCar car = new GasCar();
+    //     car.setPlate("1");
+    //     Lamp l = new Lamp("Engine", "lamp", "1");
+    //     List<Lamp> lamps = new ArrayList<Lamp>();
+    //     lamps.add(l);
+    //     car.setLamps(lamps);
+    //     car.setPotentionalEngineIssue(false);
+    //      ksession.insert(car);
+    //     b.setCar(car);
+    //     ksession.insert(b);
+    //     int ruleCount = ksession.fireAllRules();
+    // }
 
 //     //     @Test
 //     // public void tes1() {
@@ -57,24 +57,24 @@ public class CEPConfigTest {
 //     //     int ruleCount = ksession.fireAllRules();
 //     // }
 
-//     //      @Test
-//     // public void test3() {
-//     //     // KieServices ks = KieServices.Factory.get();
-//     //     // KieContainer kContainer = ks.getKieClasspathContainer(); 
-//     //     // KieSession ksession = kContainer.newKieSession("cepKsession");
-//     //     KieServices ks = KieServices.Factory.get();
-//     //     KieContainer kContainer = ks.getKieClasspathContainer();
-//     //     KieSession ksession = kContainer.newKieSession("carKsession");
-//     //     List<Symptom> s = new ArrayList<>();
-//     //     // s.add(Symptom.JERKING);
-//     //     // s.add(Symptom.FLAT_TIRE);
-//     //     Breakdown b = new Breakdown("kvar2", s);
-//     //     ElectricCar car = new ElectricCar();
-//     //      ksession.insert(car);
-//     //     b.setCar(car);
-//     //     ksession.insert(b);
-//     //     int ruleCount = ksession.fireAllRules();
-//     // }
+    //      @Test
+    // public void test3() {
+    //     // KieServices ks = KieServices.Factory.get();
+    //     // KieContainer kContainer = ks.getKieClasspathContainer(); 
+    //     // KieSession ksession = kContainer.newKieSession("cepKsession");
+    //     KieServices ks = KieServices.Factory.get();
+    //     KieContainer kContainer = ks.getKieClasspathContainer();
+    //     KieSession ksession = kContainer.newKieSession("carKsession");
+    //     List<Symptom> s = new ArrayList<>();
+    //     // s.add(Symptom.JERKING);
+    //     // s.add(Symptom.FLAT_TIRE);
+    //     Breakdown b = new Breakdown("kvar2", s);
+    //     ElectricCar car = new ElectricCar();
+    //      ksession.insert(car);
+    //     b.setCar(car);
+    //     ksession.insert(b);
+    //     int ruleCount = ksession.fireAllRules();
+    // }
 
 
         // @Test
