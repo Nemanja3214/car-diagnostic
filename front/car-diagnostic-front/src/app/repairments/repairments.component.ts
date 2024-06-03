@@ -6,6 +6,7 @@ import { RepairmentService } from '../services/repairment.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from '../interceptor/token-interceptor';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-repairments',
@@ -29,13 +30,20 @@ export class RepairmentsComponent {
     km: 0,
     owner: ''
   };
+  id: String = "1";
   // allRepairments : RepairmentDTO[] = [{id: 1, action: "Promijenite akumulator.", "price": 200, discount: 10, mechanic: "Milan Maric"}];
   allRepairments : RepairmentDTO[] = [];
   allRepairmentsDisplayedColumns = ['action', 'price', 'discount', 'mechanic']
 
-  constructor(private repairmentService: RepairmentService){
-    console.log(repairmentService);
-  }
+  constructor(private repairmentService: RepairmentService, private route: ActivatedRoute){
+    this.route.paramMap.subscribe(params => {
+      const idParam = params.get('id');
+      if (idParam !== null) {
+        this.id = idParam; // Only assign if idParam is not null
+      } else {
+        // Handle the case when idParam is null
+        this.id = '1'; // Assign a default value or handle accordingly
+      }    });  }
 
   ngOnInit(): void {
     this.getCarInfo(1);

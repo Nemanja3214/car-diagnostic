@@ -21,4 +21,6 @@ public interface ICarService {
     List<CarDTO> getByClient(Integer clientId) throws NotFoundException;
 
     List<CarDTO> getAll();
+
+    List<CarRetDTO> getAllRet();
 }

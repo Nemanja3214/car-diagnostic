@@ -11,6 +11,10 @@ export class CarService {
   getByClient(id: any) : Observable<Car[]> {
     return this.http.get<Car[]>(environment.serverOrigin + '/car/client/' + id);
   }
+
+  getAll() : Observable<any> {
+    return this.http.get<any>(environment.serverOrigin + '/car/all');
+  }
 }
 
 export interface Car{

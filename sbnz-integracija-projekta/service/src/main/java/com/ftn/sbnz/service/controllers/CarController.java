@@ -62,7 +62,13 @@ public class CarController {
         List<CarDTO> cars = carService.getAll();
         return ResponseEntity.ok(cars);
     }
-      
+
+    @PermitAll
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllRet() throws NotFoundException{
+        List<CarRetDTO> cars = carService.getAllRet();
+        return ResponseEntity.ok(cars);
+    }
     @PermitAll
     @GetMapping("/info/{id}")
     public ResponseEntity<CarRetDTO> getCarInfo(@PathVariable Integer id) throws NotFoundException {
