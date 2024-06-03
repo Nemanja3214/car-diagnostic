@@ -18,8 +18,10 @@ public class RepairmentDTO {
 
     public RepairmentDTO(Repairment rep) {
         this.id = rep.getId();
-        this.discount = rep.getDiscount().getPercent();
-        this.mechanic = rep.getMechanic().getUsername();
+        if(rep.getDiscount() != null)
+            this.discount = rep.getDiscount().getPercent();
+        if(rep.getMechanic() != null)
+            this.mechanic = rep.getMechanic().getUsername();
         this.action = rep.getAction();
         this.price = rep.getPrice();
     }

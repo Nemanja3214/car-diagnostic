@@ -10,4 +10,5 @@ public interface IRepairmentRepository extends JpaRepository<Repairment, Integer
 
      @Query("SELECT r FROM Repairment r WHERE r.breakdown.car.id = :carId")
      List<Repairment> findAllByCarId(Integer carId);
+
 }
