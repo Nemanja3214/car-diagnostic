@@ -1,0 +1,87 @@
+#mainContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    font-family: 'Times New Roman', Times, serif;
+    font-style: oblique;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+}
+
+#carInfo {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    height: fit-content;
+    margin-top: 5%;
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(25, 159, 189);
+    border: 1px white;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+}
+
+.value{
+    font-size: 1.3rem;
+    font-style: italic;
+}
+
+.key {
+    margin-right: 5px;
+    font-size: 1.7rem;
+    font-weight: 400;
+    color: aliceblue;
+}
+
+.info {
+    width: 40%;
+}
+
+.info-box {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+input{
+    background-color: rgb(25, 159, 189);
+    border: none;
+    font: 1.3rem;
+    font-style: italic;
+    margin: auto;
+    margin-bottom: 16px;
+}
+
+input::after{
+    border: none;
+}
+input:hover{
+    border: none;
+}
+
+.table-div{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(25, 159, 189);
+    border: 1px white;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+td{
+    align-items: center;
+}

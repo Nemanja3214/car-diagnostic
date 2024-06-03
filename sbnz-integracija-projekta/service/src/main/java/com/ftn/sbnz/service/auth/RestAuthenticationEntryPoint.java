@@ -1,5 +1,6 @@
 package com.ftn.sbnz.service.auth;
 
+import com.ftn.sbnz.service.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -33,6 +34,10 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         setResponseError(response, HttpServletResponse.SC_FORBIDDEN, String.format("Access Denies: %s", accessDeniedException.getMessage()));
     }
 
+    @ExceptionHandler (value = {NotFoundException.class})
+    public void commence(HttpServletRequest request, HttpServletResponse response, NotFoundException exception) throws IOException {
+        setResponseError(response, HttpServletResponse.SC_BAD_REQUEST, String.format("Not found: %s", exception.getMessage()));
+    }
 
 
 	@ExceptionHandler (value = {MethodArgumentNotValidException.class})
