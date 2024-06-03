@@ -12,4 +12,6 @@ public interface IBreakdownService {
     void create(CreateBreakdownDTO dto) throws NotFoundException;
 
     BreakdownDTO get(Integer id);
+
+    List<String> getSymptoms();
 }

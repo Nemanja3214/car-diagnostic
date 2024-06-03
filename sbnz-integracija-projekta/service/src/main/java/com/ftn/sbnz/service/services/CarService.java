@@ -6,6 +6,8 @@ import com.ftn.sbnz.service.dtos.car.CarRetDTO;
 import com.ftn.sbnz.service.dtos.car.ElectricCarDTO;
 import com.ftn.sbnz.service.dtos.car.GasCarDTO;
 import com.ftn.sbnz.service.exceptions.NotFoundException;
+import com.ftn.sbnz.model.models.Car;
+import com.ftn.sbnz.model.models.Client;
 import com.ftn.sbnz.model.models.ElectricCar;
 import com.ftn.sbnz.model.models.GasCar;
 import com.ftn.sbnz.service.repositories.ICarModelRepository;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -34,17 +37,17 @@ public class CarService implements ICarService {
         ElectricCar car = new ElectricCar();
         car.setKm(car.getKm());
 
-        if(carModelRepository.existsById(carDTO.getCarModelId()))
-            throw new NotFoundException();
+//         if(carModelRepository.existsById(carDTO.getCarModelId()))
+//             throw new NotFoundException();
 
-        car.setModel(carModelRepository.findById(carDTO.getCarModelId()).get());
+//         car.setModel(carModelRepository.findById(carDTO.getCarModelId()).get());
 
-        car.setOwner(clientRepository.findById(carDTO.getOwnerId()).get());
+//         car.setOwner(clientRepository.findById(carDTO.getOwnerId()).get());
 
-        car.setPlate(carDTO.getPlate());
-        car.setYearOfProduction(carDTO.getYearOfProduction());
-//        TODO lamps
-        car.setRepairments(new ArrayList<>());
+//         car.setPlate(carDTO.getPlate());
+//         car.setYearOfProduction(carDTO.getYearOfProduction());
+// //        TODO lamps
+//         car.setRepairments(new ArrayList<>());
 
         carRepository.save(car);
 
@@ -78,5 +81,18 @@ public class CarService implements ICarService {
         car.setRepairments(new ArrayList<>());
 
         carRepository.save(car);
+    }
+
+    @Override
+    public List<CarDTO> getByClient(Integer clientId) throws NotFoundException {
+        Client client = clientRepository.findById(clientId).orElseThrow(NotFoundException::new);
+        return this.carRepository.findAllByOwner(client).stream().map(CarDTO::toDTO).toList();
+        // return null;
+    }
+
+    @Override
+    public List<CarDTO> getAll() {
+        return carRepository.findAll().stream().map(CarDTO::toDTO).toList();
+        // return null;
     }
 }

@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import javax.annotation.security.PermitAll;
 
@@ -45,6 +48,21 @@ public class CarController {
         return ResponseEntity.ok(carDTO);
     }
 
+    // TODO change to mechanic
+    @PermitAll
+    @GetMapping("client/{id}")
+    public ResponseEntity<?> getByClient(@PathVariable Integer id) throws NotFoundException{
+        List<CarDTO> cars = carService.getByClient(id);
+        return ResponseEntity.ok(cars);
+    }
+
+    @PermitAll
+    @GetMapping
+    public ResponseEntity<?> getAll() throws NotFoundException{
+        List<CarDTO> cars = carService.getAll();
+        return ResponseEntity.ok(cars);
+    }
+      
     @PermitAll
     @GetMapping("/info/{id}")
     public ResponseEntity<CarRetDTO> getCarInfo(@PathVariable Integer id) throws NotFoundException {

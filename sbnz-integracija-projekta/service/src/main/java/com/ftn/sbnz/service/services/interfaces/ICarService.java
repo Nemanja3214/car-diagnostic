@@ -1,6 +1,8 @@
 package com.ftn.sbnz.service.services.interfaces;
 
 
+import java.util.List;
+
 import com.ftn.sbnz.service.dtos.car.CarDTO;
 import com.ftn.sbnz.service.dtos.car.CarRetDTO;
 import com.ftn.sbnz.service.dtos.car.ElectricCarDTO;
@@ -15,4 +17,8 @@ public interface ICarService {
     CarRetDTO getRetCar(Integer id);
 
     void createGas(GasCarDTO carDTO) throws NotFoundException;
+
+    List<CarDTO> getByClient(Integer clientId) throws NotFoundException;
+
+    List<CarDTO> getAll();
 }

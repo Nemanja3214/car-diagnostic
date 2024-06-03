@@ -12,5 +12,6 @@ import java.util.List;
 public class CreateBreakdownDTO {
     private String name;
     private Integer carId;
-    List<Symptom> symptoms;
+    List<String> symptoms;
+    private boolean engineLamp;
 }

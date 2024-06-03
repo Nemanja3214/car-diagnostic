@@ -1,4 +1,4 @@
-package com.ftn.sbnz.model.models;
+package ftn.sbnz.model.models;
 
 public enum Role {
     ANONYMOUS,

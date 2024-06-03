@@ -1,16 +1,24 @@
 package com.ftn.sbnz.service.services;
 
+
+import com.ftn.sbnz.model.models.Car;
 import com.ftn.sbnz.model.models.Mechanic;
-import com.ftn.sbnz.model.models.Role;
 import com.ftn.sbnz.service.repositories.IMechanicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.ftn.sbnz.service.exceptions.NotFoundException;
+import com.ftn.sbnz.service.repositories.IClientRepository;
 import com.ftn.sbnz.service.services.interfaces.IUserService;
+
+import ftn.sbnz.model.models.Role;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -32,4 +40,13 @@ public class UserService implements IUserService, UserDetailsService {
 		throw new UsernameNotFoundException("User not found with this username: " + username);
 
     }
+
+
+    @Override
+    public Mechanic getUserByToken() throws NotFoundException {
+        SecurityContext context = SecurityContextHolder.getContext();
+        User user = (User) context.getAuthentication().getPrincipal();
+        return allMechanics.findByUsername(user.getUsername()).orElseThrow(NotFoundException::new);
+    }
+
 }
