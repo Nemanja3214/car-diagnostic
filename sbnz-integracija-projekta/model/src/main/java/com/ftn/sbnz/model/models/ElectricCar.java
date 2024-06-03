@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.ftn.sbnz.model.models.battery.Battery;
+
 @Entity
 @Table
 public class ElectricCar extends Car{
@@ -20,6 +22,9 @@ public class ElectricCar extends Car{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @OneToOne
+    private Battery battery;
 
     public ElectricCar(Integer id, String plate, int yearOfProduction, double km, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments, boolean potentionalBatteryProblem, int percentageBattery, boolean faultCheck, List<FaultCodes> codes, Integer id1) {
         super(id, plate, yearOfProduction, km, potentionalEngineIssue, owner, model, lamps, repairments);
@@ -88,6 +93,14 @@ public class ElectricCar extends Car{
 
     public void setFaultCheck(boolean faultCheck) {
         this.faultCheck = faultCheck;
+    }
+
+    public Battery getBattery() {
+        return this.battery;
+    }
+
+    public void setBattery(Battery battery) {
+        this.battery = battery;
     }
 
 

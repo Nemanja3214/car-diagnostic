@@ -3,7 +3,8 @@ package com.ftn.sbnz.service.controllers;
 
 import com.ftn.sbnz.service.dtos.car.CarDTO;
 import com.ftn.sbnz.service.dtos.car.CarRetDTO;
-import com.ftn.sbnz.service.dtos.car.ElectricCarDTO;
+import com.ftn.sbnz.service.dtos.car.CreateElectricCarDTO;
+import com.ftn.sbnz.service.dtos.car.CreateGasCarDTO;
 import com.ftn.sbnz.service.dtos.car.GasCarDTO;
 import com.ftn.sbnz.service.exceptions.NotFoundException;
 import com.ftn.sbnz.service.services.interfaces.ICarService;
@@ -28,14 +29,14 @@ public class CarController {
 
     @PermitAll
     @PostMapping("/electric")
-    public ResponseEntity<?> createElectricCar(@RequestBody ElectricCarDTO carDTO) throws NotFoundException {
+    public ResponseEntity<?> createElectricCar(@RequestBody CreateElectricCarDTO carDTO) throws NotFoundException {
         carService.createElectric(carDTO);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
     @PermitAll
     @PostMapping("/gas")
-    public ResponseEntity<?> createGas(@RequestBody GasCarDTO carDTO) throws NotFoundException {
+    public ResponseEntity<?> createGas(@RequestBody CreateGasCarDTO carDTO) throws NotFoundException {
         carService.createGas(carDTO);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
