@@ -1,7 +1,9 @@
 package com.ftn.sbnz.service.controllers;
 
+import com.ftn.sbnz.model.models.Repairment;
 import com.ftn.sbnz.service.dtos.breakdown.BreakdownDTO;
 import com.ftn.sbnz.service.dtos.breakdown.CreateBreakdownDTO;
+import com.ftn.sbnz.service.dtos.repairment.RepairmentDTO;
 import com.ftn.sbnz.service.exceptions.NotFoundException;
 import com.ftn.sbnz.service.services.interfaces.IBreakdownService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +33,8 @@ public class BreakdownController {
     @PermitAll
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody CreateBreakdownDTO dto) throws NotFoundException {
-        breakdownService.create(dto);
-        return ResponseEntity.noContent().build();
+        List<RepairmentDTO> repairmentDTOs = breakdownService.create(dto);
+        return ResponseEntity.ok(repairmentDTOs);
     }
 
     @PermitAll

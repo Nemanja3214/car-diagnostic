@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { MatButtonModule } from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTableModule} from '@angular/material/table';
 import {
   MatSnackBar,
   MatSnackBarAction,
@@ -20,12 +21,13 @@ import {
   MatSnackBarLabel,
   MatSnackBarRef,
 } from '@angular/material/snack-bar';
+import { RepairmentDTO } from '../repairments/repairments.component';
 
 @Component({
   selector: 'app-breakdown',
   standalone: true,
   imports: [FormsModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, CommonModule, MatCardModule, MatSelectModule,
-    HttpClientModule, JwtModule, MatButtonModule, MatCheckboxModule],
+    HttpClientModule, JwtModule, MatButtonModule, MatCheckboxModule, MatTableModule],
   templateUrl: './breakdown.component.html',
   providers:[BreakdownService, ClientService, CarService],
   styleUrl: './breakdown.component.css'
@@ -44,7 +46,8 @@ export class BreakdownComponent implements OnInit{
     engineLamp: this.engineLamp
   });
 
-
+  displayedColumns: string[] = ['position', 'price', 'action'];
+  dataSource: RepairmentDTO[] = [];
 
 
   constructor(private breakdownService: BreakdownService, private clientService: ClientService, private carService: CarService,
@@ -95,6 +98,7 @@ export class BreakdownComponent implements OnInit{
       (response) => {
         console.log(response);
         this.snackBarService.showSnackbar("Success");
+        this.dataSource = response;
       },
       (error) => {
         // This block will only execute if catchError is used
