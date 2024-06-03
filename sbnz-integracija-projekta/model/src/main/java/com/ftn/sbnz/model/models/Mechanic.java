@@ -1,6 +1,8 @@
 package com.ftn.sbnz.model.models;
 import javax.persistence.*;
 
+import ftn.sbnz.model.models.Role;
+
 @Entity
 @Table
 public class Mechanic{

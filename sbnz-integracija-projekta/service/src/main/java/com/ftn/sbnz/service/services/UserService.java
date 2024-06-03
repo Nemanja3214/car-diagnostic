@@ -3,8 +3,6 @@ package com.ftn.sbnz.service.services;
 
 import com.ftn.sbnz.model.models.Car;
 import com.ftn.sbnz.model.models.Mechanic;
-import com.ftn.sbnz.model.models.Mechanic;
-import com.ftn.sbnz.model.models.Role;
 import com.ftn.sbnz.service.repositories.IMechanicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import com.ftn.sbnz.service.exceptions.NotFoundException;
 import com.ftn.sbnz.service.repositories.IClientRepository;
-import com.ftn.sbnz.service.repositories.IMechanicRepository;
 import com.ftn.sbnz.service.services.interfaces.IUserService;
 
 import ftn.sbnz.model.models.Role;

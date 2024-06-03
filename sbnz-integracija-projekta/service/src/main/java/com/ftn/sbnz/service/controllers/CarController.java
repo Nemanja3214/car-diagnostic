@@ -61,6 +61,7 @@ public class CarController {
     public ResponseEntity<?> getAll() throws NotFoundException{
         List<CarDTO> cars = carService.getAll();
         return ResponseEntity.ok(cars);
+    }
       
     @PermitAll
     @GetMapping("/info/{id}")
