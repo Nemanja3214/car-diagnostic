@@ -11,6 +11,23 @@ public class Mechanic{
      @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private Role role;
+
+    public Mechanic(String username, String password, Integer id, Role role) {
+        this.username = username;
+        this.password = password;
+        this.id = id;
+        this.role = role;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public Mechanic(String username, String password, Integer id) {
         this.username = username;
         this.password = password;

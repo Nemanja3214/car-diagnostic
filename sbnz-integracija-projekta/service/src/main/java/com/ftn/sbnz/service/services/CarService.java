@@ -2,6 +2,7 @@ package com.ftn.sbnz.service.services;
 
 
 import com.ftn.sbnz.service.dtos.car.CarDTO;
+import com.ftn.sbnz.service.dtos.car.CarRetDTO;
 import com.ftn.sbnz.service.dtos.car.ElectricCarDTO;
 import com.ftn.sbnz.service.dtos.car.GasCarDTO;
 import com.ftn.sbnz.service.exceptions.NotFoundException;
@@ -55,6 +56,11 @@ public class CarService implements ICarService {
     @Override
     public CarDTO get(Integer id) {
         return CarDTO.toDTO(carRepository.findById(id).get());
+    }
+
+    @Override
+    public CarRetDTO getRetCar(Integer id) {
+        return new CarRetDTO(carRepository.findById(id).get());
     }
 
     @Override
