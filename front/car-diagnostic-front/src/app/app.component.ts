@@ -4,13 +4,14 @@ import { LoginComponent } from "./login/login.component";
 import { BreakdownComponent } from "./breakdown/breakdown.component";
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { CreateClientComponent } from './create-client/create-client.component';
 
 @Component({
     selector: 'app-root',
     standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
-    imports: [RouterOutlet, LoginComponent, FormsModule, BreakdownComponent]
+    imports: [RouterOutlet, LoginComponent, FormsModule,CreateClientComponent, BreakdownComponent, ]
 })
 export class AppComponent {
   title = 'car-diagnostic-front';
