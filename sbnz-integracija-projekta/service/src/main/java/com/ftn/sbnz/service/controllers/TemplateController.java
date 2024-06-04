@@ -35,7 +35,7 @@ public class TemplateController {
     }
 
     @PermitAll
-    @GetMapping("/service/check")
+    @PostMapping("/service/check")
     public ResponseEntity<?> create(@RequestBody CheckServiceDTO dto) {
         List<RepairmentDTO> repairmentDTOs = templateService.checkForService(dto.getCarId(), dto.getKm());
         return ResponseEntity.ok(repairmentDTOs);

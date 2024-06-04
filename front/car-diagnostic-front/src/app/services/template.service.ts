@@ -25,4 +25,12 @@ import { environment } from "../environment/environment";
         });
       }
 
+      checkService(params: any) : Observable<any> {
+        return this.http.post<any>(environment.serverOrigin + '/template/service/check', params, {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+          })
+        });
+      }
+
   }
