@@ -8,12 +8,16 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { JwtModule } from '@auth0/angular-jwt';
 
+import { CreateClientComponent } from './create-client/create-client.component';
+import { CreateCarComponent } from './create-car/create-car.component';
 @Component({
     selector: 'app-root',
     standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
-    imports: [RouterOutlet, LoginComponent, FormsModule, BreakdownComponent, NavbarComponent, CommonModule, JwtModule]
+    imports: [RouterOutlet, LoginComponent, FormsModule,CreateClientComponent, CreateCarComponent, BreakdownComponent, NavbarComponent,
+        CommonModule, JwtModule
+    ]
 })
 export class AppComponent {
   title = 'car-diagnostic-front';

@@ -26,7 +26,6 @@ public class ClientController {
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
-    //TODO add exception handler
     @PermitAll
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable Integer id) throws NotFoundException {

@@ -17,6 +17,12 @@ public class Battery {
 
     private Integer currentBreakdownId;
 
+    public Battery(double nominalMaxCharge, double nominalMaxVoltage) {
+        this.state = BatteryStates.INITIAL;
+        this.nominalMaxCharge = nominalMaxCharge;
+        this.nominalMaxVoltage = nominalMaxVoltage;
+    }
+
 
     public Integer getCurrentBreakdownId() {
         return this.currentBreakdownId;

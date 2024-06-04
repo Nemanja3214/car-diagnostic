@@ -5,6 +5,8 @@ import { RepairmentsComponent } from './repairments/repairments.component';
 import { ModifyTemplateComponent } from './modify-template/modify-template.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 
+import { CreateClientComponent } from './create-client/create-client.component';
+import { CreateCarComponent } from './create-car/create-car.component';
 export const routes: Routes = [
     {path: "breakdown",
     component: BreakdownComponent
@@ -24,4 +26,12 @@ export const routes: Routes = [
     {path: "**",
         component: LandingPageComponent
     },
+
+    {path: "client-create",
+        component: CreateClientComponent
+    },
+
+    {path: "car-create",
+    component: CreateCarComponent
+},
 ];
