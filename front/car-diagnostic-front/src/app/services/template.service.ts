@@ -17,4 +17,12 @@ import { environment } from "../environment/environment";
       });
     }
 
+    sendDiscountParams(params: any) : Observable<string> {
+        return this.http.post<string>(environment.serverOrigin + '/template/create/discount', params, {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+          })
+        });
+      }
+
   }

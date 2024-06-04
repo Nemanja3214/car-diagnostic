@@ -1,5 +1,6 @@
 package com.ftn.sbnz.service.controllers;
 
+import com.ftn.sbnz.service.dtos.template.DiscountTempDTO;
 import com.ftn.sbnz.service.dtos.template.ServiceTempDTO;
 import com.ftn.sbnz.service.services.interfaces.ITemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,15 @@ public class TemplateController {
 
     @PermitAll
     @PostMapping("/create/service")
-    public ResponseEntity<?> create(@RequestBody ServiceTempDTO dto) {
+    public ResponseEntity<?> createService(@RequestBody ServiceTempDTO dto) {
         templateService.createServiceRulesFromTemplate(dto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PermitAll
+    @PostMapping("/create/discount")
+    public ResponseEntity<?> createDiscount(@RequestBody DiscountTempDTO dto) {
+        templateService.createDiscountRulesFromTemplate(dto);
         return ResponseEntity.noContent().build();
     }
 }

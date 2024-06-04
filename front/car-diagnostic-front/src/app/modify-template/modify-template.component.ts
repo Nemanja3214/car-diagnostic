@@ -60,4 +60,29 @@ export class ModifyTemplateComponent {
     }
   }
 
+  sendDiscountParams() {
+    // this.submited = true;
+
+    const params = {
+      lower: this.discountForm.value.lower,
+      upper: this.discountForm.value.upper,
+    };
+
+    if (this.discountForm.valid) {
+      this.templateService.sendDiscountParams(params).subscribe({
+        next: (result) => {
+          console.log(result);
+        },
+         error: (error) => {
+          console.log(error);
+          console.log("tu")
+          console.log(error.error)
+        //   this.snackBar.open("Bad credentials. Please try again!", "", {
+        //     duration: 2700, panelClass: ['snack-bar-server-error']
+        //  });
+        },
+      });
+    }
+  }
+
 }

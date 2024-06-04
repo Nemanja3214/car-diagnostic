@@ -31,7 +31,7 @@
     <div class="template" style="margin-bottom: 30px;">
         <div class="data">
             <h1>DISCOUNT PARAMS</h1>
-            <form [formGroup]="discountForm" style="display: flex; flex-direction: column;">
+            <form [formGroup]="discountForm" (ngSubmit)="sendDiscountParams()" style="display: flex; flex-direction: column;">
                 <mat-form-field>
                   <mat-label for="lower">10% Minimum</mat-label>
                   <input matInput formControlName="lower" id="lower" name="lower" type="number">

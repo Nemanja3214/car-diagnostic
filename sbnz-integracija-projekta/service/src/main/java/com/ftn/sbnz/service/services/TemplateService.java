@@ -1,32 +1,29 @@
 package com.ftn.sbnz.service.services;
 
-import com.ftn.sbnz.model.models.Repairment;
+import com.ftn.sbnz.service.dtos.template.DiscountTempDTO;
 import com.ftn.sbnz.service.dtos.template.ServiceTempDTO;
 import com.ftn.sbnz.service.services.interfaces.ITemplateService;
 import org.kie.api.builder.Message;
 import org.kie.api.builder.Results;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.rule.FactHandle;
 import org.kie.internal.utils.KieHelper;
 import org.springframework.stereotype.Service;
 import org.drools.template.DataProvider;
 import org.drools.template.ObjectDataCompiler;
 import org.drools.template.objects.ArrayDataProvider;
 
-import com.ftn.sbnz.model.models.Car;
-
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class TemplateService implements ITemplateService {
 
-    public KieSession serviceKsession;
+    public static KieSession serviceKsession;
+    public static KieSession discountKsession;
 
     @Override
     public void createServiceRulesFromTemplate(ServiceTempDTO dto) {
@@ -69,6 +66,28 @@ public class TemplateService implements ITemplateService {
 //        serviceKsession.update(fh, car);
 //        serviceKsession.fireAllRules();
 //        System.out.println(car.getRepairments().size());
+    }
+
+    @Override
+    public void createDiscountRulesFromTemplate(DiscountTempDTO dto) {
+        InputStream template = null;
+        try {
+            template = new FileInputStream("D:\\Fax\\SIIT-8.Sem\\SBZ\\car-diagnostic\\sbnz-integracija-projekta\\kjar\\src\\main\\resources\\rules\\templatable\\services.drt");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        DataProvider data = new ArrayDataProvider(new String[][]{
+                new String[]{dto.getLower(), dto.getUpper()}
+        });
+
+        ObjectDataCompiler converter = new ObjectDataCompiler();
+        String drl = converter.compile(data, template);
+
+        System.out.println(drl);
+
+        serviceKsession = createKieSessionFromDRL(drl);
     }
 
     private KieSession createKieSessionFromDRL(String drl){
