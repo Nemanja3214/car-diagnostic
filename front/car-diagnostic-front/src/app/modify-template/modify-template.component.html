@@ -5,7 +5,7 @@
         </div>
         <div class="data">
             <h1>SERVICE PARAMS</h1>
-            <form [formGroup]="serviceForm" style="display: flex; flex-direction: column;">
+            <form [formGroup]="serviceForm" (ngSubmit)="sendServiceParams()" style="display: flex; flex-direction: column;">
                 <mat-form-field>
                   <mat-label for="smallService">Small Service</mat-label>
                   <input matInput formControlName="smallService" id="smallService" name="smallService" type="number">
