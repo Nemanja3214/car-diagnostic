@@ -204,20 +204,20 @@ declare window LastSecondWindow
     CurrentReadingEvent(currentSOC != 0.0) over window:time(1s)
 end
 
-// rule "Charging Problem Detection"
-// agenda-group "checking battery"
-// timer (int: 60s)
-// when
-//     Battery($currentBreakdownId: currentBreakdownId, $batteryId: id)
-//     $breakdown: Breakdown(id == $currentBreakdownId)
-//     accumulate ( 
-//         CurrentReadingEvent( $soc: currentSOC != 0.0, batteryId == $batteryId ) from window LastMinuteWindow;
-//         $count: count(1);
-//         $count < 10)
-// then
-//     System.out.println("There is a charger problem, no sufficient readings");
-//      insert(new Repairment(null, 20.0, null, null, $breakdown, "There is a charger problem, no sufficient readings, check wiring and charger itself", 0));
-// end
+rule "Charging Problem Detection"
+agenda-group "checking battery"
+timer (int: 60s)
+when
+    Battery($currentBreakdownId: currentBreakdownId, $batteryId: id)
+    $breakdown: Breakdown(id == $currentBreakdownId)
+    accumulate ( 
+        CurrentReadingEvent( $soc: currentSOC != 0.0, batteryId == $batteryId ) from window LastMinuteWindow;
+        $count: count(1);
+        $count < 10)
+then
+    System.out.println("There is a charger problem, no sufficient readings");
+     insert(new Repairment(null, 20.0, null, null, $breakdown, "There is a charger problem, no sufficient readings, check wiring and charger itself", 0));
+end
 
 
 // rule "if SOC doesn't rise for at least 1% every minute, charging problem "

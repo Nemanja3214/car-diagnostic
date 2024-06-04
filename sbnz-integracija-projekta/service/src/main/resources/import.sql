@@ -6,7 +6,8 @@ INSERT INTO client(name, last_name, phone) VALUES('John', 'Doe', '123456789'),('
 
 INSERT INTO car(plate, year_of_production, km, potentional_engine_issue, owner_id, model_id) VALUES('ABC123', 2020, 15000, 0, 1, 1);
 
-INSERT INTO electric_car (id, potentional_battery_problem, percentage_battery, fault_check) VALUES(1, 0, 80, 0);
+INSERT INTO battery(nominal_max_charge, nominal_max_voltage) VALUES(50.0, 5.0);
+INSERT INTO electric_car (id, potentional_battery_problem, percentage_battery, fault_check, battery_id) VALUES(1, 0, 80, 0, 1);
 
 INSERT INTO breakdown(name, car_id) VALUES('KVAR 1', 1),('KVAR 2', 1);
 INSERT INTO discount(percent) VALUES(10),(15);

@@ -2,19 +2,27 @@ package com.ftn.sbnz.service.services;
 
 import com.ftn.sbnz.model.models.Breakdown;
 import com.ftn.sbnz.model.models.Car;
+import com.ftn.sbnz.model.models.ElectricCar;
 import com.ftn.sbnz.model.models.Lamp;
 import com.ftn.sbnz.model.models.LampKind;
 import com.ftn.sbnz.model.models.Repairment;
 import com.ftn.sbnz.model.models.Symptom;
+import com.ftn.sbnz.model.models.battery.Battery;
+import com.ftn.sbnz.model.models.battery.events.CurrentReadingEvent;
+import com.ftn.sbnz.model.models.battery.events.VoltageReadingEvent;
+import com.ftn.sbnz.service.dtos.breakdown.BatteryCheckDTO;
 import com.ftn.sbnz.service.dtos.breakdown.BreakdownDTO;
 import com.ftn.sbnz.service.dtos.breakdown.CreateBreakdownDTO;
+import com.ftn.sbnz.service.dtos.breakdown.CurrentReadingDTO;
 import com.ftn.sbnz.service.dtos.repairment.RepairmentDTO;
 import com.ftn.sbnz.service.exceptions.NotFoundException;
 import com.ftn.sbnz.service.repositories.IBreakdownRepository;
 import com.ftn.sbnz.service.repositories.ICarRepository;
+import com.ftn.sbnz.service.repositories.IElectricCarRepository;
 import com.ftn.sbnz.service.repositories.ILampRepository;
 import com.ftn.sbnz.service.repositories.IRepairmentRepository;
 import com.ftn.sbnz.service.services.interfaces.IBreakdownService;
+import com.ftn.util.Simulation;
 import com.ftn.util.Util;
 
 import org.kie.api.KieServices;
@@ -27,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,12 +52,17 @@ public class BreakdownService implements IBreakdownService {
     @Autowired
     private IRepairmentRepository repairmentRepository;
 
+    @Autowired
+    private IElectricCarRepository electricCarRepository;
+
     private KieSession kSession;
+    private KieSession cepKSession;
 
     public BreakdownService(){
         KieContainer container = KieServices.Factory.get().getKieClasspathContainer();
         // System.out.println(container);
         kSession = container.newKieSession("carKsession");
+        cepKSession = container.newKieSession("cepKsession");
     }
 
     // @Autowired
@@ -94,7 +108,7 @@ public class BreakdownService implements IBreakdownService {
         List<Repairment> previous = kSession.getObjects().stream()
         .filter(r -> r instanceof Repairment)
         .map(r -> (Repairment) r)
-        .toList();
+        .collect(Collectors.toList());
 
      
         kSession.insert(breakdown);
@@ -105,10 +119,10 @@ public class BreakdownService implements IBreakdownService {
          List<Repairment> after = kSession.getObjects().stream()
         .filter(r -> r instanceof Repairment)
         .map(r -> (Repairment) r)
-        .toList();
+        .collect(Collectors.toList());
 
         // after - previous
-        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).toList();
+        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
 
     }
 
@@ -126,5 +140,81 @@ public class BreakdownService implements IBreakdownService {
                 stringValues.add(symptom.getStringValue());
         }
         return stringValues;
+    }
+
+    @Override
+    public BatteryCheckDTO checkBattery(int carId) throws InterruptedException, NotFoundException {
+           Breakdown breakdown = new Breakdown();
+
+        //    TODO check if electrical
+        if(!carRepository.existsById(carId))
+            throw new NotFoundException();
+
+        breakdown.setName("Battery check");
+        ElectricCar car = electricCarRepository.findById(carId).orElseThrow(NotFoundException::new);
+        breakdown.setCar(car);
+
+        breakdown = breakdownRepository.save(breakdown);
+
+        // get newly created objects
+
+        List<Repairment> previous = cepKSession.getObjects().stream()
+        .filter(r -> r instanceof Repairment)
+        .map(r -> (Repairment) r)
+        .collect(Collectors.toList());
+
+        Battery battery = car.getBattery();
+        battery.setCurrentBreakdownId(breakdown.getId());
+        
+        double scale = 20.0;
+        cepKSession.setGlobal("tolerance", 0.01);
+
+        double currentValue = Simulation.calculateValue(scale);
+        double voltageValue = Simulation.calculateValue(scale);
+        System.out.println(currentValue);
+        System.out.println(voltageValue);
+        cepKSession.insert(battery);
+        cepKSession.insert(breakdown);
+        do{
+            CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L);
+            VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L);
+
+            cepKSession.insert(voltageEvent);
+            cepKSession.insert(currentReadingEvent);
+            cepKSession.getAgenda().getAgendaGroup("checking battery").setFocus();
+            cepKSession.fireAllRules();
+            cepKSession.halt();
+              System.out.println(currentValue);
+            //   System.out.println(voltageValue);
+            Thread.sleep(1000);
+            currentValue = Simulation.calculateValue(scale);
+            voltageValue = Simulation.calculateValue(scale);
+          
+        }while(!Simulation.finished);
+        Simulation.lastStart = null;
+        Simulation.finished = false;
+
+     
+        cepKSession.insert(breakdown);
+        int ruleCount = cepKSession.fireAllRules();
+        System.out.println(ruleCount);
+
+        cepKSession.halt();
+         List<Repairment> after = cepKSession.getObjects().stream()
+        .filter(r -> r instanceof Repairment)
+        .map(r -> (Repairment) r)
+         .collect(Collectors.toList());
+
+        BatteryCheckDTO dto = new BatteryCheckDTO();
+        dto.setRepairments(Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList()));
+        List<CurrentReadingDTO> readingDTOs = cepKSession.getObjects().stream()
+        .filter(a -> a instanceof CurrentReadingEvent)
+        .map(a -> CurrentReadingDTO.toDTO((CurrentReadingEvent)a))
+        .collect(Collectors.toList());
+        
+        dto.setCurrentReadings(readingDTOs);
+
+        // after - previous
+        return dto;
     }
 }

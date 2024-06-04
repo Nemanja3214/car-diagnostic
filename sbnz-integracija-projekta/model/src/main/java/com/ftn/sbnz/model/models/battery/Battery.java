@@ -33,6 +33,10 @@ public class Battery {
     }
 
 
+    public Battery() {
+         this.state = BatteryStates.INITIAL;
+    }
+
 
     public double getNominalMaxVoltage() {
         return this.nominalMaxVoltage;
