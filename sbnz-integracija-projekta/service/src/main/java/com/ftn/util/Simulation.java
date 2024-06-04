@@ -8,12 +8,12 @@ public class Simulation {
     public static boolean finished = false; 
 
     // Happy path 2 segments
-    public static double calculateValue(double scale) {
+    public static double calculateValue(double scale, LocalTime now) {
         if(lastStart == null)
-            lastStart = LocalTime.now();
+            lastStart = now;
         
         // Calculate the elapsed time in minutes
-        double minutes = Math.abs(ChronoUnit.SECONDS.between(LocalTime.now(), lastStart)) / 60.0;
+        double minutes = Math.abs(ChronoUnit.SECONDS.between(now, lastStart)) / 60.0;
         
         // Variables to hold the start and end times for each segment
         long startTimeFirstSegment = 0;
@@ -46,12 +46,12 @@ public class Simulation {
     }
 
      // Happy path 3 segments
-    public static double calculate3PartValue(double scale) {
+    public static double calculate3PartValue(double scale, LocalTime now) {
         if(lastStart == null)
-            lastStart = LocalTime.now();
+            lastStart = now;
         
         // Calculate the elapsed time in minutes
-        double minutes = Math.abs(ChronoUnit.SECONDS.between(LocalTime.now(), lastStart)) / 60.0;
+        double minutes = Math.abs(ChronoUnit.SECONDS.between(now, lastStart)) / 60.0;
         
         // Variables to hold the start and end times for each segment
         long startTimeFirstSegment = 0;

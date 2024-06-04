@@ -1,6 +1,8 @@
 package com.ftn.sbnz.service.tests;
 
 
+import java.time.LocalTime;
+
 import org.junit.Test;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
@@ -189,9 +191,10 @@ public class CEPConfigTest {
         
         double scale = 20.0;
         ksession.setGlobal("tolerance", 0.01);
+        LocalTime now = LocalTime.now();
 
-        double currentValue = Simulation.calculateValue(scale);
-         double voltageValue = Simulation.calculateValue(scale);
+        double currentValue = Simulation.calculateValue(scale, now);
+         double voltageValue = Simulation.calculateValue(scale, now);
           System.out.println(currentValue);
               System.out.println(voltageValue);
         ksession.insert(battery);
@@ -208,8 +211,8 @@ public class CEPConfigTest {
               System.out.println(currentValue);
             //   System.out.println(voltageValue);
             Thread.sleep(1000);
-            currentValue = Simulation.calculateValue(scale);
-            voltageValue = Simulation.calculateValue(scale);
+            currentValue = Simulation.calculateValue(scale, now);
+            voltageValue = Simulation.calculateValue(scale, now);
           
         }while(!Simulation.finished);
         Simulation.lastStart = null;

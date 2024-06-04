@@ -31,6 +31,7 @@ import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -168,9 +169,10 @@ public class BreakdownService implements IBreakdownService {
         
         double scale = 20.0;
         cepKSession.setGlobal("tolerance", 0.01);
+        LocalTime now = LocalTime.now();
 
-        double currentValue = Simulation.calculateValue(scale);
-        double voltageValue = Simulation.calculateValue(scale);
+        double currentValue = Simulation.calculateValue(scale, now);
+        double voltageValue = Simulation.calculateValue(scale, now);
         System.out.println(currentValue);
         System.out.println(voltageValue);
         cepKSession.insert(battery);
@@ -186,9 +188,10 @@ public class BreakdownService implements IBreakdownService {
             cepKSession.halt();
               System.out.println(currentValue);
             //   System.out.println(voltageValue);
-            Thread.sleep(1000);
-            currentValue = Simulation.calculateValue(scale);
-            voltageValue = Simulation.calculateValue(scale);
+            Thread.sleep(100);
+            now = now.plusSeconds(1);
+            currentValue = Simulation.calculateValue(scale, now);
+            voltageValue = Simulation.calculateValue(scale, now);
           
         }while(!Simulation.finished);
         Simulation.lastStart = null;

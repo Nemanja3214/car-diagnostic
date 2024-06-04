@@ -14,6 +14,7 @@ import { HttpClientModule } from '@angular/common/http';
 export class CheckBatteryComponent implements AfterViewInit{
 
   data: GraphData[] = [];
+  chartData: {x: number, y: number}[] = [];
 
   constructor(private breakdownService: BreakdownService) { }
 
@@ -30,7 +31,11 @@ export class CheckBatteryComponent implements AfterViewInit{
     this.breakdownService.checkBattery(1) .subscribe(
       (response) => {
         // Handle the successful response
-        this.data = response.currentReadings;
+        // this.data = response.currentReadings;
+        this.chartData = response.currentReadings.map(item => ({
+          x: new Date(item.startTime).getTime(),
+          y: item.value
+        }));
       },
       (error) => {
         // This block will only execute if catchError is used
@@ -40,7 +45,7 @@ export class CheckBatteryComponent implements AfterViewInit{
   }
 
   createGraph() {
-       this.data = [{
+    this.data = [{
       startTime: "2024-06-04T22:46:04.496+00:00",
       value: 0.0,
       batteryId: 1,
@@ -48,7 +53,7 @@ export class CheckBatteryComponent implements AfterViewInit{
       currentCharge: -1.0235729166666916
     }];
 
-    const chartData = this.data.map(item => ({
+    this.chartData = this.data.map(item => ({
       x: new Date(item.startTime).getTime(),
       y: item.value
     }));
@@ -60,7 +65,7 @@ export class CheckBatteryComponent implements AfterViewInit{
       data: {
         datasets: [{
           label: 'Value',
-          data: chartData,
+          data: this.chartData,
           borderColor: 'rgb(75, 192, 192)',
           tension: 0.1
         }]
