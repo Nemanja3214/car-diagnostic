@@ -25,6 +25,8 @@ when
     eval($km % Double.parseDouble("@{smallService}") == 0)
 then
     System.out.println("SMALL SERVICE");
+    insert(new Repairment(null, 100, null, null, null, "Potrebno je uraditi mali servis."));
+
     $r.add(new Repairment(null, 100, null, null, null, "Potrebno je uraditi mali servis."));
 end
 
@@ -35,6 +37,7 @@ when
     eval($km % Double.parseDouble("@{bigService}") == 0)
 then
     System.out.println("BIG SERVICE");
+    insert(new Repairment(null, 100, null, null, null, "Potrebno je uraditi veliki servis."));
     $r.add(new Repairment(null, 100, null, null, null, "Potrebno je uraditi veliki servis."));
 end
 
@@ -45,6 +48,7 @@ when
     eval($km % Double.parseDouble("@{tires}") == 0)
 then
     System.out.println("CHECK TIRES");
+    insert(new Repairment(null, 100, null, null, null, "Potrebno je zamijeniti gume."));
     $r.add(new Repairment(null, 100, null, null, null, "Potrebno je zamijeniti gume."));
 end
 
@@ -55,6 +59,7 @@ when
     eval($km % Double.parseDouble("@{brakes}") == 0)
 then
     System.out.println("CHECK BRAKES");
+    insert(new Repairment(null, 100, null, null, null, "Potrebno je provjeriti kocioni sistem."));
     $r.add(new Repairment(null, 100, null, null, null, "Potrebno je provjeriti kocioni sistem."));
 end
 

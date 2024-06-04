@@ -1,13 +1,19 @@
 package com.ftn.sbnz.service.services;
 
+import com.ftn.sbnz.model.models.Car;
+import com.ftn.sbnz.model.models.Repairment;
+import com.ftn.sbnz.service.dtos.repairment.RepairmentDTO;
 import com.ftn.sbnz.service.dtos.template.DiscountTempDTO;
 import com.ftn.sbnz.service.dtos.template.ServiceTempDTO;
+import com.ftn.sbnz.service.repositories.ICarRepository;
 import com.ftn.sbnz.service.services.interfaces.ITemplateService;
+import com.ftn.util.Util;
 import org.kie.api.builder.Message;
 import org.kie.api.builder.Results;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.utils.KieHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.drools.template.DataProvider;
 import org.drools.template.ObjectDataCompiler;
@@ -22,8 +28,11 @@ import java.util.List;
 @Service
 public class TemplateService implements ITemplateService {
 
-    public static KieSession serviceKsession;
-    public static KieSession discountKsession;
+    public KieSession serviceKsession;
+    public KieSession discountKsession;
+
+    @Autowired
+    ICarRepository allCars;
 
     @Override
     public void createServiceRulesFromTemplate(ServiceTempDTO dto) {
@@ -88,6 +97,35 @@ public class TemplateService implements ITemplateService {
         System.out.println(drl);
 
         serviceKsession = createKieSessionFromDRL(drl);
+    }
+
+    @Override
+    public List<RepairmentDTO> checkForService(Integer carId, double km) {
+        Car car = allCars.findById(carId).get();
+        car.setKm(km);
+
+        if (this.serviceKsession == null) {
+            this.createServiceRulesFromTemplate(new ServiceTempDTO("15000", "90000",
+                    "40000", "18000"));
+        }
+
+        List<Repairment> previous = this.serviceKsession.getObjects().stream()
+        .filter(r -> r instanceof Repairment)
+        .map(r -> (Repairment) r)
+        .toList();
+
+        this.serviceKsession.insert(car);
+        int ruleCount = this.serviceKsession.fireAllRules();
+        System.out.println(ruleCount);
+
+        this.serviceKsession.halt();
+         List<Repairment> after = this.serviceKsession.getObjects().stream()
+        .filter(r -> r instanceof Repairment)
+        .map(r -> (Repairment) r)
+        .toList();
+
+        // after - previous
+        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).toList();
     }
 
     private KieSession createKieSessionFromDRL(String drl){
