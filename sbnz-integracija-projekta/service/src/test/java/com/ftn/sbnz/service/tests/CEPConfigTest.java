@@ -6,6 +6,13 @@ import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
+import com.ftn.sbnz.model.models.Breakdown;
+import com.ftn.sbnz.model.models.battery.Battery;
+import com.ftn.sbnz.model.models.battery.BatteryStates;
+import com.ftn.sbnz.model.models.battery.events.CurrentReadingEvent;
+import com.ftn.sbnz.model.models.battery.events.VoltageReadingEvent;
+import com.ftn.util.Simulation;
+
 // import com.ftn.sbnz.model.models.battery.events.CurrentReadingEvent;
 // import com.ftn.sbnz.model.models.battery.events.VoltageReadingEvent;
 
@@ -125,42 +132,178 @@ public class CEPConfigTest {
 
 //     // }
 
-//     // multiple current measurements
+//     // low number of readings
     //     @Test
     // public void testCEP() throws InterruptedException {
     //     KieServices ks = KieServices.Factory.get();
     //     KieContainer kContainer = ks.getKieClasspathContainer(); 
     //     KieSession ksession = kContainer.newKieSession("cepKsession");
-      
-    //     VoltageReadingEvent voltageEvent = new VoltageReadingEvent(4.4, 1L);
-    //     CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(1.1, 1L, 5.0);
-     
-    //     ksession.insert(voltageEvent);
-    //       ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
-    //     ksession.fireAllRules();
+    //     Battery battery = new Battery(5, 5);
+    //     battery.setId(1L);
 
-    //     ksession.insert(currentReadingEvent);
-    //     // System.out.println("FIRST ONE TIME: " + currentReadingEvent.getStartTime().getTime());
-    //       ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
-    //     ksession.fireAllRules();
+    //     Breakdown b = new Breakdown();
+    //     b.setId(1);
+    //     battery.setCurrentBreakdownId(b.getId());
 
-    //        Thread.sleep(3000);
-    //           CurrentReadingEvent currentReadingEvent2 = new CurrentReadingEvent(1.1, 1L, 5.0);
-    //      ksession.insert(currentReadingEvent2);
-    //     //  System.out.println("SECOND ONE TIME: " + currentReadingEvent2.getStartTime().getTime());
-    //       ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
-    //      ksession.fireAllRules();
+    //     double currentValue = Simulation.calculateValue(20);
+    //      double voltageValue = Simulation.calculateValue(20);
+    //       System.out.println(currentValue);
+    //           System.out.println(voltageValue);
+    //     ksession.insert(battery);
+    //     ksession.insert(b);
+    //     while(currentValue > 0.0){
+    //         CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, 5.0);
+    //         VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L);
 
-    //      Thread.sleep(1000);
-    //                CurrentReadingEvent currentReadingEvent3 = new CurrentReadingEvent(1.1, 1L, 5.0);
-    //     //  System.out.println("THIRD ONE TIME: " + currentReadingEvent3.getStartTime().getTime());
-    //       ksession.insert(currentReadingEvent3);
+    //         ksession.insert(voltageEvent);
+    //         ksession.insert(currentReadingEvent);
     //         ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
-    //      ksession.fireAllRules();
-    //      ksession.getAgenda().clear();
+    //         ksession.fireAllRules();
+    //         ksession.halt();
+    //           System.out.println(currentValue);
+    //           System.out.println(voltageValue);
+    //         Thread.sleep(30* 1000);
+    //         currentValue = Simulation.calculateValue(20);
+    //         voltageValue = Simulation.calculateValue(20);
+          
+    //     }
+    //     Simulation.lastStart = null;
 
     // }
 
+    // //    happy path
+    //     @Test
+    // public void testCEP() throws InterruptedException {
+    //     KieServices ks = KieServices.Factory.get();
+    //     KieContainer kContainer = ks.getKieClasspathContainer(); 
+    //     KieSession ksession = kContainer.newKieSession("cepKsession");
+    //     Battery battery = new Battery(5, 5);
+
+    //     battery.setState(BatteryStates.INITIAL);
+    //     battery.setId(1L);
+
+    //     Breakdown b = new Breakdown();
+    //     b.setId(1);
+    //     battery.setCurrentBreakdownId(b.getId());
+
+        
+    //     double scale = 20.0;
+
+    //     double currentValue = Simulation.calculateValue(scale);
+    //      double voltageValue = Simulation.calculateValue(scale);
+    //       System.out.println(currentValue);
+    //           System.out.println(voltageValue);
+    //     ksession.insert(battery);
+    //     ksession.insert(b);
+    //     do{
+    //         CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, 5.0);
+    //         VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L);
+
+    //         ksession.insert(voltageEvent);
+    //         ksession.insert(currentReadingEvent);
+    //         ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
+    //         ksession.fireAllRules();
+    //         ksession.halt();
+    //           System.out.println(currentValue);
+    //         //   System.out.println(voltageValue);
+    //         Thread.sleep(3000);
+    //         currentValue = Simulation.calculateValue(scale);
+    //         voltageValue = Simulation.calculateValue(scale);
+          
+    //     }while(!Simulation.finished);
+    //     Simulation.lastStart = null;
+    //     Simulation.finished = false;
+
+    // }
+
+    //   //    lower voltage
+    //     @Test
+    // public void testCEP() throws InterruptedException {
+    //     KieServices ks = KieServices.Factory.get();
+    //     KieContainer kContainer = ks.getKieClasspathContainer(); 
+    //     KieSession ksession = kContainer.newKieSession("cepKsession");
+    //     Battery battery = new Battery(5, 5);
+
+    //     battery.setState(BatteryStates.INITIAL);
+    //     battery.setId(1L);
+
+    //     Breakdown b = new Breakdown();
+    //     b.setId(1);
+    //     battery.setCurrentBreakdownId(b.getId());
+
+        
+    //     double scale = 40.0;
+
+    //     double currentValue = Simulation.calculateValue(scale);
+    //      double voltageValue = Simulation.calculateValue(scale);
+    //       System.out.println(currentValue);
+    //           System.out.println(voltageValue);
+    //     ksession.insert(battery);
+    //     ksession.insert(b);
+    //     do{
+    //         CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, 5.0);
+    //         VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L);
+
+    //         ksession.insert(voltageEvent);
+    //         ksession.insert(currentReadingEvent);
+    //         ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
+    //         ksession.fireAllRules();
+    //         ksession.halt();
+    //           System.out.println(currentValue);
+    //         //   System.out.println(voltageValue);
+    //         Thread.sleep(3000);
+    //         currentValue = Simulation.calculateValue(scale);
+    //         voltageValue = Simulation.calculateValue(scale);
+          
+    //     }while(!Simulation.finished);
+    //     Simulation.lastStart = null;
+    //     Simulation.finished = false;
+    // }
+
+     //    
+        @Test
+    public void testCEP() throws InterruptedException {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kContainer = ks.getKieClasspathContainer(); 
+        KieSession ksession = kContainer.newKieSession("cepKsession");
+        Battery battery = new Battery(5, 5);
+
+        battery.setState(BatteryStates.INITIAL);
+        battery.setId(1L);
+
+        Breakdown b = new Breakdown();
+        b.setId(1);
+        battery.setCurrentBreakdownId(b.getId());
+
+        
+        double scale = 20.0;
+        ksession.setGlobal("tolerance", 0.01);
+
+        double currentValue = Simulation.calculate3PartValue(scale);
+         double voltageValue = Simulation.calculate3PartValue(scale);
+          System.out.println(currentValue);
+              System.out.println(voltageValue);
+        ksession.insert(battery);
+        ksession.insert(b);
+        do{
+            CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, 5.0);
+            VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L);
+
+            ksession.insert(voltageEvent);
+            ksession.insert(currentReadingEvent);
+            ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
+            ksession.fireAllRules();
+            ksession.halt();
+              System.out.println(currentValue);
+            //   System.out.println(voltageValue);
+            Thread.sleep(1000);
+            currentValue = Simulation.calculate3PartValue(scale);
+            voltageValue = Simulation.calculate3PartValue(scale);
+          
+        }while(!Simulation.finished);
+        Simulation.lastStart = null;
+        Simulation.finished = false;
+    }
 
 //     @Test
 //     public void testBackward() {

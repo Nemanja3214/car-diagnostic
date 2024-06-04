@@ -41,6 +41,7 @@ public class CurrentReadingEvent {
         // Calculate the new SOC
         currentSOC = currentSOC - (consumedCharge / maxCharge);
         currentSOC = Math.max(0, Math.min(1, currentSOC));
+        System.out.println(currentSOC);
     }
 
 public double getCurrentSOC() {
