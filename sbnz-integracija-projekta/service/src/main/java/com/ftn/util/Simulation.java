@@ -7,7 +7,7 @@ public class Simulation {
     public static LocalTime lastStart;
     public static boolean finished = false; 
 
-    // happy path
+    // Happy path 2 segments
     public static double calculateValue(double scale) {
         if(lastStart == null)
             lastStart = LocalTime.now();
@@ -26,18 +26,6 @@ public class Simulation {
         double endValueFirstSegment = 0;
         double startValueSecondSegment = 100;
         double endValueSecondSegment = 0;
-
-        // // Variables to hold the start and end times for each segment
-        // long startTimeFirstSegment = 0;
-        // long endTimeFirstSegment = 30;
-        // long startTimeSecondSegment = 30;
-        // long endTimeSecondSegment = 90;
-        
-        // // Variables to hold the start and end values for each segment
-        // double startValueFirstSegment = 50;
-        // double endValueFirstSegment = 100;
-        // double startValueSecondSegment = 100;
-        // double endValueSecondSegment = 0;
         
         double value;
         
@@ -57,7 +45,7 @@ public class Simulation {
         return value / scale;
     }
 
-        // happy path
+     // Happy path 3 segments
     public static double calculate3PartValue(double scale) {
         if(lastStart == null)
             lastStart = LocalTime.now();

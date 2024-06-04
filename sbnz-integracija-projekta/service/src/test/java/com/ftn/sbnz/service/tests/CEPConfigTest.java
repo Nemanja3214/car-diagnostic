@@ -152,7 +152,7 @@ public class CEPConfigTest {
     //     ksession.insert(battery);
     //     ksession.insert(b);
     //     while(currentValue > 0.0){
-    //         CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, 5.0);
+    //         CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L);
     //         VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L);
 
     //         ksession.insert(voltageEvent);
@@ -172,49 +172,50 @@ public class CEPConfigTest {
     // }
 
     // //    happy path
-    //     @Test
-    // public void testCEP() throws InterruptedException {
-    //     KieServices ks = KieServices.Factory.get();
-    //     KieContainer kContainer = ks.getKieClasspathContainer(); 
-    //     KieSession ksession = kContainer.newKieSession("cepKsession");
-    //     Battery battery = new Battery(5, 5);
+        @Test
+    public void testCEP() throws InterruptedException {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kContainer = ks.getKieClasspathContainer(); 
+        KieSession ksession = kContainer.newKieSession("cepKsession");
+        Battery battery = new Battery(5, 5);
 
-    //     battery.setState(BatteryStates.INITIAL);
-    //     battery.setId(1L);
+        battery.setState(BatteryStates.INITIAL);
+        battery.setId(1L);
 
-    //     Breakdown b = new Breakdown();
-    //     b.setId(1);
-    //     battery.setCurrentBreakdownId(b.getId());
+        Breakdown b = new Breakdown();
+        b.setId(1);
+        battery.setCurrentBreakdownId(b.getId());
 
         
-    //     double scale = 20.0;
+        double scale = 20.0;
+        ksession.setGlobal("tolerance", 0.01);
 
-    //     double currentValue = Simulation.calculateValue(scale);
-    //      double voltageValue = Simulation.calculateValue(scale);
-    //       System.out.println(currentValue);
-    //           System.out.println(voltageValue);
-    //     ksession.insert(battery);
-    //     ksession.insert(b);
-    //     do{
-    //         CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, 5.0);
-    //         VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L);
+        double currentValue = Simulation.calculateValue(scale);
+         double voltageValue = Simulation.calculateValue(scale);
+          System.out.println(currentValue);
+              System.out.println(voltageValue);
+        ksession.insert(battery);
+        ksession.insert(b);
+        do{
+            CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L);
+            VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L);
 
-    //         ksession.insert(voltageEvent);
-    //         ksession.insert(currentReadingEvent);
-    //         ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
-    //         ksession.fireAllRules();
-    //         ksession.halt();
-    //           System.out.println(currentValue);
-    //         //   System.out.println(voltageValue);
-    //         Thread.sleep(3000);
-    //         currentValue = Simulation.calculateValue(scale);
-    //         voltageValue = Simulation.calculateValue(scale);
+            ksession.insert(voltageEvent);
+            ksession.insert(currentReadingEvent);
+            ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
+            ksession.fireAllRules();
+            ksession.halt();
+              System.out.println(currentValue);
+            //   System.out.println(voltageValue);
+            Thread.sleep(1000);
+            currentValue = Simulation.calculateValue(scale);
+            voltageValue = Simulation.calculateValue(scale);
           
-    //     }while(!Simulation.finished);
-    //     Simulation.lastStart = null;
-    //     Simulation.finished = false;
+        }while(!Simulation.finished);
+        Simulation.lastStart = null;
+        Simulation.finished = false;
 
-    // }
+    }
 
     //   //    lower voltage
     //     @Test
@@ -241,7 +242,7 @@ public class CEPConfigTest {
     //     ksession.insert(battery);
     //     ksession.insert(b);
     //     do{
-    //         CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, 5.0);
+    //         CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L);
     //         VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L);
 
     //         ksession.insert(voltageEvent);
@@ -261,49 +262,49 @@ public class CEPConfigTest {
     // }
 
      //    
-        @Test
-    public void testCEP() throws InterruptedException {
-        KieServices ks = KieServices.Factory.get();
-        KieContainer kContainer = ks.getKieClasspathContainer(); 
-        KieSession ksession = kContainer.newKieSession("cepKsession");
-        Battery battery = new Battery(5, 5);
+    //     @Test
+    // public void testCEP() throws InterruptedException {
+    //     KieServices ks = KieServices.Factory.get();
+    //     KieContainer kContainer = ks.getKieClasspathContainer(); 
+    //     KieSession ksession = kContainer.newKieSession("cepKsession");
+    //     Battery battery = new Battery(5, 5);
 
-        battery.setState(BatteryStates.INITIAL);
-        battery.setId(1L);
+    //     battery.setState(BatteryStates.INITIAL);
+    //     battery.setId(1L);
 
-        Breakdown b = new Breakdown();
-        b.setId(1);
-        battery.setCurrentBreakdownId(b.getId());
+    //     Breakdown b = new Breakdown();
+    //     b.setId(1);
+    //     battery.setCurrentBreakdownId(b.getId());
 
         
-        double scale = 20.0;
-        ksession.setGlobal("tolerance", 0.01);
+    //     double scale = 20.0;
+    //     ksession.setGlobal("tolerance", 0.01);
 
-        double currentValue = Simulation.calculate3PartValue(scale);
-         double voltageValue = Simulation.calculate3PartValue(scale);
-          System.out.println(currentValue);
-              System.out.println(voltageValue);
-        ksession.insert(battery);
-        ksession.insert(b);
-        do{
-            CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, 5.0);
-            VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L);
+    //     double currentValue = Simulation.calculate3PartValue(scale);
+    //      double voltageValue = Simulation.calculate3PartValue(scale);
+    //       System.out.println(currentValue);
+    //           System.out.println(voltageValue);
+    //     ksession.insert(battery);
+    //     ksession.insert(b);
+    //     do{
+    //         CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L);
+    //         VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L);
 
-            ksession.insert(voltageEvent);
-            ksession.insert(currentReadingEvent);
-            ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
-            ksession.fireAllRules();
-            ksession.halt();
-              System.out.println(currentValue);
-            //   System.out.println(voltageValue);
-            Thread.sleep(1000);
-            currentValue = Simulation.calculate3PartValue(scale);
-            voltageValue = Simulation.calculate3PartValue(scale);
+    //         ksession.insert(voltageEvent);
+    //         ksession.insert(currentReadingEvent);
+    //         ksession.getAgenda().getAgendaGroup("checking battery").setFocus();
+    //         ksession.fireAllRules();
+    //         ksession.halt();
+    //           System.out.println(currentValue);
+    //         //   System.out.println(voltageValue);
+    //         Thread.sleep(1000);
+    //         currentValue = Simulation.calculate3PartValue(scale);
+    //         voltageValue = Simulation.calculate3PartValue(scale);
           
-        }while(!Simulation.finished);
-        Simulation.lastStart = null;
-        Simulation.finished = false;
-    }
+    //     }while(!Simulation.finished);
+    //     Simulation.lastStart = null;
+    //     Simulation.finished = false;
+    // }
 
 //     @Test
 //     public void testBackward() {

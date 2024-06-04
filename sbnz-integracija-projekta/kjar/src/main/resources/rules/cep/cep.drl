@@ -101,6 +101,7 @@ agenda-group "checking battery"
         if(Math.abs($currentReading.getValue() - $battery.getNominalMaxCharge()) > 0.3)
             System.out.println("Battery maximum charge is lower and it's at: " + (Math.abs($currentReading.getValue() / $battery.getNominalMaxCharge()))* 100);
         System.out.println("CURRENT READING NOW: " + $currentReading.getValue());
+        System.out.println("MAXIMUM CHARGE IS: " + $currentReading.getMaxCharge());
 end
 
 rule "Battery Discharging Started" 
@@ -143,11 +144,11 @@ declare window LastEventWindow
 end
 
 
-rule "SOC calculation"
+rule "SOC calculation 1" salience 11
 agenda-group "checking battery"
 when
     $list : ArrayList(size >= 2) from collect (CurrentReadingEvent() from window LastEventWindow)
-    $previousReading : CurrentReadingEvent() from $list.get(0)
+    $previousReading : CurrentReadingEvent(maxCharge == 0.0) from $list.get(0)
     $currentReading : CurrentReadingEvent(this after $previousReading) from $list
     exists VoltageReadingEvent($currentReading.getBatteryId() == batteryId)
     // there is no reading after except this currently observed
@@ -157,7 +158,11 @@ when
     
 then
     double timeDiff = ($currentReading.getStartTime().getTime() - $previousReading.getStartTime().getTime() ) * 1000.0;
-    $currentReading.calculateAndSetSOC(timeDiff);
+    modify($currentReading){
+        setMaxCharge($previousReading.getMaxCharge());
+    }
+  
+
     //System.out.println("$g: " + $previousReading);
     //System.out.println("$r: " + $currentReading);
     // modify($battery) {
@@ -165,7 +170,36 @@ then
     // }
         // System.out.println("FIRST  " + ((CurrentReadingEvent)$events.get(0)).getStartTime().getTime());
     // System.out.println("SECOND " + ((CurrentReadingEvent)$events.get(1)).getStartTime().getTime());
-       // System.out.println("SIZE ");
+       System.out.println("SOC UPDATE, CURRENT WAS EQUAL TO 0: " +  $currentReading.getMaxCharge());
+end
+
+rule "SOC calculation 2" salience 12
+agenda-group "checking battery"
+when
+    $list : ArrayList(size >= 2) from collect (CurrentReadingEvent() from window LastEventWindow)
+    $previousReading : CurrentReadingEvent(maxCharge != 0.0) from $list.get(0)
+    $currentReading : CurrentReadingEvent(this after $previousReading) from $list
+    exists VoltageReadingEvent($currentReading.getBatteryId() == batteryId)
+    // there is no reading after except this currently observed
+    not CurrentReadingEvent(this != $currentReading, $currentReading.getBatteryId() == batteryId, startTime > $currentReading.getStartTime() )
+    // there is reading before
+    exists CurrentReadingEvent(this != $currentReading, $currentReading.getBatteryId() == batteryId, startTime < $currentReading.getStartTime() )
+    
+then
+    double timeDiff = ($currentReading.getStartTime().getTime() - $previousReading.getStartTime().getTime() ) * 1000.0;
+     modify($currentReading){
+        setMaxCharge($previousReading.getMaxCharge());
+    }
+    modify($currentReading){
+        calculateAndSetSOC(timeDiff);
+    }
+  
+
+    //System.out.println("$g: " + $previousReading);
+    //System.out.println("$r: " + $currentReading);
+        // System.out.println("FIRST  " + ((CurrentReadingEvent)$events.get(0)).getStartTime().getTime());
+    // System.out.println("SECOND " + ((CurrentReadingEvent)$events.get(1)).getStartTime().getTime());
+       System.out.println("SOC UPDATE, CURRENT IS NOT EQUAL TO 0: " +  $currentReading.getMaxCharge());
 end
 
 

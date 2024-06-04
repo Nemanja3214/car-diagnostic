@@ -25,15 +25,27 @@ public class CurrentReadingEvent {
         this.maxCharge = value;
     }
 
+    public void setMaxCharge(double val) {
+        // Q = I * dt, we take dt 1s, so basicaly Q = I
+        this.maxCharge = val;
+    }
+
     public CurrentReadingEvent(double value, Long batteryId, double maxCharge) {
         this.startTime = new Date();
         this.value = value;
         this.batteryId = batteryId;
         this.maxCharge = maxCharge;
     }
+      public CurrentReadingEvent(double value, Long batteryId) {
+        this.startTime = new Date();
+        this.value = value;
+        this.batteryId = batteryId;
+    }
+
+      @Modifies( { "currentSOC" } )
     public void calculateAndSetSOC(double timeDiff){
         if(maxCharge == 0.0){
-            System.out.println("MAX is not set");
+            // System.out.println("MAX is not set");
             return;
         }
         double consumedCharge = value * timeDiff;
@@ -41,7 +53,7 @@ public class CurrentReadingEvent {
         // Calculate the new SOC
         currentSOC = currentSOC - (consumedCharge / maxCharge);
         currentSOC = Math.max(0, Math.min(1, currentSOC));
-        System.out.println(currentSOC);
+        // System.out.println(currentSOC);
     }
 
 public double getCurrentSOC() {
