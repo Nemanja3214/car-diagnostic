@@ -9,6 +9,7 @@ import { RepairmentDTO } from '../repairments/repairments.component';
 })
 export class BreakdownService {
 
+
   constructor(private http: HttpClient) { }
 
   getSymptoms(): Observable<string[]> {
@@ -22,6 +23,10 @@ createBreakdown(createBreakdown: CreateBreakdown): Observable<RepairmentDTO[]> {
     })
   });
 }
+
+checkBattery(carId: number) {
+  return this.http.get<BatteryCheck>(environment.serverOrigin + '/breakdown/check-battery/' + carId);
+}
 }
 
 export interface CreateBreakdown{
@@ -29,4 +34,17 @@ export interface CreateBreakdown{
   carId: number,
   symptoms: string[],
   engineLamp: boolean
+}
+
+export interface GraphData{
+  startTime: string,
+  value: number,
+  batteryId: number,
+  currentSOC: number,
+  currentCharge: number
+}
+
+export interface BatteryCheck{
+  currentReadings: GraphData[],
+  repairments: RepairmentDTO[]
 }

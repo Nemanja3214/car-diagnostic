@@ -214,6 +214,8 @@ public class BreakdownService implements IBreakdownService {
         
         dto.setCurrentReadings(readingDTOs);
 
+        cepKSession.dispose();
+
         // after - previous
         return dto;
     }
