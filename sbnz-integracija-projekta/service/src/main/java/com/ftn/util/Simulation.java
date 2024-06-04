@@ -24,7 +24,7 @@ public class Simulation {
         // Variables to hold the start and end values for each segment
         double startValueFirstSegment = -50;
         double endValueFirstSegment = 0;
-        double startValueSecondSegment = 100;
+        double startValueSecondSegment = 25;
         double endValueSecondSegment = 0;
         
         double value;
