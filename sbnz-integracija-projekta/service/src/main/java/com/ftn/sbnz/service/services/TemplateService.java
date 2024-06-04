@@ -128,6 +128,21 @@ public class TemplateService implements ITemplateService {
         return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).toList();
     }
 
+    @Override
+    public List<Repairment> checkDiscount(List<Repairment> repairments) {
+        if (this.discountKsession == null) {
+            this.createDiscountRulesFromTemplate(new DiscountTempDTO("100", "200"));
+        }
+
+        this.discountKsession.insert(repairments);
+        int ruleCount = this.discountKsession.fireAllRules();
+        System.out.println(ruleCount);
+
+        // after - previous
+        return repairments;
+
+    }
+
     private KieSession createKieSessionFromDRL(String drl){
          KieHelper kieHelper = new KieHelper();
          kieHelper.addContent(drl, ResourceType.DRL);

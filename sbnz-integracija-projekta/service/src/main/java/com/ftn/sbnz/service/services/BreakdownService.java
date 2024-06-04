@@ -15,6 +15,7 @@ import com.ftn.sbnz.service.repositories.ICarRepository;
 import com.ftn.sbnz.service.repositories.ILampRepository;
 import com.ftn.sbnz.service.repositories.IRepairmentRepository;
 import com.ftn.sbnz.service.services.interfaces.IBreakdownService;
+import com.ftn.sbnz.service.services.interfaces.ITemplateService;
 import com.ftn.util.Util;
 
 import org.kie.api.KieServices;
@@ -42,6 +43,9 @@ public class BreakdownService implements IBreakdownService {
 
     @Autowired
     private IRepairmentRepository repairmentRepository;
+
+    @Autowired
+    private ITemplateService templateService;
 
     private KieSession kSession;
 
@@ -107,8 +111,11 @@ public class BreakdownService implements IBreakdownService {
         .map(r -> (Repairment) r)
         .toList();
 
+         List<Repairment> newReps = Util.getListDiff(after, previous).stream().toList();
+         newReps = this.templateService.checkDiscount(newReps);
+         return newReps.stream().map(r -> new RepairmentDTO(r)).toList();
         // after - previous
-        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).toList();
+//        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).toList();
 
     }
 
