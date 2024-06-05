@@ -1,0 +1,52 @@
+<div id="mainContainer">
+    <div class="template">
+        <div class="image" style="margin-right: auto;">
+            <img src="../../assets/service2.svg">
+        </div>
+        <div class="data">
+            <h1>SERVICE PARAMS</h1>
+            <form [formGroup]="serviceForm" (ngSubmit)="sendServiceParams()" style="display: flex; flex-direction: column;">
+                <mat-form-field>
+                  <mat-label for="smallService">Small Service</mat-label>
+                  <input matInput formControlName="smallService" id="smallService" name="smallService" type="number">
+                </mat-form-field>
+            
+                <mat-form-field>
+                  <mat-label for="bigService">Big Service</mat-label>
+                  <input matInput formControlName="bigService" id="bigService" name="bigService" type="number">
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label for="brakes">Brakes Service</mat-label>
+                  <input matInput formControlName="brakes" id="brakes" name="brakes" type="number">
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-label for="tires">Tires Rotation</mat-label>
+                  <input matInput formControlName="tires" id="tires" name="tires" type="number">
+                </mat-form-field>
+            
+                <button mat-flat-button color="green" type="submit">Create rules</button>
+              </form>
+        </div>
+    </div>
+    <div class="template" style="margin-bottom: 30px;">
+        <div class="data">
+            <h1>DISCOUNT PARAMS</h1>
+            <form [formGroup]="discountForm" (ngSubmit)="sendDiscountParams()" style="display: flex; flex-direction: column;">
+                <mat-form-field>
+                  <mat-label for="lower">10% Minimum</mat-label>
+                  <input matInput formControlName="lower" id="lower" name="lower" type="number">
+                </mat-form-field>
+            
+                <mat-form-field>
+                  <mat-label for="bigService">15% Minimum</mat-label>
+                  <input matInput formControlName="bigService" id="bigService" name="bigService" type="number">
+                </mat-form-field>
+            
+                <button mat-flat-button color="green" type="submit">Create rules</button>
+              </form>
+        </div>
+        <div class="image" style="margin-left: auto;">
+            <img src="../../assets/percent.svg">
+        </div>
+    </div>
+</div>

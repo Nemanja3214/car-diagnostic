@@ -114,4 +114,14 @@ public class CarService implements ICarService {
         return carRepository.findAll().stream().map(CarDTO::toDTO).collect(Collectors.toList());
         // return null;
     }
+
+    @Override
+    public List<CarRetDTO> getAllRet() {
+        List<Car> cars = carRepository.findAll();
+        List<CarRetDTO> ret = new ArrayList<CarRetDTO>();
+        for (Car car: cars) {
+            ret.add(new CarRetDTO(car));
+        }
+        return ret;
+    }
 }

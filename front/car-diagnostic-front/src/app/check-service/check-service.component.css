@@ -1,0 +1,16 @@
+h2{
+    text-align: center;
+}
+
+mat-card-header, mat-card-content{
+    margin: auto;
+}
+
+button {
+    margin: auto !important;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}

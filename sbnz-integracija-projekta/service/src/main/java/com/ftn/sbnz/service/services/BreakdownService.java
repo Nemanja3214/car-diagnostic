@@ -22,6 +22,9 @@ import com.ftn.sbnz.service.repositories.IElectricCarRepository;
 import com.ftn.sbnz.service.repositories.ILampRepository;
 import com.ftn.sbnz.service.repositories.IRepairmentRepository;
 import com.ftn.sbnz.service.services.interfaces.IBreakdownService;
+
+import com.ftn.sbnz.service.services.interfaces.ITemplateService;
+
 import com.ftn.util.Simulation;
 import com.ftn.util.Util;
 
@@ -59,7 +62,10 @@ public class BreakdownService implements IBreakdownService {
     private IRepairmentRepository repairmentRepository;
 
     @Autowired
+    private ITemplateService templateService;
+
     private IElectricCarRepository electricCarRepository;
+
 
     private KieSession kSession;
 
@@ -130,8 +136,12 @@ public class BreakdownService implements IBreakdownService {
         .map(r -> (Repairment) r)
         .collect(Collectors.toList());
 
+         List<Repairment> newReps = Util.getListDiff(after, previous).stream().toList();
+         newReps = this.templateService.checkDiscount(newReps);
+         return newReps.stream().map(r -> new RepairmentDTO(r)).toList();
         // after - previous
-        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
+//        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).toList();
+     //   return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
 
     }
 

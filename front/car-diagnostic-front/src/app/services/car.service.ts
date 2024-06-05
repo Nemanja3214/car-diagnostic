@@ -35,8 +35,13 @@ export class CarService {
     return this.http.get<Car[]>(environment.serverOrigin + '/car/client/' + id);
   }
 
+
+  getAll() : Observable<any> {
+    return this.http.get<any>(environment.serverOrigin + '/car/all');
+
   getElectricByClient(id: any)  : Observable<Car[]> {
     return this.http.get<Car[]>(environment.serverOrigin + '/car/electric/client/' + id);
+
   }
 }
 

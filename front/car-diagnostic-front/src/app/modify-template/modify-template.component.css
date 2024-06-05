@@ -1,0 +1,53 @@
+#mainContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.template {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    margin-top: 3cqi;
+    background-color: rgb(25, 159, 189);
+    border: 1px white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.data {
+    margin: auto;
+}
+
+h1 {
+    color: white;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: oblique;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+}
+
+img {
+    width: 100%;
+    height: 400px;
+}
+
+
+
+button {
+    color: white;
+    font-weight: 500;
+    font-style: oblique;
+    background-color: #BA68C8;
+    padding: 15px;
+    stroke: 5px white;
+    border: 1px white;
+    border-radius: 10px;
+    cursor: pointer;
+
+}

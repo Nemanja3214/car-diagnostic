@@ -1,0 +1,41 @@
+<div id="mainContainer">
+    <div id="dataContainer">
+        <h1>CAR DIAGNOSTIC</h1>
+        <div class="img">
+            <img src="../../assets/car.svg">
+        </div>
+        <table [dataSource]="allCars" mat-table matSort class="mat-elevation-z8" >
+
+            <ng-container matColumnDef="plate">
+              <th mat-header-cell *matHeaderCellDef> Plate </th>
+              <td mat-cell *matCellDef="let rep"> {{rep.plate}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="model">
+              <th mat-header-cell *matHeaderCellDef> Model </th>
+              <td mat-cell *matCellDef="let rep"> {{rep.model}} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="yearOfProduction">
+                <th mat-header-cell *matHeaderCellDef> Year of production </th>
+                <td mat-cell *matCellDef="let rep"> {{rep.yearOfProduction}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="km">
+                <th mat-header-cell *matHeaderCellDef> KM </th>
+                <td mat-cell *matCellDef="let rep"> {{rep.km}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="button">
+                <th mat-header-cell *matHeaderCellDef> Details </th>
+                <td mat-cell *matCellDef="let rep"><button mat-flat-button (click)="goToAbout(rep.id)">Details</button> </td>
+              </ng-container>
+  
+            
+          
+            <tr mat-header-row *matHeaderRowDef="allCarsDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: allCarsDisplayedColumns;"></tr>
+          </table>
+        
+    </div>
+</div>
