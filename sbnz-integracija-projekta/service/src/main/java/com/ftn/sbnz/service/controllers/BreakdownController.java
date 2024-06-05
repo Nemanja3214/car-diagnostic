@@ -1,8 +1,11 @@
 package com.ftn.sbnz.service.controllers;
 
 import com.ftn.sbnz.model.models.Repairment;
+import com.ftn.sbnz.model.models.battery.events.CurrentReadingEvent;
+import com.ftn.sbnz.service.dtos.breakdown.BatteryCheckDTO;
 import com.ftn.sbnz.service.dtos.breakdown.BreakdownDTO;
 import com.ftn.sbnz.service.dtos.breakdown.CreateBreakdownDTO;
+import com.ftn.sbnz.service.dtos.breakdown.CurrentReadingDTO;
 import com.ftn.sbnz.service.dtos.repairment.RepairmentDTO;
 import com.ftn.sbnz.service.exceptions.NotFoundException;
 import com.ftn.sbnz.service.services.interfaces.IBreakdownService;
@@ -50,4 +53,12 @@ public class BreakdownController {
         List<String> symptoms = breakdownService.getSymptoms();
         return ResponseEntity.ok(symptoms);
     }
+
+     @PermitAll
+    @GetMapping("check-battery/{carId}")
+    public ResponseEntity<?> checkBattery(@PathVariable int carId, @RequestParam int caseScenario) throws NotFoundException, InterruptedException {
+        BatteryCheckDTO dto = breakdownService.checkBattery(carId, caseScenario);
+        return ResponseEntity.ok(dto);
+    }
+
 }

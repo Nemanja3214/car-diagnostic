@@ -4,6 +4,7 @@ import { BreakdownComponent } from './breakdown/breakdown.component';
 import { RepairmentsComponent } from './repairments/repairments.component';
 import { CreateClientComponent } from './create-client/create-client.component';
 import { CreateCarComponent } from './create-car/create-car.component';
+import { CheckBatteryComponent } from './check-battery/check-battery.component';
 export const routes: Routes = [
     {path: "breakdown",
     component: BreakdownComponent
@@ -22,5 +23,8 @@ export const routes: Routes = [
 
     {path: "car-create",
     component: CreateCarComponent
+},
+{path: "check-battery",
+    component: CheckBatteryComponent
 },
 ];

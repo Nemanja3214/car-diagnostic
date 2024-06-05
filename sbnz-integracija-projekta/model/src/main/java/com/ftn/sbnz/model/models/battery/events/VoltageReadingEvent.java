@@ -41,8 +41,8 @@ public class VoltageReadingEvent {
         this.initialSOC = initialSOC;
     }
 
-    public VoltageReadingEvent(double value, Long batteryId) {
-        this.startTime = new Date();
+    public VoltageReadingEvent(double value, Long batteryId, Date startTime) {
+        this.startTime = startTime;
         this.value = value;
         this.batteryId = batteryId;
         initialSOC = GeneratorUtil.getInitialSoc(value);

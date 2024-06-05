@@ -41,7 +41,6 @@ public class CarController {
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
-    //TODO add exception handler
     @PermitAll
     @GetMapping("/{id}")
     public ResponseEntity<?> getCar(@PathVariable Integer id) throws NotFoundException {
@@ -56,6 +55,14 @@ public class CarController {
         List<CarDTO> cars = carService.getByClient(id);
         return ResponseEntity.ok(cars);
     }
+
+    @PermitAll
+    @GetMapping("electric/client/{id}")
+    public ResponseEntity<?> getElectricByClient(@PathVariable Integer id) throws NotFoundException{
+        List<CarDTO> cars = carService.getElectricByClient(id);
+        return ResponseEntity.ok(cars);
+    }
+
 
     @PermitAll
     @GetMapping
