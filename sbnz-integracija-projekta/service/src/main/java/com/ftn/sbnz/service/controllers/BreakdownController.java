@@ -56,8 +56,8 @@ public class BreakdownController {
 
      @PermitAll
     @GetMapping("check-battery/{carId}")
-    public ResponseEntity<?> checkBattery(@PathVariable int carId) throws NotFoundException, InterruptedException {
-        BatteryCheckDTO dto = breakdownService.checkBattery(carId);
+    public ResponseEntity<?> checkBattery(@PathVariable int carId, @RequestParam int caseScenario) throws NotFoundException, InterruptedException {
+        BatteryCheckDTO dto = breakdownService.checkBattery(carId, caseScenario);
         return ResponseEntity.ok(dto);
     }
 

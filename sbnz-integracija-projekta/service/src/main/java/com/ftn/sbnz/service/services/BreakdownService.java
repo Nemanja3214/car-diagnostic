@@ -152,8 +152,7 @@ public class BreakdownService implements IBreakdownService {
     }
 
     @Override
-    public BatteryCheckDTO checkBattery(int carId) throws InterruptedException, NotFoundException {
-        boolean lowReading = false;
+    public BatteryCheckDTO checkBattery(int carId, int caseScenarion) throws InterruptedException, NotFoundException {
            Breakdown breakdown = new Breakdown();
 
         //    TODO check if electrical
@@ -192,7 +191,7 @@ public class BreakdownService implements IBreakdownService {
         cepKSession.insert(battery);
         cepKSession.insert(breakdown);
 
-        if(!lowReading){
+        if(caseScenarion == 1){
             do{
                     CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, Util.localToDate(now));
                     VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L, Util.localToDate(now));

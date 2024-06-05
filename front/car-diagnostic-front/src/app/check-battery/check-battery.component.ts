@@ -70,12 +70,15 @@ export class CheckBatteryComponent implements OnInit{
     return 0;
   }
  
-
+  randomIntFromInterval(min: number, max: number) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+  
   checkBattery(){
     if(!this.chooseCarForm.valid)
       return;
     this.carId = this.chooseCarForm.value!.car!.id!;
-    this.breakdownService.checkBattery(this.chooseCarForm.value!.car!.id!) .subscribe(
+    this.breakdownService.checkBattery(this.chooseCarForm.value!.car!.id!, this.randomIntFromInterval(1, 2)) .subscribe(
       (response) => {
         // Handle the successful response
         // this.data = response.currentReadings;

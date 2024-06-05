@@ -24,8 +24,11 @@ createBreakdown(createBreakdown: CreateBreakdown): Observable<RepairmentDTO[]> {
   });
 }
 
-checkBattery(carId: number) {
-  return this.http.get<BatteryCheck>(environment.serverOrigin + '/breakdown/check-battery/' + carId);
+checkBattery(carId: number, caseScenarion: number) {
+  return this.http.get<BatteryCheck>(environment.serverOrigin + '/breakdown/check-battery/' + carId,  {
+    params: {
+      caseScenario: caseScenarion,
+    }});
 }
 }
 
