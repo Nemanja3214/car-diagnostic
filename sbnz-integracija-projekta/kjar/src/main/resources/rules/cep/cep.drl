@@ -228,15 +228,15 @@ end
 //     $breakdown: Breakdown(id == $currentBreakdownId)
 //     $lis: List() from  accumulate ( 
 //         CurrentReadingEvent( $soc: currentSOC != 0.0 , batteryId == $batteryId ) from window LastMinuteWindow; collectList($soc) )
-//     // accumulate ( 
-//     //     CurrentReadingEvent( $soc: currentSOC != 0.0, batteryId == $batteryId  ) from window LastMinuteWindow;
-//     //     $count: count(1);
-//     // //     $count > 10)
-//     // $min: Double() from  accumulate ( 
-//     //     CurrentReadingEvent( $soc: currentSOC != 0.0 , batteryId == $batteryId ) from window LastMinuteWindow; min( $soc ))
-//     // $max: Double() from  accumulate ( 
-//     //     CurrentReadingEvent( $soc: currentSOC != 0.0 , batteryId == $batteryId ) from window LastMinuteWindow; max( $soc ))
-//     // eval(($max - $min) < 1.0 || ($max - $min) > 5.0)
+//     accumulate ( 
+//         CurrentReadingEvent( $soc: currentSOC != 0.0, batteryId == $batteryId  ) from window LastMinuteWindow;
+//         $count: count(1);
+//         $count > 10)
+//     $min: Double() from  accumulate ( 
+//         CurrentReadingEvent( $soc: currentSOC != 0.0 , batteryId == $batteryId ) from window LastMinuteWindow; min( $soc ))
+//     $max: Double() from  accumulate ( 
+//         CurrentReadingEvent( $soc: currentSOC != 0.0 , batteryId == $batteryId ) from window LastMinuteWindow; max( $soc ))
+//     eval(($max - $min) < 1.0 || ($max - $min) > 5.0)
 // then
 //     // double diff = $max - $min; 
 //     // System.out.println("DIFF :" + diff);

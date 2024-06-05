@@ -87,6 +87,7 @@ export class CheckBatteryComponent implements OnInit{
         this.lineChartLabels = [];
         this.lineChartData.push({data: response.currentReadings.map(l => l.currentCharge), label: "Charge"});
         this.lineChartData.push({data: response.currentReadings.map(l => l.value), label: "Current"});
+        this.lineChartData.push({data: response.currentReadings.map(l => l.currentSOC), label: "SOC"});
         this.lineChartLabels = response.currentReadings.map(l =>new Date(l.startTime)).map(d => d.toLocaleTimeString() + " " + d.toLocaleDateString());
 
         this.repairments = response.repairments;
