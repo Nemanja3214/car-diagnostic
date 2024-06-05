@@ -95,11 +95,15 @@ agenda-group "checking battery"
         }
         // detect lower maximum voltage
         // System.out.println(($voltageReading.getValue() / $battery.getNominalMaxVoltage())* 100 > 0);
-        if(Math.abs($voltageReading.getValue() - $battery.getNominalMaxVoltage()) > 0.3)
+        if(Math.abs($voltageReading.getValue() - $battery.getNominalMaxVoltage()) > 0.3){
             System.out.println("Battery maximum voltage is lower and it's at: " + (Math.abs($voltageReading.getValue() / $battery.getNominalMaxVoltage()))* 100);
+            //  insert(new Repairment(null, 20.0, null, null, $breakdown, "There is a charger problem, no sufficient readings, check wiring and charger itself", 0));
+        }
 
-        if(Math.abs($currentReading.getValue() - $battery.getNominalMaxCharge()) > 0.3)
+        if(Math.abs($currentReading.getValue() - $battery.getNominalMaxCharge()) > 0.3){
             System.out.println("Battery maximum charge is lower and it's at: " + (Math.abs($currentReading.getValue() / $battery.getNominalMaxCharge()))* 100);
+             //  insert(new Repairment(null, 20.0, null, null, $breakdown, "There is a charger problem, no sufficient readings, check wiring and charger itself", 0));
+        }
         System.out.println("CURRENT READING NOW: " + $currentReading.getValue());
         System.out.println("MAXIMUM CHARGE IS: " + $currentReading.getMaxCharge());
 end
@@ -133,9 +137,9 @@ agenda-group "checking battery"
         not CurrentReadingEvent(this != $firstReading, $firstReading.getBatteryId() == batteryId )
     then
         double a = $voltageReading.getInitialSOC();
-        modify($firstReading) {
-            setCurrentSOC(a);
-        }
+        // modify($firstReading) {
+        //     setCurrentSOC(a);
+        // }
         System.out.println("INITIAL  " + $firstReading.getStartTime().getTime());
 end
 
@@ -200,8 +204,8 @@ declare window LastMinuteWindow
     CurrentReadingEvent() over window:time(60s)
 end
 
-declare window LastSecondWindow
-    CurrentReadingEvent() over window:time(1s)
+declare window LastSecondsWindow
+    CurrentReadingEvent() over window:time(3s)
 end
 
 rule "Charging Problem Detection" salience 20
@@ -220,27 +224,36 @@ then
      insert(new Repairment(null, 20.0, null, null, $breakdown, "There is a charger problem, no sufficient readings, check wiring and charger itself", 0));
 end
 
-// rule "if SOC doesn't rise for at least 1% every minute, charging problem "
-// agenda-group "checking battery"
-// // timer (int: 60s 60s)
-// when
-//     Battery($currentBreakdownId: currentBreakdownId, $batteryId: id)
-//     $breakdown: Breakdown(id == $currentBreakdownId)
-//     $lis: List() from  accumulate ( 
-//         CurrentReadingEvent( $soc: currentSOC != 0.0 , batteryId == $batteryId ) from window LastMinuteWindow; collectList($soc) )
-//     accumulate ( 
-//         CurrentReadingEvent( $soc: currentSOC != 0.0, batteryId == $batteryId  ) from window LastMinuteWindow;
-//         $count: count(1);
-//         $count > 10)
-//     $min: Double() from  accumulate ( 
-//         CurrentReadingEvent( $soc: currentSOC != 0.0 , batteryId == $batteryId ) from window LastMinuteWindow; min( $soc ))
-//     $max: Double() from  accumulate ( 
-//         CurrentReadingEvent( $soc: currentSOC != 0.0 , batteryId == $batteryId ) from window LastMinuteWindow; max( $soc ))
-//     eval(($max - $min) < 1.0 || ($max - $min) > 5.0)
-// then
-//     // double diff = $max - $min; 
-//     // System.out.println("DIFF :" + diff);
-//     System.out.println($lis);
-//     System.out.println("Battery is degraded");
-//        insert(new Repairment(null, 35.0, null, null, $breakdown, "Battery is degraded, replace it", 0));
-// end
+
+// change to second
+rule "if SOC doesn't rise for at least 1% every minute, charging problem " salience -10
+agenda-group "checking battery"
+when
+    not Repairment(action == "Battery is degraded, replace it" || action == "There is a charger problem, no sufficient readings, check wiring and charger itself")
+    Battery($currentBreakdownId: currentBreakdownId, $batteryId: id)
+    $breakdown: Breakdown(id == $currentBreakdownId)
+    // $lis: List() from  accumulate ( 
+        // $read: CurrentReadingEvent() over window:time(3s); collectList($read) )
+    // $obj : CurrentReadingEvent(getCurrentSOC() > 0.0, getCurrentSOC() < 100.0) from $lis 
+    // $c: Long() from  accumulate ( 
+    //     CurrentReadingEvent(   getCurrentSOC() != 0.0 , batteryId == $batteryId  ) from window LastMinuteWindow, count( 1 ))
+    // $c: Long() from accumulate ( 
+    //     CurrentReadingEvent( currentSOC != 0.0) from window LastMinuteWindow;
+    //     count(1))
+    $minVal: Double() from  accumulate ( 
+        $c: CurrentReadingEvent( getCurrentSOC() > 0.0, getCurrentSOC() < 100.0) over window:time(2s), min( $c.getCurrentSOC() ))
+    $maxVal: Double() from  accumulate ( 
+        $c: CurrentReadingEvent(getCurrentSOC() > 0.0, getCurrentSOC() < 100.0) over window:time(2s) ; max( $c.getCurrentSOC() ))
+    eval(Math.abs($maxVal - $minVal) > 5.0)
+then
+    // double diff = $max - $min; 
+    //   System.out.println("SIZE LIS:" + $lis.size());
+    System.out.println("MAX :" + $maxVal);
+    System.out.println("MIN :" + $minVal);
+    System.out.println("DIFF :" + ($maxVal - $minVal));
+
+    // System.out.println($obj.getCurrentSOC());
+    // System.out.println($c);
+    System.out.println("Battery is degraded");
+       insert(new Repairment(null, 35.0, null, null, $breakdown, "Battery is degraded, replace it", 0));
+end
