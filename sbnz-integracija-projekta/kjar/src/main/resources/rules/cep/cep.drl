@@ -14,7 +14,7 @@ import java.util.Date;
 import java.lang.Math;
 
 global Double tolerance;
-global String globalStartTime;
+global Boolean initPassed;
 
 rule "Battery Empty"
 agenda-group "checking battery"
@@ -205,20 +205,52 @@ declare window LastSecondWindow
     CurrentReadingEvent(currentSOC != 0.0) over window:time(1s)
 end
 
-rule "Charging Problem Detection"
+rule "Charging Problem Detection" salience 20
 agenda-group "checking battery"
-timer (int: 60s; start=globalStartTime)
 when
+   eval(initPassed)
     Battery($currentBreakdownId: currentBreakdownId, $batteryId: id)
     $breakdown: Breakdown(id == $currentBreakdownId)
     accumulate ( 
-        CurrentReadingEvent( $soc: currentSOC != 0.0, batteryId == $batteryId) from window LastMinuteWindow;
+        CurrentReadingEvent(batteryId == $batteryId) from window LastMinuteWindow;
         $count: count(1);
         $count < 10)
 then
     System.out.println("There is a charger problem, no sufficient readings");
      insert(new Repairment(null, 20.0, null, null, $breakdown, "There is a charger problem, no sufficient readings, check wiring and charger itself", 0));
 end
+
+rule "CHECK LIST" salience 20
+agenda-group "checking battery"
+when
+   eval(initPassed)
+    // Battery($currentBreakdownId: currentBreakdownId, $batteryId: id)
+    // $breakdown: Breakdown(id == $currentBreakdownId)
+    $lis: List() from  accumulate ( 
+        CurrentReadingEvent( ) from window LastMinuteWindow; collectList() )
+then
+    System.out.println("SIZE CHECK: " + $lis.size());
+end
+
+rule "Update init" salience 25
+agenda-group "checking battery"
+timer(int: 60s)
+when
+    eval(!initPassed)
+then
+    drools.getKnowledgeRuntime().setGlobal("initPassed", true);
+    // initPassed = true;
+    System.out.println("INIT IS NOW:"+ initPassed);
+end
+
+
+// rule "Time checker"
+// agenda-group "checking battery"
+// when
+//     eval(initPassed)
+// then
+//     System.out.println("TIMER");
+// end
 
 
 // rule "if SOC doesn't rise for at least 1% every minute, charging problem "

@@ -153,6 +153,7 @@ public class BreakdownService implements IBreakdownService {
 
     @Override
     public BatteryCheckDTO checkBattery(int carId) throws InterruptedException, NotFoundException {
+        boolean lowReading = true;
            Breakdown breakdown = new Breakdown();
 
         //    TODO check if electrical
@@ -180,8 +181,9 @@ public class BreakdownService implements IBreakdownService {
   
         LocalDateTime now = LocalDateTime.now();
         SessionPseudoClock clock = cepKSession.getSessionClock();
-         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
-        cepKSession.setGlobal("globalStartTime", formatter.format(Util.localToDate(now)));
+         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+        // cepKSession.setGlobal("globalStartTime", LocalDateTime.now().);
+         cepKSession.setGlobal("initPassed", false);
 
         double currentValue = Simulation.calculateValue(scale, now.toLocalTime());
         double voltageValue = Simulation.calculateValue(scale, now.toLocalTime());
@@ -190,8 +192,35 @@ public class BreakdownService implements IBreakdownService {
         cepKSession.insert(battery);
         cepKSession.insert(breakdown);
 
-      
-        do{
+        if(!lowReading){
+            do{
+                    CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, Util.localToDate(now));
+                    VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L, Util.localToDate(now));
+
+                    cepKSession.insert(voltageEvent);
+                    cepKSession.insert(currentReadingEvent);
+                    cepKSession.getAgenda().getAgendaGroup("checking battery").setFocus();
+                    cepKSession.fireAllRules();
+                    cepKSession.halt();
+                    System.out.println(currentValue);
+                    //   System.out.println(voltageValue);
+                    // Thread.sleep(100);
+
+                    // advance time
+                    clock.advanceTime( 1, TimeUnit.SECONDS );
+                    now = now.plusSeconds(1);
+
+
+                    currentValue = Simulation.calculateValue(scale, now.toLocalTime());
+                    voltageValue = Simulation.calculateValue(scale, now.toLocalTime());
+                    System.out.println(now.toString());
+                    //  System.out.println(clock.getCurrentTime().toString());
+                
+                }while(!Simulation.finished);
+                Simulation.lastStart = null;
+                Simulation.finished = false;
+        }
+        else{
             CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, Util.localToDate(now));
             VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L, Util.localToDate(now));
 
@@ -205,25 +234,26 @@ public class BreakdownService implements IBreakdownService {
             // Thread.sleep(100);
 
             // advance time
-            clock.advanceTime( 1, TimeUnit.SECONDS );
-            now = now.plusSeconds(1);
+            clock.advanceTime( 80, TimeUnit.SECONDS );
+            now = now.plusSeconds(80);
 
-
-            currentValue = Simulation.calculateValue(scale, now.toLocalTime());
-            voltageValue = Simulation.calculateValue(scale, now.toLocalTime());
-            System.out.println(now.toString());
-            //  System.out.println(clock.getCurrentTime().toString());
+            cepKSession.getAgenda().getAgendaGroup("checking battery").setFocus();
+            cepKSession.fireAllRules();
+            cepKSession.halt();
           
-        }while(!Simulation.finished);
-        Simulation.lastStart = null;
-        Simulation.finished = false;
+            Simulation.lastStart = null;
+            Simulation.finished = false;
+        }
+
+      
+  
 
      
-        cepKSession.insert(breakdown);
-        int ruleCount = cepKSession.fireAllRules();
-        System.out.println(ruleCount);
+        // cepKSession.insert(breakdown);
+        // int ruleCount = cepKSession.fireAllRules();
+        // System.out.println(ruleCount);
 
-        cepKSession.halt();
+        // cepKSession.halt();
          List<Repairment> after = cepKSession.getObjects().stream()
         .filter(r -> r instanceof Repairment)
         .map(r -> (Repairment) r)
