@@ -11,13 +11,15 @@ import { MatInputModule } from '@angular/material/input';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Car, CarService } from '../services/car.service';
 import { Client, ClientService } from '../services/client.service';
+import { RepairmentDTO } from '../repairments/repairments.component';
+import {MatTableModule} from '@angular/material/table';
 
 
 @Component({
   selector: 'app-check-battery',
   standalone: true,
   imports: [FormsModule, MatFormFieldModule, ReactiveFormsModule,BaseChartDirective, CommonModule,MatSelectModule,MatButtonModule,
-    HttpClientModule,],
+    HttpClientModule, MatTableModule],
   templateUrl: './check-battery.component.html',
   providers: [BreakdownService, ClientService, CarService],
   styleUrl: './check-battery.component.css'
@@ -33,6 +35,10 @@ export class CheckBatteryComponent implements OnInit{
   });
   availableElectricCars: Car[] = [];
   availableClients: Client[] = [];
+
+
+  displayedColumns: string[] = ['position', 'price', 'action'];
+  repairments: RepairmentDTO[] = [];
 
   constructor(private breakdownService: BreakdownService, private carService: CarService, private clientService: ClientService) { }
   ngOnInit(): void {
@@ -79,6 +85,8 @@ export class CheckBatteryComponent implements OnInit{
         this.lineChartData.push({data: response.currentReadings.map(l => l.currentCharge), label: "Charge"});
         this.lineChartData.push({data: response.currentReadings.map(l => l.value), label: "Current"});
         this.lineChartLabels = response.currentReadings.map(l =>new Date(l.startTime)).map(d => d.toLocaleTimeString() + " " + d.toLocaleDateString());
+
+        this.repairments = response.repairments;
       },
       (error) => {
         console.error('Error handler:', error);
@@ -89,7 +97,7 @@ export class CheckBatteryComponent implements OnInit{
   onClientChange(event: any) {
     // Update the selected option when the selection changes
     let selectedOption = event.value;
-    this.carService.getByClient(event.value.id) .subscribe(
+    this.carService.getElectricByClient(event.value.id) .subscribe(
       (response) => {
         // Handle the successful response
         this.availableElectricCars = response
@@ -100,4 +108,6 @@ export class CheckBatteryComponent implements OnInit{
       }
     );
   }
+
+  
 }
