@@ -10,54 +10,81 @@ import com.ftn.sbnz.model.models.Breakdown;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 import java.lang.Math;
+
+global Double tolerance;
 
 rule "Battery Empty"
 agenda-group "checking battery"
     when
+        $list : ArrayList(size >= 2) from collect (CurrentReadingEvent() from window LastEventWindow)
+        $previousReading : CurrentReadingEvent() from $list.get(0)
+        $currentReading : CurrentReadingEvent(this after $previousReading, $batteryId: batteryId, value < tolerance, value > -tolerance) from $list
+        exists VoltageReadingEvent($currentReading.getBatteryId() == batteryId)
+        // there is no reading after except this currently observed
+        not CurrentReadingEvent(this != $currentReading, $currentReading.getBatteryId() == batteryId, startTime > $currentReading.getStartTime() )
         // current close to zero, practically I = 0
-        $currentReading: CurrentReadingEvent($batteryId: batteryId, value < 0.01, value > -0.01)
         // only after discharging can battery be empty
-        $battery : Battery(state == BatteryStates.DISCHARGING, id == $batteryId)
+        $battery : Battery(state == BatteryStates.DISCHARGING, state != BatteryStates.EMPTY, id == $batteryId)
     then
         modify($battery) {
             setState(BatteryStates.EMPTY)
         }
+        System.out.println("BATTERY STATE: EMPTY");
+         System.out.println("CURRENT READING NOW: " + $currentReading.getValue());
 end
 
 rule "Battery Charged"
 agenda-group "checking battery"
     when
+        $list : ArrayList(size >= 2) from collect (CurrentReadingEvent() from window LastEventWindow)
+        $previousReading : CurrentReadingEvent() from $list.get(0)
+        $currentReading : CurrentReadingEvent(this after $previousReading, $batteryId: batteryId,  value < tolerance, value > -tolerance) from $list
+        exists VoltageReadingEvent($currentReading.getBatteryId() == batteryId)
+        // there is no reading after except this currently observed
+        not CurrentReadingEvent(this != $currentReading, $currentReading.getBatteryId() == batteryId, startTime > $currentReading.getStartTime() )
         // current close to zero, practically I = 0
-        $currentReading: CurrentReadingEvent($batteryId: batteryId, value < 0.01, value > -0.01)
         // if not discharging and current is zero then it is charged
-        $battery : Battery(state != BatteryStates.DISCHARGING, id == $batteryId)
+        $battery : Battery(state != BatteryStates.DISCHARGING,state != BatteryStates.CHARGED, state != BatteryStates.EMPTY, id == $batteryId)
     then
         modify($battery) {
             setState(BatteryStates.CHARGED)
         }
+         System.out.println("BATTERY STATE: CHARGED");
+         System.out.println("CURRENT READING NOW: " + $currentReading.getValue());
 
 end
 
 rule "Battery Charging Started"
 agenda-group "checking battery"
     when
+        $list : ArrayList(size >= 2) from collect (CurrentReadingEvent() from window LastEventWindow)
+        $previousReading : CurrentReadingEvent() from $list.get(0)
+        $currentReading : CurrentReadingEvent(this after $previousReading, $batteryId: batteryId, value < -tolerance) from $list
+        exists VoltageReadingEvent($currentReading.getBatteryId() == batteryId)
+        // there is no reading after except this currently observed
+        not CurrentReadingEvent(this != $currentReading, $currentReading.getBatteryId() == batteryId, startTime > $currentReading.getStartTime() )
+
         // current less zero, practically I < 0
-        $currentReading: CurrentReadingEvent($batteryId: batteryId, value < -0.01)
         // get into RHS only if neccessary
-    $battery : Battery(state != BatteryStates.CHARGING, id == $batteryId)
+    $battery : Battery(state != BatteryStates.CHARGING, state != BatteryStates.CHARGED, id == $batteryId)
     then
         modify($battery) {
             setState(BatteryStates.CHARGING)
         }
+         System.out.println("BATTERY STATE: CHARGING STARTED");
+         System.out.println("CURRENT READING NOW: " + $currentReading.getValue());
 end
 
 // this comes after charged coming into discharging and needs to be before assigning discharging
 rule "Set Maximum charge" salience 10
 agenda-group "checking battery"
     when
+        $list : ArrayList(size >= 2) from collect (CurrentReadingEvent() from window LastEventWindow)
+        $previousReading : CurrentReadingEvent() from $list.get(0)
+        $currentReading : CurrentReadingEvent(this after $previousReading, $batteryId: batteryId, value > tolerance) from $list
         // current more than zero, practically I > 0
-        $currentReading: CurrentReadingEvent($batteryId: batteryId, value > 0.01)
          $voltageReading: VoltageReadingEvent($batteryId == batteryId)
         //  last voltage reading
         not VoltageReadingEvent(this != $voltageReading, $voltageReading.getBatteryId() == batteryId, startTime > $voltageReading.getStartTime() )
@@ -73,18 +100,28 @@ agenda-group "checking battery"
 
         if(Math.abs($currentReading.getValue() - $battery.getNominalMaxCharge()) > 0.3)
             System.out.println("Battery maximum charge is lower and it's at: " + (Math.abs($currentReading.getValue() / $battery.getNominalMaxCharge()))* 100);
+        System.out.println("CURRENT READING NOW: " + $currentReading.getValue());
+        System.out.println("MAXIMUM CHARGE IS: " + $currentReading.getMaxCharge());
 end
 
-rule "Battery Discharging Started"
+rule "Battery Discharging Started" 
 agenda-group "checking battery"
     when
+        $list : ArrayList(size >= 2) from collect (CurrentReadingEvent() from window LastEventWindow)
+        $previousReading : CurrentReadingEvent() from $list.get(0)
+        $currentReading : CurrentReadingEvent(this after $previousReading, $batteryId: batteryId, value > tolerance) from $list
+        exists VoltageReadingEvent($currentReading.getBatteryId() == batteryId)
+        // there is no reading after except this currently observed
+        not CurrentReadingEvent(this != $currentReading, $currentReading.getBatteryId() == batteryId, startTime > $currentReading.getStartTime() )
+
         // current more than zero, practically I > 0
-        $currentReading: CurrentReadingEvent($batteryId: batteryId, value > 0.01)
-        $battery : Battery(state != BatteryStates.DISCHARGING, id == $batteryId)
+        $battery : Battery(state != BatteryStates.DISCHARGING, state != BatteryStates.EMPTY, id == $batteryId)
     then
         modify($battery) {
             setState(BatteryStates.DISCHARGING)
         }
+         System.out.println("BATTERY STATE: DISCHARGING STARTED");
+         System.out.println("CURRENT READING NOW: " + $currentReading.getValue());
 end
 
 rule "Initial SOC assignment"
@@ -107,7 +144,7 @@ declare window LastEventWindow
 end
 
 
-rule "SOC calculation"
+rule "Charge calculation" salience 13
 agenda-group "checking battery"
 when
     $list : ArrayList(size >= 2) from collect (CurrentReadingEvent() from window LastEventWindow)
@@ -120,32 +157,62 @@ when
     exists CurrentReadingEvent(this != $currentReading, $currentReading.getBatteryId() == batteryId, startTime < $currentReading.getStartTime() )
     
 then
-    double timeDiff = ($currentReading.getStartTime().getTime() - $previousReading.getStartTime().getTime() ) * 1000.0;
-    $currentReading.calculateAndSetSOC(timeDiff);
-    System.out.println("$g: " + $previousReading);
-    System.out.println("$r: " + $currentReading);
-    // modify($battery) {
-    //     setStatus("Discharged")
+    double timeDiff = ($currentReading.getStartTime().getTime() - $previousReading.getStartTime().getTime() ) / 1000.0;
+     modify($currentReading){
+        setCurrentCharge($previousReading.getCurrentCharge());
+    }
+    modify($currentReading){
+        setNextCharge(timeDiff);
+    }
+    // System.out.println("FIRST  " + $previousReading.getStartTime().getTime());
+    // System.out.println("SECOND " + $currentReading.getStartTime().getTime());
+    // System.out.println("TIME DIFF " +  timeDiff);
+     System.out.println("CURRENT CHARGE " +  $currentReading.getCurrentCharge());
+end
+
+rule "SOC calculation when max charge is present" salience 12
+agenda-group "checking battery"
+when
+    $list : ArrayList(size >= 2) from collect (CurrentReadingEvent() from window LastEventWindow)
+    $previousReading : CurrentReadingEvent(maxCharge != 0.0) from $list.get(0)
+    $currentReading : CurrentReadingEvent(this after $previousReading) from $list
+    exists VoltageReadingEvent($currentReading.getBatteryId() == batteryId)
+    // there is no reading after except this currently observed
+    not CurrentReadingEvent(this != $currentReading, $currentReading.getBatteryId() == batteryId, startTime > $currentReading.getStartTime() )
+    // there is reading before
+    exists CurrentReadingEvent(this != $currentReading, $currentReading.getBatteryId() == batteryId, startTime < $currentReading.getStartTime() )
+    
+then
+    double timeDiff = ($currentReading.getStartTime().getTime() - $previousReading.getStartTime().getTime() ) / 1000.0;
+     modify($currentReading){
+        setMaxCharge($previousReading.getMaxCharge());
+    }
+    // modify($currentReading){
+    //     calculateAndSetSOC(timeDiff);
     // }
-        // System.out.println("FIRST  " + ((CurrentReadingEvent)$events.get(0)).getStartTime().getTime());
+    // System.out.println("FIRST  " + ((CurrentReadingEvent)$events.get(0)).getStartTime().getTime());
     // System.out.println("SECOND " + ((CurrentReadingEvent)$events.get(1)).getStartTime().getTime());
-        System.out.println("SIZE ");
+       System.out.println("CURRENT SOC:  " +  $currentReading.getCurrentSOC()+"%");
 end
 
 
 declare window LastMinuteWindow
-    CurrentReadingEvent(currentSOC != 0.0) over window:time(60000ms)
+    CurrentReadingEvent() over window:time(60s)
 end
 
-rule "Charging Problem Detection"
+declare window LastSecondWindow
+    CurrentReadingEvent() over window:time(1s)
+end
+
+rule "Charging Problem Detection" salience 20
+timer(int: 60s)
 agenda-group "checking battery"
 when
     Battery($currentBreakdownId: currentBreakdownId, $batteryId: id)
     $breakdown: Breakdown(id == $currentBreakdownId)
+    not Repairment(action == "There is a charger problem, no sufficient readings, check wiring and charger itself")
     accumulate ( 
-        CurrentReadingEvent( $soc: currentSOC != 0.0, batteryId == $batteryId ) from window LastMinuteWindow;
-        $min : min( $soc ),
-        $max : max( $soc ),
+        CurrentReadingEvent(batteryId == $batteryId) from window LastMinuteWindow;
         $count: count(1);
         $count < 10)
 then
@@ -153,19 +220,27 @@ then
      insert(new Repairment(null, 20.0, null, null, $breakdown, "There is a charger problem, no sufficient readings, check wiring and charger itself", 0));
 end
 
-rule "if SOC doesn't rise for at least 1% every minute, charging problem "
-agenda-group "checking battery"
-when
-    Battery($currentBreakdownId: currentBreakdownId)
-    $breakdown: Breakdown(id == $currentBreakdownId)
-    accumulate ( 
-        CurrentReadingEvent( $soc: currentSOC != 0.0 ) from window LastMinuteWindow;
-        $min : min( $soc ),
-        $max : max( $soc ),
-        $count: count(1);
-        $count > 10,
-        ($max - $min) < 1.0 || ($max - $min) > 5.0)
-then
-    System.out.println("Battery is degraded");
-       insert(new Repairment(null, 35.0, null, null, $breakdown, "Battery is degraded, replace it", 0));
-end
+// rule "if SOC doesn't rise for at least 1% every minute, charging problem "
+// agenda-group "checking battery"
+// // timer (int: 60s 60s)
+// when
+//     Battery($currentBreakdownId: currentBreakdownId, $batteryId: id)
+//     $breakdown: Breakdown(id == $currentBreakdownId)
+//     $lis: List() from  accumulate ( 
+//         CurrentReadingEvent( $soc: currentSOC != 0.0 , batteryId == $batteryId ) from window LastMinuteWindow; collectList($soc) )
+//     accumulate ( 
+//         CurrentReadingEvent( $soc: currentSOC != 0.0, batteryId == $batteryId  ) from window LastMinuteWindow;
+//         $count: count(1);
+//         $count > 10)
+//     $min: Double() from  accumulate ( 
+//         CurrentReadingEvent( $soc: currentSOC != 0.0 , batteryId == $batteryId ) from window LastMinuteWindow; min( $soc ))
+//     $max: Double() from  accumulate ( 
+//         CurrentReadingEvent( $soc: currentSOC != 0.0 , batteryId == $batteryId ) from window LastMinuteWindow; max( $soc ))
+//     eval(($max - $min) < 1.0 || ($max - $min) > 5.0)
+// then
+//     // double diff = $max - $min; 
+//     // System.out.println("DIFF :" + diff);
+//     System.out.println($lis);
+//     System.out.println("Battery is degraded");
+//        insert(new Repairment(null, 35.0, null, null, $breakdown, "Battery is degraded, replace it", 0));
+// end

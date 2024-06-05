@@ -17,12 +17,14 @@ import com.ftn.sbnz.service.repositories.IBatteryRepository;
 import com.ftn.sbnz.service.repositories.ICarModelRepository;
 import com.ftn.sbnz.service.repositories.ICarRepository;
 import com.ftn.sbnz.service.repositories.IClientRepository;
+import com.ftn.sbnz.service.repositories.IElectricCarRepository;
 import com.ftn.sbnz.service.services.interfaces.ICarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -38,6 +40,9 @@ public class CarService implements ICarService {
 
     @Autowired
     IBatteryRepository batteryRepository;
+
+    @Autowired
+    IElectricCarRepository electricCarRepository;
 
     @Override
     public void createElectric(CreateElectricCarDTO carDTO) throws NotFoundException {
@@ -93,13 +98,20 @@ public class CarService implements ICarService {
     @Override
     public List<CarDTO> getByClient(Integer clientId) throws NotFoundException {
         Client client = clientRepository.findById(clientId).orElseThrow(NotFoundException::new);
-            return this.carRepository.findAllByOwner(client).stream().map(CarDTO::toDTO).toList();
+            return this.carRepository.findAllByOwner(client).stream().map(CarDTO::toDTO).collect(Collectors.toList());
+        // return null;
+    }
+
+    @Override
+    public List<CarDTO> getElectricByClient(Integer clientId) throws NotFoundException {
+        Client client = clientRepository.findById(clientId).orElseThrow(NotFoundException::new);
+            return this.electricCarRepository.findAllByOwner(client).stream().map(CarDTO::toDTO).collect(Collectors.toList());
         // return null;
     }
 
     @Override
     public List<CarDTO> getAll() {
-        return carRepository.findAll().stream().map(CarDTO::toDTO).toList();
+        return carRepository.findAll().stream().map(CarDTO::toDTO).collect(Collectors.toList());
         // return null;
     }
 

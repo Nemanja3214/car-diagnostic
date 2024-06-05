@@ -8,6 +8,8 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { CreateClientComponent } from './create-client/create-client.component';
 import { CreateCarComponent } from './create-car/create-car.component';
 import { CheckServiceComponent } from './check-service/check-service.component';
+
+import { CheckBatteryComponent } from './check-battery/check-battery.component';
 export const routes: Routes = [
     {path: "breakdown",
     component: BreakdownComponent
@@ -35,7 +37,11 @@ export const routes: Routes = [
     {path: "car-create",
     component: CreateCarComponent
 },
-{path: "**",
+  {path: "**",
         component: LandingPageComponent
     },
+
+{path: "check-battery",
+    component: CheckBatteryComponent
+},
 ];

@@ -9,6 +9,7 @@ import { Client } from './client.service';
   providedIn: 'root'
 })
 export class CarService {
+ 
   getCarModels() : Observable<CarModel[]> {
     return this.http.get<CarModel[]>(environment.serverOrigin + '/carModel');
   }
@@ -34,8 +35,13 @@ export class CarService {
     return this.http.get<Car[]>(environment.serverOrigin + '/car/client/' + id);
   }
 
+
   getAll() : Observable<any> {
     return this.http.get<any>(environment.serverOrigin + '/car/all');
+
+  getElectricByClient(id: any)  : Observable<Car[]> {
+    return this.http.get<Car[]>(environment.serverOrigin + '/car/electric/client/' + id);
+
   }
 }
 
