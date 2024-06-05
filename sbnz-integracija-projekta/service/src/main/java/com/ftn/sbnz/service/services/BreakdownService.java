@@ -25,6 +25,7 @@ import com.ftn.sbnz.service.services.interfaces.IBreakdownService;
 import com.ftn.util.Simulation;
 import com.ftn.util.Util;
 
+import org.drools.core.time.SessionPseudoClock;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -32,10 +33,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -57,13 +60,16 @@ public class BreakdownService implements IBreakdownService {
     private IElectricCarRepository electricCarRepository;
 
     private KieSession kSession;
+
     private KieSession cepKSession;
+    private KieContainer container;
 
     public BreakdownService(){
-        KieContainer container = KieServices.Factory.get().getKieClasspathContainer();
+        container = KieServices.Factory.get().getKieClasspathContainer();
         // System.out.println(container);
         kSession = container.newKieSession("carKsession");
         cepKSession = container.newKieSession("cepKsession");
+       
     }
 
     // @Autowired
@@ -158,7 +164,7 @@ public class BreakdownService implements IBreakdownService {
         breakdown = breakdownRepository.save(breakdown);
 
         // get newly created objects
-
+        cepKSession = container.newKieSession("cepKsession");
         List<Repairment> previous = cepKSession.getObjects().stream()
         .filter(r -> r instanceof Repairment)
         .map(r -> (Repairment) r)
@@ -170,6 +176,7 @@ public class BreakdownService implements IBreakdownService {
         double scale = 20.0;
         cepKSession.setGlobal("tolerance", 0.01);
         LocalTime now = LocalTime.now();
+        SessionPseudoClock clock = cepKSession.getSessionClock();
 
         double currentValue = Simulation.calculateValue(scale, now);
         double voltageValue = Simulation.calculateValue(scale, now);
@@ -177,6 +184,8 @@ public class BreakdownService implements IBreakdownService {
         System.out.println(voltageValue);
         cepKSession.insert(battery);
         cepKSession.insert(breakdown);
+
+      
         do{
             CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L);
             VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L);
@@ -188,8 +197,13 @@ public class BreakdownService implements IBreakdownService {
             cepKSession.halt();
               System.out.println(currentValue);
             //   System.out.println(voltageValue);
-            Thread.sleep(100);
+            // Thread.sleep(100);
+
+            // advance time
+            clock.advanceTime( 1, TimeUnit.SECONDS );
             now = now.plusSeconds(1);
+
+
             currentValue = Simulation.calculateValue(scale, now);
             voltageValue = Simulation.calculateValue(scale, now);
           
