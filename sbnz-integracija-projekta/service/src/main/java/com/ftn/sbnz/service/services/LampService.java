@@ -23,9 +23,9 @@ public class LampService implements ILampService {
 
     @Override
     public List<RepairmentDTO> getRepairmentByLamps(List<Lamp> lamps, Integer carId) {
-        KieServices ks = KieServices.Factory.get();
-        KieContainer kContainer = ks.getKieClasspathContainer();
-        KieSession ksession = kContainer.newKieSession("bwKsession");
+        KieContainer container = KieServices.Factory.get().getKieClasspathContainer();
+        // System.out.println(container);
+        KieSession ksession = container.newKieSession("bwKsession");
 
         Car car = allCars.findById(carId).get();
 

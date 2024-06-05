@@ -19,7 +19,7 @@ public class LampController {
     ILampService lampService;
 
     @PermitAll
-    @PostMapping("/lamps/check/{carId}")
+    @PostMapping("/check/{carId}")
     public ResponseEntity<?> create(@RequestBody List<Lamp> lamps, @PathVariable Integer carId) {
         List<RepairmentDTO> repairmentDTOs = lampService.getRepairmentByLamps(lamps, carId);
         return ResponseEntity.ok(repairmentDTOs);
