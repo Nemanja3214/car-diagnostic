@@ -19,6 +19,8 @@ rule "is big service"
         isService("Big Service", causedBy, $plate; )
     then
         System.out.println("Big service needed. Plate: " + $plate);
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je uraditi veliki servis."));
+
 end
 
 //rule "is big service"
@@ -35,6 +37,8 @@ rule "is small service"
         isService("Small Service", "Root", $plate; )
     then
         System.out.println("Small service needed. Plate: " + $plate);
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je uraditi mali servis."));
+
 end
 
 rule "is transmission service"
@@ -43,6 +47,8 @@ rule "is transmission service"
         isService("Transmission Service", "Root", $plate; )
     then
         System.out.println("Transmission service needed. Plate: " + $plate);
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je uraditi servis mjenjaca."));
+
 end
 
 rule "is clutch service"
@@ -51,6 +57,8 @@ rule "is clutch service"
         isService("Clutch Service", "Root", $plate; )
     then
         System.out.println("Clutch service needed. Plate: " + $plate);
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je uraditi servis kvacila."));
+
 end
 
 
