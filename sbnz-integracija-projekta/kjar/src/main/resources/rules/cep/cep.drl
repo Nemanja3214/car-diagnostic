@@ -10,10 +10,11 @@ import com.ftn.sbnz.model.models.Breakdown;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 import java.lang.Math;
 
 global Double tolerance;
-
+global String globalStartTime;
 
 rule "Battery Empty"
 agenda-group "checking battery"
@@ -206,12 +207,12 @@ end
 
 rule "Charging Problem Detection"
 agenda-group "checking battery"
-timer (int: 60s)
+timer (int: 60s; start=globalStartTime)
 when
     Battery($currentBreakdownId: currentBreakdownId, $batteryId: id)
     $breakdown: Breakdown(id == $currentBreakdownId)
     accumulate ( 
-        CurrentReadingEvent( $soc: currentSOC != 0.0, batteryId == $batteryId ) from window LastMinuteWindow;
+        CurrentReadingEvent( $soc: currentSOC != 0.0, batteryId == $batteryId) from window LastMinuteWindow;
         $count: count(1);
         $count < 10)
 then

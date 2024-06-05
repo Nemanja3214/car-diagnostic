@@ -32,6 +32,7 @@ import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -176,8 +177,11 @@ public class BreakdownService implements IBreakdownService {
         
         double scale = 20.0;
         cepKSession.setGlobal("tolerance", 0.01);
+  
         LocalDateTime now = LocalDateTime.now();
         SessionPseudoClock clock = cepKSession.getSessionClock();
+         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+        cepKSession.setGlobal("globalStartTime", formatter.format(Util.localToDate(now)));
 
         double currentValue = Simulation.calculateValue(scale, now.toLocalTime());
         double voltageValue = Simulation.calculateValue(scale, now.toLocalTime());

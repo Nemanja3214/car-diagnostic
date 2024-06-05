@@ -45,6 +45,7 @@ public class Simulation {
         return value / scale;
     }
 
+
      // Happy path 3 segments
     public static double calculate3PartValue(double scale, LocalTime now) {
         if(lastStart == null)
