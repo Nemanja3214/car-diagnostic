@@ -3,7 +3,6 @@ package com.ftn.sbnz.service.services;
 import com.ftn.sbnz.model.models.Breakdown;
 import com.ftn.sbnz.model.models.Car;
 import com.ftn.sbnz.model.models.ElectricCar;
-import com.ftn.sbnz.model.models.Init;
 import com.ftn.sbnz.model.models.Lamp;
 import com.ftn.sbnz.model.models.LampKind;
 import com.ftn.sbnz.model.models.Repairment;
@@ -154,7 +153,7 @@ public class BreakdownService implements IBreakdownService {
 
     @Override
     public BatteryCheckDTO checkBattery(int carId) throws InterruptedException, NotFoundException {
-        boolean lowReading = true;
+        boolean lowReading = false;
            Breakdown breakdown = new Breakdown();
 
         //    TODO check if electrical
@@ -185,7 +184,6 @@ public class BreakdownService implements IBreakdownService {
          SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
         // cepKSession.setGlobal("globalStartTime", LocalDateTime.now().);
         //  cepKSession.setGlobal("initPassed", false);
-        cepKSession.insert(new Init(false));
 
         double currentValue = Simulation.calculateValue(scale, now.toLocalTime());
         double voltageValue = Simulation.calculateValue(scale, now.toLocalTime());
@@ -238,6 +236,9 @@ public class BreakdownService implements IBreakdownService {
             // advance time
             clock.advanceTime( 80, TimeUnit.SECONDS );
             now = now.plusSeconds(80);
+
+            currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, Util.localToDate(now));
+            voltageEvent = new VoltageReadingEvent(voltageValue, 1L, Util.localToDate(now));
 
             cepKSession.getAgenda().getAgendaGroup("checking battery").setFocus();
             cepKSession.fireAllRules();

@@ -6,7 +6,6 @@ import com.ftn.sbnz.model.models.battery.BatteryStates;
 import com.ftn.sbnz.model.models.battery.events.VoltageReadingEvent;
 import com.ftn.sbnz.model.models.battery.events.CurrentReadingEvent;
 import com.ftn.sbnz.model.models.Repairment;
-import com.ftn.sbnz.model.models.Init;
 import com.ftn.sbnz.model.models.Breakdown;
 
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import java.util.Date;
 import java.lang.Math;
 
 global Double tolerance;
-// global Boolean initPassed;
 
 rule "Battery Empty"
 agenda-group "checking battery"
@@ -203,16 +201,16 @@ declare window LastMinuteWindow
 end
 
 declare window LastSecondWindow
-    CurrentReadingEvent(currentSOC != 0.0) over window:time(1s)
+    CurrentReadingEvent() over window:time(1s)
 end
 
 rule "Charging Problem Detection" salience 20
 timer(int: 60s)
 agenda-group "checking battery"
 when
-//    Init(initPassed == true)
     Battery($currentBreakdownId: currentBreakdownId, $batteryId: id)
     $breakdown: Breakdown(id == $currentBreakdownId)
+    not Repairment(action == "There is a charger problem, no sufficient readings, check wiring and charger itself")
     accumulate ( 
         CurrentReadingEvent(batteryId == $batteryId) from window LastMinuteWindow;
         $count: count(1);
@@ -221,40 +219,6 @@ then
     System.out.println("There is a charger problem, no sufficient readings");
      insert(new Repairment(null, 20.0, null, null, $breakdown, "There is a charger problem, no sufficient readings, check wiring and charger itself", 0));
 end
-
-rule "CHECK LIST" salience 20
-agenda-group "checking battery"
-when
-//    Init(initPassed == true)
-    // Battery($currentBreakdownId: currentBreakdownId, $batteryId: id)
-    // $breakdown: Breakdown(id == $currentBreakdownId)
-    $lis: List() from  accumulate ( 
-        CurrentReadingEvent( ) from window LastMinuteWindow; collectList() )
-then
-    System.out.println("SIZE CHECK: " + $lis.size());
-end
-
-// rule "Update init" salience 25
-// agenda-group "checking battery"
-// timer(int: 60s)
-// when
-//     $i: Init(initPassed == false)
-// then
-//     modify($i){
-//         setInitPassed(true);
-//     }
-//     System.out.println("INIT IS NOW:"+ $i.isInitPassed());
-// end
-
-
-// rule "Time checker"
-// agenda-group "checking battery"
-// when
-//     eval(initPassed)
-// then
-//     System.out.println("TIMER");
-// end
-
 
 // rule "if SOC doesn't rise for at least 1% every minute, charging problem "
 // agenda-group "checking battery"
