@@ -1,3 +1,30 @@
-<div>
-    <canvas id="myChart" width="400" height="400"></canvas>
-  </div>
+<h3>Check battery condition</h3>
+<form (ngSubmit)="checkBattery()" [formGroup]="chooseCarForm">
+    <mat-form-field>
+        <mat-label>Select client</mat-label>
+        <mat-select #availableClientSelect (selectionChange)="onClientChange($event)">
+            <mat-option *ngFor="let topping of availableClients" [value]="topping">
+            {{topping.name + " " + topping.lastName + " " + topping.phone}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+        <mat-label>Select car</mat-label>
+        <mat-select #availableElectricCarsSelect formControlName="car">
+            <mat-option *ngFor="let topping of availableElectricCars" [value]="topping">
+            {{topping.plate}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br>
+    <br>
+    <button  mat-flat-button color="primary" type="submit" [disabled]="!chooseCarForm.valid">Submit</button>
+</form>
+<div *ngIf="carId" style="display: block;" class="canvasContainer">
+    <canvas baseChart 
+                [datasets]="lineChartData"
+                [labels]="lineChartLabels"
+                [options]="lineChartOptions"
+                [type]="lineChartType"></canvas>
+</div>

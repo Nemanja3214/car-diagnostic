@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -93,13 +94,13 @@ public class CarService implements ICarService {
     @Override
     public List<CarDTO> getByClient(Integer clientId) throws NotFoundException {
         Client client = clientRepository.findById(clientId).orElseThrow(NotFoundException::new);
-            return this.carRepository.findAllByOwner(client).stream().map(CarDTO::toDTO).toList();
+            return this.carRepository.findAllByOwner(client).stream().map(CarDTO::toDTO).collect(Collectors.toList());
         // return null;
     }
 
     @Override
     public List<CarDTO> getAll() {
-        return carRepository.findAll().stream().map(CarDTO::toDTO).toList();
+        return carRepository.findAll().stream().map(CarDTO::toDTO).collect(Collectors.toList());
         // return null;
     }
 }

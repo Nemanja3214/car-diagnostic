@@ -47,15 +47,15 @@ public class CurrentReadingEvent {
     }
 
 
-    public CurrentReadingEvent(double value, Long batteryId, double maxCharge) {
-        this.startTime = new Date();
+    public CurrentReadingEvent(double value, Long batteryId, double maxCharge, Date startTime) {
+        this.startTime = startTime;
         this.value = value;
         this.batteryId = batteryId;
         this.maxCharge = maxCharge;
         this.currentCharge = 0;
     }
-      public CurrentReadingEvent(double value, Long batteryId) {
-        this.startTime = new Date();
+      public CurrentReadingEvent(double value, Long batteryId, Date startTime) {
+        this.startTime = startTime;
         this.value = value;
         this.batteryId = batteryId;
           this.currentCharge = 0;

@@ -32,6 +32,7 @@ import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -175,11 +176,11 @@ public class BreakdownService implements IBreakdownService {
         
         double scale = 20.0;
         cepKSession.setGlobal("tolerance", 0.01);
-        LocalTime now = LocalTime.now();
+        LocalDateTime now = LocalDateTime.now();
         SessionPseudoClock clock = cepKSession.getSessionClock();
 
-        double currentValue = Simulation.calculateValue(scale, now);
-        double voltageValue = Simulation.calculateValue(scale, now);
+        double currentValue = Simulation.calculateValue(scale, now.toLocalTime());
+        double voltageValue = Simulation.calculateValue(scale, now.toLocalTime());
         System.out.println(currentValue);
         System.out.println(voltageValue);
         cepKSession.insert(battery);
@@ -187,8 +188,8 @@ public class BreakdownService implements IBreakdownService {
 
       
         do{
-            CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L);
-            VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L);
+            CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, Util.localToDate(now));
+            VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L, Util.localToDate(now));
 
             cepKSession.insert(voltageEvent);
             cepKSession.insert(currentReadingEvent);
@@ -204,8 +205,10 @@ public class BreakdownService implements IBreakdownService {
             now = now.plusSeconds(1);
 
 
-            currentValue = Simulation.calculateValue(scale, now);
-            voltageValue = Simulation.calculateValue(scale, now);
+            currentValue = Simulation.calculateValue(scale, now.toLocalTime());
+            voltageValue = Simulation.calculateValue(scale, now.toLocalTime());
+            System.out.println(now.toString());
+            //  System.out.println(clock.getCurrentTime().toString());
           
         }while(!Simulation.finished);
         Simulation.lastStart = null;

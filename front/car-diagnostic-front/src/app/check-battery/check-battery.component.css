@@ -1,0 +1,10 @@
+.canvasContainer{
+    height: 800px;
+    width: 90%;
+
+}
+
+form, h3{
+    margin-left: 25px;
+    padding-left: 25px;
+}
