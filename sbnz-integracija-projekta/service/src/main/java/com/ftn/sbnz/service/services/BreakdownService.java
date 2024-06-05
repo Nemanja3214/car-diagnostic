@@ -3,6 +3,7 @@ package com.ftn.sbnz.service.services;
 import com.ftn.sbnz.model.models.Breakdown;
 import com.ftn.sbnz.model.models.Car;
 import com.ftn.sbnz.model.models.ElectricCar;
+import com.ftn.sbnz.model.models.Init;
 import com.ftn.sbnz.model.models.Lamp;
 import com.ftn.sbnz.model.models.LampKind;
 import com.ftn.sbnz.model.models.Repairment;
@@ -183,7 +184,8 @@ public class BreakdownService implements IBreakdownService {
         SessionPseudoClock clock = cepKSession.getSessionClock();
          SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
         // cepKSession.setGlobal("globalStartTime", LocalDateTime.now().);
-         cepKSession.setGlobal("initPassed", false);
+        //  cepKSession.setGlobal("initPassed", false);
+        cepKSession.insert(new Init(false));
 
         double currentValue = Simulation.calculateValue(scale, now.toLocalTime());
         double voltageValue = Simulation.calculateValue(scale, now.toLocalTime());
