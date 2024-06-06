@@ -33,6 +33,8 @@
 <br>
 <h3 *ngIf="!carId">Graph</h3>
 
+<mat-spinner *ngIf="loading"></mat-spinner>
+
 <div class="repairments">
     <h3>Repairments</h3>
     <table mat-table [dataSource]="repairments" class="mat-elevation-z8">
