@@ -78,7 +78,7 @@ export class CheckBatteryComponent implements OnInit{
     if(!this.chooseCarForm.valid)
       return;
     this.carId = this.chooseCarForm.value!.car!.id!;
-    this.breakdownService.checkBattery(this.chooseCarForm.value!.car!.id!, this.randomIntFromInterval(1, 2)) .subscribe(
+    this.breakdownService.checkBattery(this.chooseCarForm.value!.car!.id!, this.randomIntFromInterval(1, 3)) .subscribe(
       (response) => {
         // Handle the successful response
         // this.data = response.currentReadings;

@@ -12,7 +12,7 @@ public class CurrentReadingEvent {
        private Date startTime;
        private double value;
        private Long batteryId;
-       private double currentSOC;
+    //    private double currentSOC;
        private double currentCharge;
 
        private double maxCharge = 0.0;
@@ -43,6 +43,8 @@ public class CurrentReadingEvent {
      public void setNextCharge(double timeDiff) {
         // System.out.println(currentCharge + " - " + timeDiff + " * " + this.value);
         this.currentCharge = currentCharge - timeDiff * this.value;
+        if(currentCharge < 0)
+            currentCharge = 0.0;
         return;
     }
 
@@ -80,15 +82,22 @@ public class CurrentReadingEvent {
 public double getCurrentSOC() {
     //  System.out.println("CURRENT MAX: " + maxCharge);
     //  System.out.println("CURRENT SOC: " + (currentCharge / maxCharge) * 100);
-        if(maxCharge != 0.0)
-            return (currentCharge / maxCharge) * 100.0;
+        if(maxCharge != 0.0){
+            double v = (currentCharge / maxCharge) * 100.0;
+            if(v < 0.0)
+                return 0.0; 
+            if(v > 100.0)
+                return 100.0;
+            return v;
+        }
+           
         return 0.0;
     }
 
-    @Modifies( { "currentSOC" } )
-    public void setCurrentSOC(double currentSOC) {
-        this.currentSOC = currentSOC;
-    }
+    // @Modifies( { "currentSOC" } )
+    // public void setCurrentSOC(double currentSOC) {
+    //     this.currentSOC = currentSOC;
+    // }
 
 public Long getBatteryId() {
         return batteryId;
