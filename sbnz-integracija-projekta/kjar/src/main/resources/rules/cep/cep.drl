@@ -102,8 +102,8 @@ agenda-group "checking battery"
             //  insert(new Repairment(null, 20.0, null, null, $breakdown, "There is a charger problem, no sufficient readings, check wiring and charger itself", 0));
         }
 
-        if(Math.abs($currentReading.getValue() - $battery.getNominalMaxCharge()) > 5){
-            System.out.println("Battery maximum charge is lower and it's at: " + (Math.abs($currentReading.getValue() / $battery.getNominalMaxCharge()))* 100);
+        if(Math.abs($currentReading.getMaxCharge() - $battery.getNominalMaxCharge()) > 5){
+            System.out.println("Battery maximum charge is lower and it's at: " + (Math.abs($currentReading.getMaxCharge() / $battery.getNominalMaxCharge()))* 100);
               insert(new Repairment(null, 20.0, null, null, $breakdown, "Battery maximum charge is lower "));
         }
         System.out.println("CURRENT READING NOW: " + $currentReading.getValue());

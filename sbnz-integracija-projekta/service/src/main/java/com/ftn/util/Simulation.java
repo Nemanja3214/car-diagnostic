@@ -4,11 +4,11 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
 public class Simulation {
-    public static LocalTime lastStart;
-    public static boolean finished = false; 
+    public LocalTime lastStart;
+    public boolean finished = false; 
 
     // Happy path 2 segments
-    public static double calculateValue(double scale, LocalTime now) {
+    public double calculateValue(double scale, LocalTime now) {
         if(lastStart == null)
             lastStart = now;
         
@@ -47,7 +47,7 @@ public class Simulation {
 
 
      // Happy path 3 segments
-    public static double calculate3PartValue(double scale, LocalTime now) {
+    public double calculate3PartValue(double scale, LocalTime now) {
         if(lastStart == null)
             lastStart = now;
         
@@ -94,7 +94,7 @@ public class Simulation {
     }
 
 
-    public static double calculateDegradationValue(double scale, LocalTime now) {
+    public double calculateDegradationValue(double scale, LocalTime now) {
         if(lastStart == null)
             lastStart = now;
         
