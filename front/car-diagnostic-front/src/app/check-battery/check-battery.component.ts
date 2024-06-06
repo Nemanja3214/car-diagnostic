@@ -13,18 +13,21 @@ import { Car, CarService } from '../services/car.service';
 import { Client, ClientService } from '../services/client.service';
 import { RepairmentDTO } from '../repairments/repairments.component';
 import {MatTableModule} from '@angular/material/table';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @Component({
   selector: 'app-check-battery',
   standalone: true,
   imports: [FormsModule, MatFormFieldModule, ReactiveFormsModule,BaseChartDirective, CommonModule,MatSelectModule,MatButtonModule,
-    HttpClientModule, MatTableModule],
+    HttpClientModule, MatTableModule,MatProgressSpinnerModule],
   templateUrl: './check-battery.component.html',
   providers: [BreakdownService, ClientService, CarService],
   styleUrl: './check-battery.component.css'
 })
 export class CheckBatteryComponent implements OnInit{
+
+  loading: boolean = false;
 
   data: GraphData[] = [];
   chartData: {x: number, y: number}[] = [];
@@ -77,11 +80,13 @@ export class CheckBatteryComponent implements OnInit{
   checkBattery(){
     if(!this.chooseCarForm.valid)
       return;
+      this.loading = true;
     this.carId = this.chooseCarForm.value!.car!.id!;
     this.breakdownService.checkBattery(this.chooseCarForm.value!.car!.id!, this.randomIntFromInterval(1, 3)) .subscribe(
       (response) => {
         // Handle the successful response
         // this.data = response.currentReadings;
+        this.loading = false;
         response.currentReadings.sort(this.cmpFn);
         this.lineChartData = [];
         this.lineChartLabels = [];
