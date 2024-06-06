@@ -1,5 +1,6 @@
 package com.ftn.sbnz.service;
 
+import java.io.File;
 import java.util.Arrays;
 
 import org.kie.api.KieServices;
@@ -24,6 +25,7 @@ public class ServiceApplication  {
 	
 	private static Logger log = LoggerFactory.getLogger(ServiceApplication.class);
 	public static void main(String[] args) {
+		//   System.out.println("CURRENT DIRECTORY: "+ new File(".").getAbsolutePath());
 		ApplicationContext ctx = SpringApplication.run(ServiceApplication.class, args);
 //
 //		String[] beanNames = ctx.getBeanDefinitionNames();

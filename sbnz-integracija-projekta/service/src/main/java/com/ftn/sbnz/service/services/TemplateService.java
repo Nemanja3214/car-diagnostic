@@ -19,7 +19,7 @@ import org.drools.template.DataProvider;
 import org.drools.template.ObjectDataCompiler;
 import org.drools.template.objects.ArrayDataProvider;
 
-
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -39,8 +39,10 @@ public class TemplateService implements ITemplateService {
     @Override
     public void createServiceRulesFromTemplate(ServiceTempDTO dto) {
         InputStream template = null;
+        String separator = File.separator;
         try {
-            template = new FileInputStream("D:\\Fax\\SIIT-8.Sem\\SBZ\\car-diagnostic\\sbnz-integracija-projekta\\kjar\\src\\main\\resources\\rules\\templatable\\services.drt");
+            // System.out.println("CURRENT DIRECTORY: "+ new File(".").getAbsolutePath());
+            template = new FileInputStream("." + separator + "kjar" + separator + "src" + separator + "main" + separator + "resources" + separator + "rules" + separator + "templatable" + separator + "services.drt");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -82,8 +84,9 @@ public class TemplateService implements ITemplateService {
     @Override
     public void createDiscountRulesFromTemplate(DiscountTempDTO dto) {
         InputStream template = null;
+        String separator = File.separator;
         try {
-            template = new FileInputStream("D:\\Fax\\SIIT-8.Sem\\SBZ\\car-diagnostic\\sbnz-integracija-projekta\\kjar\\src\\main\\resources\\rules\\templatable\\services.drt");
+            template = new FileInputStream("."+ separator + "kjar" + separator + "src" + separator + "main" + separator + "resources" + separator + "rules" + separator + "templatable" + separator + "discount.drt");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -98,7 +101,7 @@ public class TemplateService implements ITemplateService {
 
         System.out.println(drl);
 
-        serviceKsession = createKieSessionFromDRL(drl);
+        discountKsession = createKieSessionFromDRL(drl);
     }
 
     @Override

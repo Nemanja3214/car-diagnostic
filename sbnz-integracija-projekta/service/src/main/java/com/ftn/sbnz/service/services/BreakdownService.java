@@ -300,7 +300,12 @@ public class BreakdownService implements IBreakdownService {
          .collect(Collectors.toList());
 
         BatteryCheckDTO dto = new BatteryCheckDTO();
-        dto.setRepairments(Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList()));
+        // check discount and modify repairments if needed
+         List<Repairment> newReps = Util.getListDiff(after, previous).stream().collect(Collectors.toList());
+         newReps = this.templateService.checkDiscount(newReps);
+         repairmentRepository.saveAll(newReps);
+        dto.setRepairments(newReps.stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList()));
+
         List<CurrentReadingDTO> readingDTOs = cepKSession.getObjects().stream()
         .filter(a -> a instanceof CurrentReadingEvent)
         .map(a -> CurrentReadingDTO.toDTO((CurrentReadingEvent)a))
