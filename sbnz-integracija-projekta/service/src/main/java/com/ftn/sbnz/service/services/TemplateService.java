@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TemplateService implements ITemplateService {
@@ -112,7 +113,7 @@ public class TemplateService implements ITemplateService {
         List<Repairment> previous = this.serviceKsession.getObjects().stream()
         .filter(r -> r instanceof Repairment)
         .map(r -> (Repairment) r)
-        .toList();
+        .collect(Collectors.toList());;
 
         this.serviceKsession.insert(car);
         int ruleCount = this.serviceKsession.fireAllRules();
@@ -122,10 +123,10 @@ public class TemplateService implements ITemplateService {
          List<Repairment> after = this.serviceKsession.getObjects().stream()
         .filter(r -> r instanceof Repairment)
         .map(r -> (Repairment) r)
-        .toList();
+        .collect(Collectors.toList());
 
         // after - previous
-        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).toList();
+        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
     }
 
     @Override

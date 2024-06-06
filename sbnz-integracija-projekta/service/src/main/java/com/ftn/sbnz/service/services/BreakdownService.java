@@ -136,9 +136,9 @@ public class BreakdownService implements IBreakdownService {
         .map(r -> (Repairment) r)
         .collect(Collectors.toList());
 
-         List<Repairment> newReps = Util.getListDiff(after, previous).stream().toList();
+         List<Repairment> newReps = Util.getListDiff(after, previous).stream().collect(Collectors.toList());
          newReps = this.templateService.checkDiscount(newReps);
-         return newReps.stream().map(r -> new RepairmentDTO(r)).toList();
+         return newReps.stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
         // after - previous
 //        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).toList();
      //   return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
