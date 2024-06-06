@@ -39,7 +39,7 @@ public class LampService implements ILampService {
         List<Repairment> previous = ksession.getObjects().stream()
         .filter(r -> r instanceof Repairment)
         .map(r -> (Repairment) r)
-        .collect(Collectors.toList());;
+        .collect(Collectors.toList());
 
         int ruleCount = ksession.fireAllRules();
         System.out.println(ruleCount);

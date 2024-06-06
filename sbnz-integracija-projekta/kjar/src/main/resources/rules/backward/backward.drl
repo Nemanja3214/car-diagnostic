@@ -2,8 +2,14 @@ package backward;
 import com.ftn.sbnz.model.models.Car
 import com.ftn.sbnz.model.models.Lamp
 import com.ftn.sbnz.model.models.Breakdown
+import com.ftn.sbnz.model.models.Repairment
 import com.ftn.sbnz.model.models.Symptom
 import java.util.Collection;
+
+import java.util.HashSet;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 
 query isService(A, B, plate)
@@ -71,17 +77,18 @@ end
 //        )
 //end
 
+// function int countDistinct(Collection<Car> collection) {
+//     return new HashSet<Car>(collection).size();
+// }
 
 query "getCarsWithSymptom"
-    $count : Number() from accumulate (
+    $set : Set() from accumulate (
             $b: Breakdown($car: car),
-            countDistinct($car)
+            collectSet($car)
         )
+    
 end
 
-function int countDistinct(java.util.Collection<?> collection) {
-    return new java.util.HashSet<>(collection).size();
-}
 
 //rule "Print Count of Cars With Symptom"
 //when
@@ -92,9 +99,13 @@ function int countDistinct(java.util.Collection<?> collection) {
 //    System.out.println("Number of different cars with symptom: " + $result);
 //end
 
-rule "Print Count of Cars With Symptom"
+rule "Print Count of Cars With same Symptoms"
 when
-    $result : Number() from getCarsWithSymptom()
+    $currentBreakdown: Breakdown($currentCar: car)
+     $set : Set() from accumulate (
+            $b: Breakdown($car: car != $currentCar, symptoms.containsAll($currentBreakdown.getSymptoms())),
+            collectSet($car)
+        )
 then
-    System.out.println("Number of different cars with symptom: " + $result);
+    System.out.println("Number of different cars with symptom: " + $set.size());
 end
