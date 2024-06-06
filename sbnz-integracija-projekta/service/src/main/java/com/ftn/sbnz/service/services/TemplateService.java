@@ -124,7 +124,7 @@ public class TemplateService implements ITemplateService {
          List<Repairment> after = this.serviceKsession.getObjects().stream()
         .filter(r -> r instanceof Repairment)
         .map(r -> (Repairment) r)
-        .collect(Collectors.toList());;
+        .collect(Collectors.toList());
 
         // after - previous
         return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
