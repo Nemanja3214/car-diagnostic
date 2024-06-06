@@ -81,6 +81,7 @@ end
 rule "Set Maximum charge" salience 10
 agenda-group "checking battery"
     when
+
         $list : ArrayList(size >= 2) from collect (CurrentReadingEvent() from window LastEventWindow)
         $previousReading : CurrentReadingEvent() from $list.get(0)
         $currentReading : CurrentReadingEvent(this after $previousReading, $batteryId: batteryId, value > tolerance) from $list
@@ -88,21 +89,22 @@ agenda-group "checking battery"
          $voltageReading: VoltageReadingEvent($batteryId == batteryId)
         //  last voltage reading
         not VoltageReadingEvent(this != $voltageReading, $voltageReading.getBatteryId() == batteryId, startTime > $voltageReading.getStartTime() )
-        $battery : Battery(state == BatteryStates.CHARGED, id == $batteryId)
+        $battery : Battery(state == BatteryStates.CHARGED, id == $batteryId, $currentBreakdownId: currentBreakdownId)
+        $breakdown: Breakdown(id == $currentBreakdownId)
     then
         modify($currentReading) {
             setMaxCharge()
         }
         // detect lower maximum voltage
         // System.out.println(($voltageReading.getValue() / $battery.getNominalMaxVoltage())* 100 > 0);
-        if(Math.abs($voltageReading.getValue() - $battery.getNominalMaxVoltage()) > 0.3){
+        if(Math.abs($voltageReading.getValue() - $battery.getNominalMaxVoltage()) > 5){
             System.out.println("Battery maximum voltage is lower and it's at: " + (Math.abs($voltageReading.getValue() / $battery.getNominalMaxVoltage()))* 100);
             //  insert(new Repairment(null, 20.0, null, null, $breakdown, "There is a charger problem, no sufficient readings, check wiring and charger itself", 0));
         }
 
-        if(Math.abs($currentReading.getValue() - $battery.getNominalMaxCharge()) > 0.3){
+        if(Math.abs($currentReading.getValue() - $battery.getNominalMaxCharge()) > 5){
             System.out.println("Battery maximum charge is lower and it's at: " + (Math.abs($currentReading.getValue() / $battery.getNominalMaxCharge()))* 100);
-             //  insert(new Repairment(null, 20.0, null, null, $breakdown, "There is a charger problem, no sufficient readings, check wiring and charger itself", 0));
+              insert(new Repairment(null, 20.0, null, null, $breakdown, "Battery maximum charge is lower "));
         }
         System.out.println("CURRENT READING NOW: " + $currentReading.getValue());
         System.out.println("MAXIMUM CHARGE IS: " + $currentReading.getMaxCharge());
