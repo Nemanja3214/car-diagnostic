@@ -24,7 +24,7 @@ when
     $sum: Number() from accumulate (
        Repairment(this != $c, $price: price ) from $car.getRepairments(),
        sum( $price ))
-   // eval($sum.doubleValue() > Double.parseDouble("@{upper}"))
+    eval($sum.doubleValue() > Double.parseDouble("@{upper}"))
 then
     System.out.println("UPPER");
     modify($c){ setDiscount(new Discount(10.0)); }
@@ -35,11 +35,11 @@ rule "Calculate discount mid Discount_@{row.rowNumber}"
 no-loop true
 when
     $c: Repairment($bd: breakdown, $p: price)
-    //$car: Car() from $bd.getCar()
-    //$sum: Number() from accumulate (
-      // Repairment(this != $c, $price: price ) from $car.getRepairments(),
-       //sum( $price ))
-    //eval($sum.doubleValue() >= Double.parseDouble("@{lower}") && $sum.doubleValue() <= Double.parseDouble("@{upper}"))
+    $car: Car() from $bd.getCar()
+    $sum: Number() from accumulate (
+       Repairment(this != $c, $price: price ) from $car.getRepairments(),
+       sum( $price ))
+    eval($sum.doubleValue() >= Double.parseDouble("@{lower}") && $sum.doubleValue() <= Double.parseDouble("@{upper}"))
 then
     System.out.println("MID");
     modify($c){ setDiscount(new Discount(10.0)); }
@@ -55,7 +55,7 @@ when
     $sum: Number() from accumulate (
        Repairment(this != $c, $price: price ) from $car.getRepairments(),
        sum( $price ))
-   // eval($sum.doubleValue() < Double.parseDouble("@{lower}"))
+    eval($sum.doubleValue() < Double.parseDouble("@{lower}"))
 then
     System.out.println($sum);
 

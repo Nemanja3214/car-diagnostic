@@ -139,7 +139,10 @@ public class TemplateService implements ITemplateService {
             this.createDiscountRulesFromTemplate(new DiscountTempDTO("20", "200"));
         }
 
-        this.discountKsession.insert(repairments);
+        for(Repairment r : repairments){
+            this.discountKsession.insert(r);
+        }
+      
         int ruleCount = this.discountKsession.fireAllRules();
         System.out.println(ruleCount);
 
