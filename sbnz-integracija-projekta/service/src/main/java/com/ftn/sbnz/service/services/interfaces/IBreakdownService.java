@@ -17,7 +17,7 @@ public interface IBreakdownService {
 
     BreakdownDTO get(Integer id);
 
-    List<String> getSymptoms();
+    List<String> getSymptoms(String purpose);
 
     BatteryCheckDTO checkBattery(int carId, int caseScenario) throws InterruptedException, NotFoundException;
 }

@@ -12,8 +12,11 @@ export class BreakdownService {
 
   constructor(private http: HttpClient) { }
 
-  getSymptoms(): Observable<string[]> {
-    return this.http.get<string[]>(environment.serverOrigin + '/breakdown/symptoms');
+  getSymptoms(isElectric: boolean): Observable<string[]> {
+    return this.http.get<string[]>(environment.serverOrigin + '/breakdown/symptoms', {
+      params: {
+        purpose: isElectric ? "ELECTRIC": "GAS",
+      }});
 }
 
 createBreakdown(createBreakdown: CreateBreakdown): Observable<RepairmentDTO[]> {

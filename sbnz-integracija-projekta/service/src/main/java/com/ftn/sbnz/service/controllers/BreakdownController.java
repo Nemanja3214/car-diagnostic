@@ -49,8 +49,8 @@ public class BreakdownController {
 
     @PermitAll
     @GetMapping("symptoms")
-    public ResponseEntity<?> getSymptoms() throws NotFoundException {
-        List<String> symptoms = breakdownService.getSymptoms();
+    public ResponseEntity<?> getSymptoms(@RequestParam String purpose) throws NotFoundException {
+        List<String> symptoms = breakdownService.getSymptoms(purpose);
         return ResponseEntity.ok(symptoms);
     }
 

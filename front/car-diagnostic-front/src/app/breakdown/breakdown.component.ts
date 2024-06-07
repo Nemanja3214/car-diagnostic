@@ -42,7 +42,7 @@ export class BreakdownComponent implements OnInit{
   @Input()
   codeLamp = new FormControl(false);
 
-  isElectric: boolean = false;
+  isElectric: boolean | null = null;
 
   createForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -63,16 +63,7 @@ export class BreakdownComponent implements OnInit{
 
 
   ngOnInit(): void {
-    this.breakdownService.getSymptoms() .subscribe(
-      (response) => {
-        // Handle the successful response
-        this.availableItems = response
-      },
-      (error) => {
-        // This block will only execute if catchError is used
-        console.error('Error handler:', error);
-      }
-    );
+ 
 
     this.clientService.getClients() .subscribe(
       (response) => {
@@ -132,5 +123,15 @@ export class BreakdownComponent implements OnInit{
     // Update the selected option when the selection changes
     let selectedOption = event.value;
     this.isElectric = selectedOption.electric;
+    this.breakdownService.getSymptoms(this.isElectric!) .subscribe(
+      (response) => {
+        // Handle the successful response
+        this.availableItems = response
+      },
+      (error) => {
+        // This block will only execute if catchError is used
+        console.error('Error handler:', error);
+      }
+    );
   }
 }

@@ -166,11 +166,11 @@ public class BreakdownService implements IBreakdownService {
     }
 
     @Override
-    public List<String> getSymptoms() {
-
+    public List<String> getSymptoms(String strPurpose) {
+        SymptomPurpose purpose = SymptomPurpose.valueOf(strPurpose);
         List<String> stringValues = new ArrayList<>();
         for (Symptom symptom : Symptom.values()) {
-            if(symptom.isShow())
+            if(symptom.isShow() && (symptom.getPurpose() == purpose || symptom.getPurpose() == SymptomPurpose.BOTH))
                 stringValues.add(symptom.getStringValue());
         }
         return stringValues;
