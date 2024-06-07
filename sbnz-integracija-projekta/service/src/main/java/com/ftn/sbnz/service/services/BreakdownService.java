@@ -25,6 +25,7 @@ import com.ftn.sbnz.service.services.interfaces.IBreakdownService;
 
 import com.ftn.sbnz.service.services.interfaces.ITemplateService;
 
+import com.ftn.util.Container;
 import com.ftn.util.Simulation;
 import com.ftn.util.Util;
 
@@ -75,8 +76,10 @@ public class BreakdownService implements IBreakdownService {
     private KieContainer container;
 
     public BreakdownService(){
-        container = KieServices.Factory.get().getKieClasspathContainer();
+//        container = KieServices.Factory.get().getKieClasspathContainer();
         // System.out.println(container);
+        KieContainer container = Container.getKieContainer();
+
         kSession = container.newKieSession("carKsession");
         cepKSession = container.newKieSession("cepKsession");
        

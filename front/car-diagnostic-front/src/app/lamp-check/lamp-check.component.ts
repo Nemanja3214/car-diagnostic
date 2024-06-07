@@ -78,6 +78,7 @@ export class LampCheckComponent {
         next: (result) => {
           console.log(result);
           this.dataSource = result;
+          this.lamps = [];
         },
         error: (error) => {
           console.log(error);

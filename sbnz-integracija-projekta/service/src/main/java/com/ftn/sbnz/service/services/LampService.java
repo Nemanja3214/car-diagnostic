@@ -6,6 +6,7 @@ import com.ftn.sbnz.model.models.Repairment;
 import com.ftn.sbnz.service.dtos.repairment.RepairmentDTO;
 import com.ftn.sbnz.service.repositories.ICarRepository;
 import com.ftn.sbnz.service.services.interfaces.ILampService;
+import com.ftn.util.Container;
 import com.ftn.util.Util;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
@@ -24,8 +25,9 @@ public class LampService implements ILampService {
 
     @Override
     public List<RepairmentDTO> getRepairmentByLamps(List<Lamp> lamps, Integer carId) {
-        KieContainer container = KieServices.Factory.get().getKieClasspathContainer();
+//        KieContainer container = KieServices.Factory.get().getKieClasspathContainer();
         // System.out.println(container);
+        KieContainer container = Container.getKieContainer();
         KieSession ksession = container.newKieSession("bwKsession");
 
         Car car = allCars.findById(carId).get();

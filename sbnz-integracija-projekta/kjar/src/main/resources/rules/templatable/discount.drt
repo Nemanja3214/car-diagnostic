@@ -27,7 +27,7 @@ when
     eval($sum.doubleValue() > Double.parseDouble("@{upper}"))
 then
     System.out.println("UPPER");
-    modify($c){ setDiscount(new Discount(10.0)); }
+    modify($c){ setDiscount(new Discount(15.0)); }
     modify($c){ setPrice($p - 0.15 * $p); }
 end
 
