@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environment/environment';
@@ -8,6 +8,7 @@ import { RepairmentDTO } from '../repairments/repairments.component';
   providedIn: 'root'
 })
 export class BreakdownService {
+
 
 
   constructor(private http: HttpClient) { }
@@ -32,6 +33,13 @@ checkBattery(carId: number, caseScenarion: number) {
     params: {
       caseScenario: caseScenarion,
     }});
+}
+sameCases(s: string[]): Observable<number> {
+  return this.http.post<number>(environment.serverOrigin + '/breakdown/same-symptoms', {symptoms: s}, {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    })
+  });
 }
 }
 

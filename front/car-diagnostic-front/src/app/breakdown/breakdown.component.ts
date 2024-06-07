@@ -35,6 +35,7 @@ import { RepairmentDTO } from '../repairments/repairments.component';
 export class BreakdownComponent implements OnInit{
   availableCars: Car[] = [];
   availableClients: Client[] = [];
+  cnt: number| null = null;
 
   @Input()
   engineLamp = new FormControl(false);
@@ -98,6 +99,17 @@ export class BreakdownComponent implements OnInit{
         console.log(response);
         this.snackBarService.showSnackbar("Success");
         this.dataSource = response;
+      },
+      (error) => {
+        // This block will only execute if catchError is used
+        console.error('Error handler:', error);
+      }
+    );
+
+    this.breakdownService.sameCases(dto.symptoms).subscribe(
+      (response) => {
+        console.log(response);
+        this.cnt = response;
       },
       (error) => {
         // This block will only execute if catchError is used

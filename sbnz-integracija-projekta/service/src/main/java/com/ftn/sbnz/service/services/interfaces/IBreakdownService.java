@@ -5,6 +5,7 @@ import com.ftn.sbnz.service.dtos.breakdown.BatteryCheckDTO;
 import com.ftn.sbnz.service.dtos.breakdown.BreakdownDTO;
 import com.ftn.sbnz.service.dtos.breakdown.CreateBreakdownDTO;
 import com.ftn.sbnz.service.dtos.breakdown.CurrentReadingDTO;
+import com.ftn.sbnz.service.dtos.breakdown.SymptomsDTO;
 import com.ftn.sbnz.service.dtos.repairment.RepairmentDTO;
 import com.ftn.sbnz.service.exceptions.NotFoundException;
 
@@ -20,4 +21,6 @@ public interface IBreakdownService {
     List<String> getSymptoms(String purpose);
 
     BatteryCheckDTO checkBattery(int carId, int caseScenario) throws InterruptedException, NotFoundException;
+
+    Long countSameSymptoms(SymptomsDTO dto) throws NotFoundException;
 }
