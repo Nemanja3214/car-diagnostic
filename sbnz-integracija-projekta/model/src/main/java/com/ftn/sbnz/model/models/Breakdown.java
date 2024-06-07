@@ -72,5 +72,13 @@ public class Breakdown {
 
     public Breakdown() {}
 
-
+    @Override
+    public String toString() {
+        return "Breakdown{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", car=" + car +
+                ", symptoms=" + symptoms +
+                '}';
+    }
 }

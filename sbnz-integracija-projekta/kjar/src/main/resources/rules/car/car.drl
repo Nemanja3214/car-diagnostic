@@ -172,7 +172,7 @@ rule "engine check lamp is on"
 salience 20
 no-loop true
     when
-        $car: GasCar($p: plate, $p1: potentionalCoolingLeakage, $p2: potentionalTurbineIssue)
+        $car: GasCar($p: plate, $p1: potentionalCoolingLeakage, $p2: potentionalTurbineIssue, ruleFinished==false)
         exists Lamp(plate == $p, lampKind=="Engine") from $car.getLamps()
         eval($p1 == false && $p2 == false)
     then
@@ -190,9 +190,10 @@ end
 // end
 
 rule "potential engine issue and strange noise during acceleration"
+salience 19
 no-loop true
     when
-        $car: Car(potentionalEngineIssue == true)
+        $car: GasCar(potentionalEngineIssue == true)
         $breakdown : Breakdown(car == $car)
         exists Symptom( this == Symptom.WEIRD_NOISE_ACCELERATION ) from $breakdown.getSymptoms()
     then
@@ -202,9 +203,10 @@ no-loop true
 end
 
 rule "potential engine issue and hight engine temp"
+salience 19
 no-loop true
     when
-        $car: Car(potentionalEngineIssue == true)
+        $car: GasCar(potentionalEngineIssue == true)
         $breakdown : Breakdown(car == $car)
         exists Symptom( this == Symptom.HIGH_ENGINE_TEMP ) from $breakdown.getSymptoms()
     then
@@ -213,12 +215,14 @@ no-loop true
 end
 
 rule "potential turbine issue and white smoke"
+salience 18
 no-loop true
     when
         $car: GasCar(potentionalTurbineIssue == true)
         $breakdown : Breakdown(car == $car)
         exists Symptom( this == Symptom.WHITE_SMOKE ) from $breakdown.getSymptoms()
     then
+        modify((GasCar)$car){setRuleFinished(true);}
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
@@ -227,12 +231,14 @@ no-loop true
 end
 
 rule "potential cooling issue and low liquid"
+salience 18
 no-loop true
     when
         $car: GasCar(potentionalCoolingLeakage == true)
         $breakdown : Breakdown($car == car)
         exists Symptom( this == Symptom.LOW_COOLING_LIQUID ) from $breakdown.getSymptoms()
     then
+        modify((GasCar)$car){setRuleFinished(true);}
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}

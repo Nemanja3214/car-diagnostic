@@ -6,6 +6,7 @@ package templatetable;
 
 import com.ftn.sbnz.model.models.Repairment;
 import com.ftn.sbnz.model.models.Car;
+import com.ftn.sbnz.model.models.GasCar;
 import com.ftn.sbnz.model.models.Breakdown;
 import com.ftn.sbnz.model.models.Discount;
 

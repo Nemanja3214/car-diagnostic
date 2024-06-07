@@ -1,5 +1,6 @@
 package com.ftn.sbnz.service.services;
 
+import com.ftn.sbnz.model.models.Breakdown;
 import com.ftn.sbnz.model.models.Car;
 import com.ftn.sbnz.model.models.Repairment;
 import com.ftn.sbnz.service.dtos.repairment.RepairmentDTO;
@@ -24,14 +25,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
 public class TemplateService implements ITemplateService {
 
-    public KieSession serviceKsession;
-    public KieSession discountKsession;
+    public static KieSession serviceKsession;
+    public static KieSession discountKsession;
 
     @Autowired
     ICarRepository allCars;
@@ -55,7 +55,7 @@ public class TemplateService implements ITemplateService {
         ObjectDataCompiler converter = new ObjectDataCompiler();
         String drl = converter.compile(data, template);
 
-        // System.out.println(drl);
+         System.out.println(drl);
 
         serviceKsession = createKieSessionFromDRL(drl);
 
@@ -99,7 +99,7 @@ public class TemplateService implements ITemplateService {
         ObjectDataCompiler converter = new ObjectDataCompiler();
         String drl = converter.compile(data, template);
 
-        // System.out.println(drl);
+         System.out.println(drl);
 
         discountKsession = createKieSessionFromDRL(drl);
     }
@@ -134,15 +134,18 @@ public class TemplateService implements ITemplateService {
     }
 
     @Override
-    public List<Repairment> checkDiscount(Car car, List<Repairment> repairments) {
+    public List<Repairment> checkDiscount(Car car, List<Repairment> repairments, Breakdown breakdown) {
         if (this.discountKsession == null) {
             this.createDiscountRulesFromTemplate(new DiscountTempDTO("20", "80"));
         }
 
         for(Repairment r : repairments){
+            r.setBreakdown(breakdown);
             this.discountKsession.insert(r);
         }
-      
+        breakdown.setCar(car);
+        this.discountKsession.insert(breakdown);
+        this.discountKsession.insert(car);
         int ruleCount = this.discountKsession.fireAllRules();
         System.out.println(ruleCount);
 

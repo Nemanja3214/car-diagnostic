@@ -103,6 +103,7 @@ public class BreakdownService implements IBreakdownService {
 
         GasCar car = gasCarRepository.findById(dto.getCarId()).orElseThrow(NotFoundException::new);
         breakdown.setCar(car);
+        car.setRuleFinished(false);
 
         if (dto.isEngineLamp()) {
             // System.out.println("ENGINE LAMP ON");
@@ -117,7 +118,6 @@ public class BreakdownService implements IBreakdownService {
             car.getLamps().add(lamp);
 
         }
-
         breakdown = breakdownRepository.save(breakdown);
 
         // get newly created objects
@@ -151,7 +151,7 @@ public class BreakdownService implements IBreakdownService {
 
         carRepository.save(car);
 
-        newReps = this.templateService.checkDiscount(car, newReps);
+        newReps = this.templateService.checkDiscount(car, newReps, breakdown);
 
         return newReps.stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
         // after - previous
@@ -324,7 +324,7 @@ public class BreakdownService implements IBreakdownService {
        
         carRepository.save(car);
 
-        newReps = this.templateService.checkDiscount(car, newReps);
+        newReps = this.templateService.checkDiscount(car, newReps, breakdown);
           dto.setRepairments(newReps.stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList()));
 
         List<CurrentReadingDTO> readingDTOs = cepKSession.getObjects().stream()

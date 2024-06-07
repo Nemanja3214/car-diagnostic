@@ -61,14 +61,14 @@ export class ModifyTemplateComponent {
   }
 
   sendDiscountParams() {
-    // this.submited = true;
 
     const params = {
       lower: this.discountForm.value.lower,
       upper: this.discountForm.value.upper,
     };
 
-    if (this.discountForm.valid) {
+    // if (this.discountForm.valid) {
+      console.log('usao')
       this.templateService.sendDiscountParams(params).subscribe({
         next: (result) => {
           console.log(result);
@@ -82,7 +82,7 @@ export class ModifyTemplateComponent {
         //  });
         },
       });
-    }
+    // }
   }
 
 }
