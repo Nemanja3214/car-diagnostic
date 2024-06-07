@@ -19,6 +19,16 @@
         </mat-select>
     </mat-form-field>
     <br>
+    <mat-form-field>
+      <mat-label>Select scenario</mat-label>
+      <mat-select [(value)]="caseScenario">
+          <mat-option  [value]="1">1</mat-option>
+          <mat-option  [value]="2">2</mat-option>
+          <mat-option  [value]="3" selected>3</mat-option>
+      </mat-select>
+  </mat-form-field>
+  <br>
+    <br>
     <br>
     <button  mat-flat-button color="primary" type="submit" [disabled]="!chooseCarForm.valid">Submit</button>
 </form>

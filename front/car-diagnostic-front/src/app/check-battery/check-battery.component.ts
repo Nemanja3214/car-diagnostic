@@ -32,6 +32,7 @@ export class CheckBatteryComponent implements OnInit{
   data: GraphData[] = [];
   chartData: {x: number, y: number}[] = [];
   carId: number | null = null;
+  caseScenario : number = 3;
 
   chooseCarForm = new FormGroup({
     car: new FormControl<Car | null>(null, [Validators.required]),
@@ -82,7 +83,7 @@ export class CheckBatteryComponent implements OnInit{
       return;
       this.loading = true;
     this.carId = this.chooseCarForm.value!.car!.id!;
-    this.breakdownService.checkBattery(this.chooseCarForm.value!.car!.id!, this.randomIntFromInterval(1, 3)) .subscribe(
+    this.breakdownService.checkBattery(this.chooseCarForm.value!.car!.id!, this.caseScenario) .subscribe(
       (response) => {
         // Handle the successful response
         // this.data = response.currentReadings;
