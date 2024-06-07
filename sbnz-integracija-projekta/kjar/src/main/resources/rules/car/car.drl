@@ -172,19 +172,28 @@ rule "engine check lamp is on"
 salience 20
 no-loop true
     when
-        $car: GasCar($p: plate, $p1: potentionalCoolingLeakage, $p2: potentionalTurbineIssue)
+        $car: GasCar($p: plate, $p1: potentionalCoolingLeakage, $p2: potentionalTurbineIssue, ruleFinished==false)
         exists Lamp(plate == $p, lampKind=="Engine") from $car.getLamps()
-        //eval($p1 == false && $p2 == false)
+        eval($p1 == false && $p2 == false)
     then
         modify($car){setPotentionalEngineIssue(true);}
         System.out.println("LEVEL 1!");
 
 end
 
+// rule "PRINT"
+//     when
+//         Breakdown()
+//     then
+//         System.out.println("PRINT");
+
+// end
+
 rule "potential engine issue and strange noise during acceleration"
+salience 19
 no-loop true
     when
-        $car: Car(potentionalEngineIssue == true)
+        $car: GasCar(potentionalEngineIssue == true)
         $breakdown : Breakdown(car == $car)
         exists Symptom( this == Symptom.WEIRD_NOISE_ACCELERATION ) from $breakdown.getSymptoms()
     then
@@ -194,9 +203,10 @@ no-loop true
 end
 
 rule "potential engine issue and hight engine temp"
+salience 19
 no-loop true
     when
-        $car: Car(potentionalEngineIssue == true)
+        $car: GasCar(potentionalEngineIssue == true)
         $breakdown : Breakdown(car == $car)
         exists Symptom( this == Symptom.HIGH_ENGINE_TEMP ) from $breakdown.getSymptoms()
     then
@@ -205,12 +215,14 @@ no-loop true
 end
 
 rule "potential turbine issue and white smoke"
+salience 18
 no-loop true
     when
         $car: GasCar(potentionalTurbineIssue == true)
         $breakdown : Breakdown(car == $car)
         exists Symptom( this == Symptom.WHITE_SMOKE ) from $breakdown.getSymptoms()
     then
+        modify((GasCar)$car){setRuleFinished(true);}
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
@@ -219,37 +231,20 @@ no-loop true
 end
 
 rule "potential cooling issue and low liquid"
+salience 18
 no-loop true
     when
         $car: GasCar(potentionalCoolingLeakage == true)
         $breakdown : Breakdown($car == car)
         exists Symptom( this == Symptom.LOW_COOLING_LIQUID ) from $breakdown.getSymptoms()
     then
+        modify((GasCar)$car){setRuleFinished(true);}
         modify((GasCar)$car){setPotentionalTurbineIssue(false);}
         modify((GasCar)$car){setPotentionalCoolingLeakage(false);}
         modify((GasCar)$car){setPotentionalEngineIssue(false);}
         insert(new Repairment(null, 100, null, null, null, "Potrebno je zameniti bocu za cuvanje rashladne tecnosti."));
 end
 
-// maybe CEP
-// rule "25. Potential battery problem"
-// when
-//     $breakdown : Breakdown($car: car)
-//     Car(batterySOCDropSignificant: true, name: $name)
-// then
-//     System.out.println($name + ": Flag as potential battery problem");
-//     modify($car) {
-//         setBrokenBattery(true)
-//     }
-// end
-
-// rule "26. Check health of batteries and charging system"
-// when
-//     $breakdown : Breakdown()
-//     Car(suddenLossOfPowerOrRange: true, name: $name)
-// then
-//     System.out.println($name + ": Check for health of batteries and charging system");
-// end
 
 // if the battery is not bad check engine, battery is CEP part, later implementation
 rule "55. Check A fault"

@@ -15,6 +15,16 @@ public class Car {
      @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+     private boolean ruleFinished;
+
+    public boolean isRuleFinished() {
+        return ruleFinished;
+    }
+
+    public void setRuleFinished(boolean ruleFinished) {
+        this.ruleFinished = ruleFinished;
+    }
+
     public Integer getId() {
         return id;
     }

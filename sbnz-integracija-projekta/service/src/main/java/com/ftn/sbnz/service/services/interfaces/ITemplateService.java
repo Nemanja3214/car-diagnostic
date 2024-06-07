@@ -1,5 +1,7 @@
 package com.ftn.sbnz.service.services.interfaces;
 
+import com.ftn.sbnz.model.models.Breakdown;
+import com.ftn.sbnz.model.models.Car;
 import com.ftn.sbnz.model.models.Repairment;
 import com.ftn.sbnz.service.dtos.repairment.RepairmentDTO;
 import com.ftn.sbnz.service.dtos.template.DiscountTempDTO;
@@ -14,5 +16,5 @@ public interface ITemplateService {
 
     List<RepairmentDTO> checkForService(Integer carId, double km);
 
-    List<Repairment> checkDiscount(List<Repairment> repairments);
+    List<Repairment> checkDiscount(Car car, List<Repairment> repairments, Breakdown breakdown);
 }
