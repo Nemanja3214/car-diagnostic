@@ -10,6 +10,7 @@ import { CreateCarComponent } from './create-car/create-car.component';
 import { CheckServiceComponent } from './check-service/check-service.component';
 
 import { CheckBatteryComponent } from './check-battery/check-battery.component';
+import { LampCheckComponent } from './lamp-check/lamp-check.component';
 export const routes: Routes = [
     {path: "breakdown",
     component: BreakdownComponent
@@ -36,12 +37,15 @@ export const routes: Routes = [
 
     {path: "car-create",
     component: CreateCarComponent
-},
-  {path: "**",
-        component: LandingPageComponent
+    },
+{path: "check-battery",
+        component: CheckBatteryComponent
     },
 
-{path: "check-battery",
-    component: CheckBatteryComponent
-},
+    {path: "check-lamps",
+        component: LampCheckComponent
+    },
+    {path: "**",
+        component: LandingPageComponent
+    },
 ];
