@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service.services;
 
 import com.ftn.sbnz.model.models.*;
+import com.ftn.sbnz.model.models.FaultProblems.FaultProblem;
 import com.ftn.sbnz.model.models.battery.Battery;
 import com.ftn.sbnz.model.models.battery.events.CurrentReadingEvent;
 import com.ftn.sbnz.model.models.battery.events.VoltageReadingEvent;
@@ -101,23 +102,50 @@ public class BreakdownService implements IBreakdownService {
             throw new NotFoundException();
         breakdown.setSymptoms(dto.getSymptoms().stream().map(Symptom::fromString).collect(Collectors.toList()));
 
-        GasCar car = gasCarRepository.findById(dto.getCarId()).orElseThrow(NotFoundException::new);
-        breakdown.setCar(car);
-        car.setRuleFinished(false);
+        Car genericCar = null;
 
-        if (dto.isEngineLamp()) {
-            // System.out.println("ENGINE LAMP ON");
-            String lampStr = LampKind.ENGINE.getStringValue();
-            if (lampStr == null)
-                throw new NotFoundException();
-            Lamp lamp = new Lamp();
-            lamp.setLampKind(lampStr);
-            lamp.setPlate(car.getPlate());
-            lampRepository.save(lamp);
-            kSession.insert(lamp);
-            car.getLamps().add(lamp);
+        if(dto.isElectric()){
+            ElectricCar car = electricCarRepository.findById(dto.getCarId()).orElseThrow(NotFoundException::new);
+            breakdown.setCar(car);
+            // car.setRuleFinished(false);
 
+            if (dto.isCodeLamp()) {
+                car.setFaultCheck(true);
+                FaultCodes code = com.ftn.sbnz.model.models.Util.randomCode(); 
+                car.addCode(code);
+                breakdown.setCar(car);
+                breakdown = breakdownRepository.save(breakdown);
+                FaultProblem problem = new FaultProblem(breakdown.getId());
+                kSession.insert(code);
+                kSession.insert(problem);
+            }
+            kSession.insert(car);
+            genericCar = car;
         }
+        else{
+            GasCar car = gasCarRepository.findById(dto.getCarId()).orElseThrow(NotFoundException::new);
+            breakdown.setCar(car);
+            car.setRuleFinished(false);
+
+            if (dto.isEngineLamp()) {
+                // System.out.println("ENGINE LAMP ON");
+                String lampStr = LampKind.ENGINE.getStringValue();
+                if (lampStr == null)
+                    throw new NotFoundException();
+                Lamp lamp = new Lamp();
+                lamp.setLampKind(lampStr);
+                lamp.setPlate(car.getPlate());
+                lampRepository.save(lamp);
+                kSession.insert(lamp);
+                car.getLamps().add(lamp);
+
+            }
+            kSession.insert(car);
+             genericCar = car;
+        }
+
+
+
         breakdown = breakdownRepository.save(breakdown);
 
         // get newly created objects
@@ -127,12 +155,12 @@ public class BreakdownService implements IBreakdownService {
                 .map(r -> (Repairment) r)
                 .collect(Collectors.toList());
 
-
         kSession.insert(breakdown);
-        kSession.insert(car);
+     
         for(Symptom s: breakdown.getSymptoms()){
             kSession.insert(s);
         }
+        kSession.getAgenda().getAgendaGroup("checking faults").setFocus();
         int ruleCount = kSession.fireAllRules();
         System.out.println(ruleCount);
 
@@ -146,12 +174,12 @@ public class BreakdownService implements IBreakdownService {
 
         //  add new repairments to car
         newReps = repairmentRepository.saveAll(newReps);
-        car.setRepairments(Stream.concat(car.getRepairments().stream(), newReps.stream())
+        genericCar.setRepairments(Stream.concat(genericCar.getRepairments().stream(), newReps.stream())
                 .collect(Collectors.toList()));
 
-        carRepository.save(car);
+        carRepository.save(genericCar);
 
-        newReps = this.templateService.checkDiscount(car, newReps, breakdown);
+        newReps = this.templateService.checkDiscount(genericCar, newReps, breakdown);
 
         return newReps.stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
         // after - previous
@@ -166,11 +194,11 @@ public class BreakdownService implements IBreakdownService {
     }
 
     @Override
-    public List<String> getSymptoms() {
-
+    public List<String> getSymptoms(String strPurpose) {
+        SymptomPurpose purpose = SymptomPurpose.valueOf(strPurpose);
         List<String> stringValues = new ArrayList<>();
         for (Symptom symptom : Symptom.values()) {
-            if(symptom.isShow())
+            if(symptom.isShow() && (symptom.getPurpose() == purpose || symptom.getPurpose() == SymptomPurpose.BOTH))
                 stringValues.add(symptom.getStringValue());
         }
         return stringValues;
