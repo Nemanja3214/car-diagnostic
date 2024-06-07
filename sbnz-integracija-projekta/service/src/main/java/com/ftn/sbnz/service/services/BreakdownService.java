@@ -1,12 +1,6 @@
 package com.ftn.sbnz.service.services;
 
-import com.ftn.sbnz.model.models.Breakdown;
-import com.ftn.sbnz.model.models.Car;
-import com.ftn.sbnz.model.models.ElectricCar;
-import com.ftn.sbnz.model.models.Lamp;
-import com.ftn.sbnz.model.models.LampKind;
-import com.ftn.sbnz.model.models.Repairment;
-import com.ftn.sbnz.model.models.Symptom;
+import com.ftn.sbnz.model.models.*;
 import com.ftn.sbnz.model.models.battery.Battery;
 import com.ftn.sbnz.model.models.battery.events.CurrentReadingEvent;
 import com.ftn.sbnz.model.models.battery.events.VoltageReadingEvent;
@@ -16,11 +10,7 @@ import com.ftn.sbnz.service.dtos.breakdown.CreateBreakdownDTO;
 import com.ftn.sbnz.service.dtos.breakdown.CurrentReadingDTO;
 import com.ftn.sbnz.service.dtos.repairment.RepairmentDTO;
 import com.ftn.sbnz.service.exceptions.NotFoundException;
-import com.ftn.sbnz.service.repositories.IBreakdownRepository;
-import com.ftn.sbnz.service.repositories.ICarRepository;
-import com.ftn.sbnz.service.repositories.IElectricCarRepository;
-import com.ftn.sbnz.service.repositories.ILampRepository;
-import com.ftn.sbnz.service.repositories.IRepairmentRepository;
+import com.ftn.sbnz.service.repositories.*;
 import com.ftn.sbnz.service.services.interfaces.IBreakdownService;
 
 import com.ftn.sbnz.service.services.interfaces.ITemplateService;
@@ -69,6 +59,9 @@ public class BreakdownService implements IBreakdownService {
     @Autowired
     private IElectricCarRepository electricCarRepository;
 
+    @Autowired
+    private IGasCarRepository gasCarRepository;
+
 
     private KieSession kSession;
 
@@ -98,27 +91,31 @@ public class BreakdownService implements IBreakdownService {
     public List<RepairmentDTO> create(CreateBreakdownDTO dto) throws NotFoundException {
         Breakdown breakdown = new Breakdown();
 
-        if(!carRepository.existsById(dto.getCarId()))
+        if (!carRepository.existsById(dto.getCarId()))
             throw new NotFoundException();
 
         breakdown.setName(dto.getName());
         boolean hasInvalidSymptom = dto.getSymptoms().stream()
                 .anyMatch(str -> Symptom.fromString(str) == null);
-        if(hasInvalidSymptom)
+        if (hasInvalidSymptom)
             throw new NotFoundException();
         breakdown.setSymptoms(dto.getSymptoms().stream().map(Symptom::fromString).collect(Collectors.toList()));
 
-        Car car = carRepository.findById(dto.getCarId()).orElseThrow(NotFoundException::new);
+        GasCar car = gasCarRepository.findById(dto.getCarId()).orElseThrow(NotFoundException::new);
         breakdown.setCar(car);
 
-        if(dto.isEngineLamp()){
+        if (dto.isEngineLamp()) {
             // System.out.println("ENGINE LAMP ON");
             String lampStr = LampKind.ENGINE.getStringValue();
-            if(lampStr == null)
+            if (lampStr == null)
                 throw new NotFoundException();
             Lamp lamp = new Lamp();
             lamp.setLampKind(lampStr);
+            lamp.setPlate(car.getPlate());
             lampRepository.save(lamp);
+            kSession.insert(lamp);
+            car.getLamps().add(lamp);
+
         }
 
         breakdown = breakdownRepository.save(breakdown);
@@ -126,36 +123,37 @@ public class BreakdownService implements IBreakdownService {
         // get newly created objects
 
         List<Repairment> previous = kSession.getObjects().stream()
-        .filter(r -> r instanceof Repairment)
-        .map(r -> (Repairment) r)
-        .collect(Collectors.toList());
+                .filter(r -> r instanceof Repairment)
+                .map(r -> (Repairment) r)
+                .collect(Collectors.toList());
 
-     
+
         kSession.insert(breakdown);
+        kSession.insert(car);
         int ruleCount = kSession.fireAllRules();
         System.out.println(ruleCount);
 
         kSession.halt();
-         List<Repairment> after = kSession.getObjects().stream()
-        .filter(r -> r instanceof Repairment)
-        .map(r -> (Repairment) r)
-        .collect(Collectors.toList());
+        List<Repairment> after = kSession.getObjects().stream()
+                .filter(r -> r instanceof Repairment)
+                .map(r -> (Repairment) r)
+                .collect(Collectors.toList());
 
-         List<Repairment> newReps = Util.getListDiff(after, previous).stream().collect(Collectors.toList());
+        List<Repairment> newReps = Util.getListDiff(after, previous).stream().collect(Collectors.toList());
 
         //  add new repairments to car
-         newReps = repairmentRepository.saveAll(newReps); 
-         car.setRepairments(Stream.concat(car.getRepairments().stream(), newReps.stream())
-                             .collect(Collectors.toList()));
-       
+        newReps = repairmentRepository.saveAll(newReps);
+        car.setRepairments(Stream.concat(car.getRepairments().stream(), newReps.stream())
+                .collect(Collectors.toList()));
+
         carRepository.save(car);
 
         newReps = this.templateService.checkDiscount(newReps);
 
-         return newReps.stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
+        return newReps.stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
         // after - previous
 //        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).toList();
-     //   return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
+        //   return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
 
     }
 

@@ -169,9 +169,12 @@ rule "out of gas if headlights are on and periodically cranking and low on gas"
 end
 
 rule "engine check lamp is on"
+salience 20
+no-loop true
     when
-        $car: Car($p: plate)
+        $car: GasCar($p: plate, $p1: potentionalCoolingLeakage, $p2: potentionalTurbineIssue)
         exists Lamp(plate == $p, lampKind=="Engine") from $car.getLamps()
+        //eval($p1 == false && $p2 == false)
     then
         modify($car){setPotentionalEngineIssue(true);}
         System.out.println("LEVEL 1!");
@@ -179,6 +182,7 @@ rule "engine check lamp is on"
 end
 
 rule "potential engine issue and strange noise during acceleration"
+no-loop true
     when
         $car: Car(potentionalEngineIssue == true)
         $breakdown : Breakdown(car == $car)
@@ -190,6 +194,7 @@ rule "potential engine issue and strange noise during acceleration"
 end
 
 rule "potential engine issue and hight engine temp"
+no-loop true
     when
         $car: Car(potentionalEngineIssue == true)
         $breakdown : Breakdown(car == $car)
@@ -200,6 +205,7 @@ rule "potential engine issue and hight engine temp"
 end
 
 rule "potential turbine issue and white smoke"
+no-loop true
     when
         $car: GasCar(potentionalTurbineIssue == true)
         $breakdown : Breakdown(car == $car)
@@ -213,6 +219,7 @@ rule "potential turbine issue and white smoke"
 end
 
 rule "potential cooling issue and low liquid"
+no-loop true
     when
         $car: GasCar(potentionalCoolingLeakage == true)
         $breakdown : Breakdown($car == car)
@@ -291,7 +298,7 @@ end
 rule "NN. Check Powertrain problems"
 agenda-group "checking faults"
     when
-                
+
         $problem: FaultProblem(kind == FaultProblemKinds.POWERTRAIN, $breakdownId: breakdownId)
         $breakdown : Breakdown(id == $breakdownId, $car: car instanceof ElectricCar, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
     then
@@ -303,7 +310,7 @@ end
 rule "NN. Check AUXILIARY problems"
 agenda-group "checking faults"
     when
-                
+
         $problem: FaultProblem(kind == FaultProblemKinds.AUXILIARY, $breakdownId: breakdownId)
         $breakdown : Breakdown($car: car instanceof ElectricCar, id == $breakdownId, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
     then
@@ -315,7 +322,7 @@ end
 rule "NN. Check Regenerative breaking problems"
 agenda-group "checking faults"
     when
-                
+
         $problem: FaultProblem(kind == FaultProblemKinds.REGENERATIVE_BREAKING, $breakdownId: breakdownId)
         $breakdown : Breakdown($car: car instanceof ElectricCar, id == $breakdownId, $faultCheck: car.getFaultCheck() == true, $codes: car.getCodes())
     then
@@ -458,7 +465,7 @@ end
 
 rule "21. Inflate tire"
     when
-        $breakdown : Breakdown($car: car)  
+        $breakdown : Breakdown($car: car)
         exists Symptom( this == Symptom.FLAT_TIRE) from $breakdown.getSymptoms()
         not (exists Symptom( this == Symptom.DAMAGED_TIRE ) from $breakdown.getSymptoms())
     then
