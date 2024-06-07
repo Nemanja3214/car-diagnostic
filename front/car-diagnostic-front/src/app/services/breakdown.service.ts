@@ -39,7 +39,9 @@ export interface CreateBreakdown{
   name: string,
   carId: number,
   symptoms: string[],
-  engineLamp: boolean
+  engineLamp: boolean,
+  codeLamp: boolean,
+  isElectric: boolean
 }
 
 export interface GraphData{

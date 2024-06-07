@@ -81,14 +81,16 @@ export class BreakdownComponent implements OnInit{
   availableItems: string[] = []; 
 
   createBreakdown(){
-    if (!this.createForm.valid) {
+    if (!this.createForm.valid && this.isElectric != null) {
       return;
     }
     const dto: CreateBreakdown = {
       name: this.createForm.value.name!,
       symptoms: this.createForm.value.symptoms!,
       carId: this.createForm.value.car!.id,
-      engineLamp: this.createForm.value.engineLamp!
+      engineLamp: this.createForm.value.engineLamp!,
+      codeLamp: this.createForm.value.codeLamp!,
+      isElectric: this.isElectric!
     };
     console.log(dto);
     this.breakdownService.createBreakdown(dto).subscribe(

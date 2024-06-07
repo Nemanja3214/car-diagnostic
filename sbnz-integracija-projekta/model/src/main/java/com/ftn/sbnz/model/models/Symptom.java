@@ -1,5 +1,7 @@
 package com.ftn.sbnz.model.models;
 
+import java.util.Random;
+
 import javax.persistence.Entity;
 import javax.xml.crypto.KeySelector.Purpose;
 

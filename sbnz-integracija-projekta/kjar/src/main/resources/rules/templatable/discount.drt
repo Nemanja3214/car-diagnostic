@@ -23,7 +23,7 @@ when
     $c: Repairment($bd: breakdown, $p: price)
     $car: Car() from $bd.getCar()
     $sum: Number() from accumulate (
-       Repairment(this != $c, $price: price ) from $car.getRepairments(),
+       Repairment($price: price ) from $car.getRepairments(),
        sum( $price ))
     eval($sum.doubleValue() > Double.parseDouble("@{upper}"))
 then
@@ -38,7 +38,7 @@ when
     $c: Repairment($bd: breakdown, $p: price)
     $car: Car() from $bd.getCar()
     $sum: Number() from accumulate (
-       Repairment(this != $c, $price: price ) from $car.getRepairments(),
+       Repairment($price: price ) from $car.getRepairments(),
        sum( $price ))
     eval($sum.doubleValue() >= Double.parseDouble("@{lower}") && $sum.doubleValue() <= Double.parseDouble("@{upper}"))
 then
@@ -54,7 +54,7 @@ when
     $c: Repairment($bd: breakdown)
     $car: Car() from $bd.getCar()
     $sum: Number() from accumulate (
-       Repairment(this != $c, $price: price ) from $car.getRepairments(),
+       Repairment($price: price ) from $car.getRepairments(),
        sum( $price ))
     eval($sum.doubleValue() < Double.parseDouble("@{lower}"))
 then
