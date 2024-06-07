@@ -151,7 +151,7 @@ public class BreakdownService implements IBreakdownService {
 
         carRepository.save(car);
 
-        newReps = this.templateService.checkDiscount(newReps);
+        newReps = this.templateService.checkDiscount(car, newReps);
 
         return newReps.stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
         // after - previous
@@ -324,7 +324,7 @@ public class BreakdownService implements IBreakdownService {
        
         carRepository.save(car);
 
-        newReps = this.templateService.checkDiscount(newReps);
+        newReps = this.templateService.checkDiscount(car, newReps);
           dto.setRepairments(newReps.stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList()));
 
         List<CurrentReadingDTO> readingDTOs = cepKSession.getObjects().stream()
