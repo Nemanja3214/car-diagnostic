@@ -136,7 +136,7 @@ public class TemplateService implements ITemplateService {
     @Override
     public List<Repairment> checkDiscount(List<Repairment> repairments) {
         if (this.discountKsession == null) {
-            this.createDiscountRulesFromTemplate(new DiscountTempDTO("100", "200"));
+            this.createDiscountRulesFromTemplate(new DiscountTempDTO("20", "200"));
         }
 
         this.discountKsession.insert(repairments);

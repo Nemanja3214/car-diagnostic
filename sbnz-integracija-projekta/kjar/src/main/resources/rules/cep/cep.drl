@@ -216,7 +216,7 @@ agenda-group "checking battery"
 when
     Battery($currentBreakdownId: currentBreakdownId, $batteryId: id)
     $breakdown: Breakdown(id == $currentBreakdownId)
-    not Repairment(action == "There is a charger problem, no sufficient readings, check wiring and charger itself")
+    not Repairment(breakdown == $breakdown, action == "There is a charger problem, no sufficient readings, check wiring and charger itself")
     accumulate ( 
         CurrentReadingEvent(batteryId == $batteryId) from window LastMinuteWindow;
         $count: count(1);
@@ -231,9 +231,10 @@ end
 rule "if SOC doesn't rise for at least 1% every minute, charging problem " salience -10
 agenda-group "checking battery"
 when
-    not Repairment(action == "Battery is degraded, replace it" || action == "There is a charger problem, no sufficient readings, check wiring and charger itself")
+  
     Battery($currentBreakdownId: currentBreakdownId, $batteryId: id)
     $breakdown: Breakdown(id == $currentBreakdownId)
+    not Repairment(breakdown == $breakdown, action == "Battery is degraded, replace it" || action == "There is a charger problem, no sufficient readings, check wiring and charger itself")
     // $lis: List() from  accumulate ( 
         // $read: CurrentReadingEvent() over window:time(3s); collectList($read) )
     // $obj : CurrentReadingEvent(getCurrentSOC() > 0.0, getCurrentSOC() < 100.0) from $lis 
@@ -242,10 +243,12 @@ when
     // $c: Long() from accumulate ( 
     //     CurrentReadingEvent( currentSOC != 0.0) from window LastMinuteWindow;
     //     count(1))
+    Number(intValue > 1) from  accumulate ( 
+        $c: CurrentReadingEvent( getCurrentSOC() > 0.0, getCurrentSOC() < 100.0) over window:time(3s), count(1))
     $minVal: Double() from  accumulate ( 
-        $c: CurrentReadingEvent( getCurrentSOC() > 0.0, getCurrentSOC() < 100.0) over window:time(2s), min( $c.getCurrentSOC() ))
+        $c: CurrentReadingEvent( getCurrentSOC() > 0.0, getCurrentSOC() < 100.0) over window:time(3s), min( $c.getCurrentSOC() ))
     $maxVal: Double() from  accumulate ( 
-        $c: CurrentReadingEvent(getCurrentSOC() > 0.0, getCurrentSOC() < 100.0) over window:time(2s) ; max( $c.getCurrentSOC() ))
+        $c: CurrentReadingEvent(getCurrentSOC() > 0.0, getCurrentSOC() < 100.0) over window:time(3s) ; max( $c.getCurrentSOC() ))
     eval(Math.abs($maxVal - $minVal) > 5.0)
 then
     // double diff = $max - $min; 
