@@ -79,9 +79,6 @@ public class BreakdownService implements IBreakdownService {
        
     }
 
-    // @Autowired
-    // private KieContainer container;
-
     @Override
     public List<BreakdownDTO> getAll() {
         return breakdownRepository.findAll().stream().map(BreakdownDTO::toDTO).collect(Collectors.toList());
@@ -219,7 +216,7 @@ public class BreakdownService implements IBreakdownService {
         breakdown = breakdownRepository.save(breakdown);
 
         // get newly created objects
-        cepKSession = container.newKieSession("cepKsession");
+        cepKSession = Container.getKieContainer().newKieSession("cepKsession");
         List<Repairment> previous = cepKSession.getObjects().stream()
         .filter(r -> r instanceof Repairment)
         .map(r -> (Repairment) r)
