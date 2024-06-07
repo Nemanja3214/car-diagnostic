@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.kie.api.runtime.KieSession;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LampService implements ILampService {
@@ -38,7 +39,7 @@ public class LampService implements ILampService {
         List<Repairment> previous = ksession.getObjects().stream()
         .filter(r -> r instanceof Repairment)
         .map(r -> (Repairment) r)
-        .toList();
+        .collect(Collectors.toList());
 
         int ruleCount = ksession.fireAllRules();
         System.out.println(ruleCount);
@@ -47,10 +48,10 @@ public class LampService implements ILampService {
          List<Repairment> after = ksession.getObjects().stream()
         .filter(r -> r instanceof Repairment)
         .map(r -> (Repairment) r)
-        .toList();
+        .collect(Collectors.toList());
 
         // after - previous
-        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).toList();
+        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
 
     }
 }

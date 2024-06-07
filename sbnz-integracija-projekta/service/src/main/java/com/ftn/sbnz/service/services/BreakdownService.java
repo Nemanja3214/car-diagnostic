@@ -64,6 +64,7 @@ public class BreakdownService implements IBreakdownService {
     @Autowired
     private ITemplateService templateService;
 
+    @Autowired
     private IElectricCarRepository electricCarRepository;
 
 
@@ -136,9 +137,9 @@ public class BreakdownService implements IBreakdownService {
         .map(r -> (Repairment) r)
         .collect(Collectors.toList());
 
-         List<Repairment> newReps = Util.getListDiff(after, previous).stream().toList();
+         List<Repairment> newReps = Util.getListDiff(after, previous).stream().collect(Collectors.toList());
          newReps = this.templateService.checkDiscount(newReps);
-         return newReps.stream().map(r -> new RepairmentDTO(r)).toList();
+         return newReps.stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
         // after - previous
 //        return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).toList();
      //   return Util.getListDiff(after, previous).stream().map(r -> new RepairmentDTO(r)).collect(Collectors.toList());
@@ -164,7 +165,7 @@ public class BreakdownService implements IBreakdownService {
     @Override
     public BatteryCheckDTO checkBattery(int carId, int caseScenarion) throws InterruptedException, NotFoundException {
            Breakdown breakdown = new Breakdown();
-
+        
         //    TODO check if electrical
         if(!carRepository.existsById(carId))
             throw new NotFoundException();
@@ -189,13 +190,12 @@ public class BreakdownService implements IBreakdownService {
         cepKSession.setGlobal("tolerance", 0.01);
   
         LocalDateTime now = LocalDateTime.now();
-        SessionPseudoClock clock = cepKSession.getSessionClock();
-         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-        // cepKSession.setGlobal("globalStartTime", LocalDateTime.now().);
-        //  cepKSession.setGlobal("initPassed", false);
+        // SessionPseudoClock clock = cepKSession.getSessionClock();
 
-        double currentValue = Simulation.calculateValue(scale, now.toLocalTime());
-        double voltageValue = Simulation.calculateValue(scale, now.toLocalTime());
+        Simulation simulation = new Simulation();
+
+        double currentValue = simulation.calculateValue(scale, now.toLocalTime());
+        double voltageValue = simulation.calculateValue(scale, now.toLocalTime());
         System.out.println(currentValue);
         System.out.println(voltageValue);
         cepKSession.insert(battery);
@@ -203,8 +203,8 @@ public class BreakdownService implements IBreakdownService {
 
         if(caseScenarion == 1){
             do{
-                    CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, Util.localToDate(now));
-                    VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L, Util.localToDate(now));
+                    CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, battery.getId(), Util.localToDate(now));
+                    VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, battery.getId(), Util.localToDate(now));
 
                     cepKSession.insert(voltageEvent);
                     cepKSession.insert(currentReadingEvent);
@@ -213,25 +213,53 @@ public class BreakdownService implements IBreakdownService {
                     cepKSession.halt();
                     System.out.println(currentValue);
                     //   System.out.println(voltageValue);
-                    // Thread.sleep(100);
+                    Thread.sleep(1000);
 
                     // advance time
-                    clock.advanceTime( 1, TimeUnit.SECONDS );
+                    // clock.advanceTime( 1, TimeUnit.SECONDS );
                     now = now.plusSeconds(1);
 
 
-                    currentValue = Simulation.calculateValue(scale, now.toLocalTime());
-                    voltageValue = Simulation.calculateValue(scale, now.toLocalTime());
-                    System.out.println(now.toString());
+                    currentValue = simulation.calculateValue(scale, now.toLocalTime());
+                    voltageValue = simulation.calculateValue(scale, now.toLocalTime());
+                    // System.out.println(now.toString());
                     //  System.out.println(clock.getCurrentTime().toString());
                 
-                }while(!Simulation.finished);
-                Simulation.lastStart = null;
-                Simulation.finished = false;
+                }while(!simulation.finished);
+                simulation.lastStart = null;
+                simulation.finished = false;
+        }
+        else if(caseScenarion == 2){
+            do{
+                    CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, battery.getId(), Util.localToDate(now));
+                    VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, battery.getId(), Util.localToDate(now));
+
+                    cepKSession.insert(voltageEvent);
+                    cepKSession.insert(currentReadingEvent);
+                    cepKSession.getAgenda().getAgendaGroup("checking battery").setFocus();
+                    cepKSession.fireAllRules();
+                    cepKSession.halt();
+                    System.out.println(currentValue);
+                    //   System.out.println(voltageValue);
+                    Thread.sleep(1000);
+
+                    // advance time
+                    // clock.advanceTime( 1, TimeUnit.SECONDS );
+                    now = now.plusSeconds(1);
+
+
+                    currentValue = simulation.calculateDegradationValue(scale, now.toLocalTime());
+                    voltageValue = simulation.calculateDegradationValue(scale, now.toLocalTime());
+                    // System.out.println(now.toString());
+                    //  System.out.println(clock.getCurrentTime().toString());
+                
+                }while(!simulation.finished);
+                simulation.lastStart = null;
+                simulation.finished = false;
         }
         else{
-            CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, Util.localToDate(now));
-            VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, 1L, Util.localToDate(now));
+            CurrentReadingEvent currentReadingEvent = new CurrentReadingEvent(currentValue, battery.getId(), Util.localToDate(now));
+            VoltageReadingEvent voltageEvent = new VoltageReadingEvent(voltageValue, battery.getId(), Util.localToDate(now));
 
             cepKSession.insert(voltageEvent);
             cepKSession.insert(currentReadingEvent);
@@ -240,21 +268,21 @@ public class BreakdownService implements IBreakdownService {
             cepKSession.halt();
               System.out.println(currentValue);
             //   System.out.println(voltageValue);
-            // Thread.sleep(100);
+            Thread.sleep(60 * 1000);
 
             // advance time
-            clock.advanceTime( 80, TimeUnit.SECONDS );
-            now = now.plusSeconds(80);
+            // clock.advanceTime( 80, TimeUnit.SECONDS );
+            now = now.plusSeconds(61);
 
-            currentReadingEvent = new CurrentReadingEvent(currentValue, 1L, Util.localToDate(now));
-            voltageEvent = new VoltageReadingEvent(voltageValue, 1L, Util.localToDate(now));
+            currentReadingEvent = new CurrentReadingEvent(currentValue, battery.getId(), Util.localToDate(now));
+            voltageEvent = new VoltageReadingEvent(voltageValue, battery.getId(), Util.localToDate(now));
 
             cepKSession.getAgenda().getAgendaGroup("checking battery").setFocus();
             cepKSession.fireAllRules();
             cepKSession.halt();
           
-            Simulation.lastStart = null;
-            Simulation.finished = false;
+            simulation.lastStart = null;
+            simulation.finished = false;
         }
 
       
