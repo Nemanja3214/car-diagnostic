@@ -1,1 +1,105 @@
 package backward;
+import com.ftn.sbnz.model.models.Car
+import com.ftn.sbnz.model.models.Lamp
+import com.ftn.sbnz.model.models.Breakdown
+import com.ftn.sbnz.model.models.Repairment
+import com.ftn.sbnz.model.models.Symptom
+import java.util.Collection;
+
+import java.util.HashSet;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
+
+query isService(A, B, plate)
+    Lamp(A, B, plate; )
+    or
+    (Lamp(Z, B, plate;) and isService(A, Z, plate; ))
+end
+
+
+rule "is big service"
+    when
+        $car: Car($plate: plate)
+        isService("Big Service", causedBy, $plate; )
+    then
+        System.out.println("Big service needed. Plate: " + $plate);
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je uraditi veliki servis."));
+
+end
+
+//rule "is big service"
+//    when
+//        $car: Car($plate: plate)
+//        isService("Big Service", causedBy, $plate; )
+//    then
+//        System.out.println(causedBy);
+//end
+
+rule "is small service"
+    when
+        $car: Car($plate: plate)
+        isService("Small Service", "Root", $plate; )
+    then
+        System.out.println("Small service needed. Plate: " + $plate);
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je uraditi mali servis."));
+
+end
+
+rule "is transmission service"
+    when
+        $car: Car($plate: plate)
+        isService("Transmission Service", "Root", $plate; )
+    then
+        System.out.println("Transmission service needed. Plate: " + $plate);
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je uraditi servis mjenjaca."));
+
+end
+
+rule "is clutch service"
+    when
+        $car: Car($plate: plate)
+        isService("Clutch Service", "Root", $plate; )
+    then
+        System.out.println("Clutch service needed. Plate: " + $plate);
+        insert(new Repairment(null, 100, null, null, null, "Potrebno je uraditi servis kvacila."));
+
+end
+
+
+
+//query getCarsWithSymptom(symptom)
+//    $count : Number() from accumulate (
+//            $b: Breakdown($car: car)
+//            and exists Symptom(this == symptom) from $b.getSymptoms(),
+//            countDistinct($car)
+//        )
+//end
+
+// function int countDistinct(Collection<Car> collection) {
+//     return new HashSet<Car>(collection).size();
+// }
+
+
+
+
+//rule "Print Count of Cars With Symptom"
+//when
+////    $symptom: Symptom()
+//    Breakdown()
+//    $result : Number() from getCarsWithSymptom()
+//then
+//    System.out.println("Number of different cars with symptom: " + $result);
+//end
+
+rule "Print Count of Cars With same Symptoms"
+when
+    $currentBreakdown: Breakdown($currentCar: car)
+     $set : Set() from accumulate (
+            $b: Breakdown($car: car != $currentCar, symptoms.containsAll($currentBreakdown.getSymptoms())),
+            collectSet($car)
+        )
+then
+    System.out.println("Number of different cars with symptom: " + $set.size());
+end

@@ -2,14 +2,63 @@ package com.ftn.sbnz.model.models;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.*;
+
+@Entity
+@Table
 public class Repairment {
     private LocalDateTime timeFinished;
     private double price;
 
+    @OneToOne
     private Discount discount;
+
+    @ManyToOne
     private Mechanic mechanic;
 
+    @OneToOne
     private Breakdown breakdown;
+
+    private String action;
+
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    public Repairment(LocalDateTime timeFinished, double price, Discount discount, Mechanic mechanic, Breakdown breakdown, String action) {
+        this.timeFinished = timeFinished;
+        this.price = price;
+        this.discount = discount;
+        this.mechanic = mechanic;
+        this.breakdown = breakdown;
+        this.action = action;
+    }
+
+    public Repairment(LocalDateTime timeFinished, double price, Discount discount, Mechanic mechanic, Breakdown breakdown, String action, Integer id) {
+        this.timeFinished = timeFinished;
+        this.price = price;
+        this.discount = discount;
+        this.mechanic = mechanic;
+        this.breakdown = breakdown;
+        this.action = action;
+        this.id = id;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Repairment() {}
 

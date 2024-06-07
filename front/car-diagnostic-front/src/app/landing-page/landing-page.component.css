@@ -1,0 +1,55 @@
+#mainContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    font-family: 'Times New Roman', Times, serif;
+    font-style: oblique;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0px;
+}
+
+#dataContainer {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    height: fit-content;
+    margin-top: 2%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(25, 159, 189);
+    border: 1px white;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+img {
+    width: 100%;
+}
+.img {
+    width: 40%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+button {
+    color: white;
+    font-weight: 500;
+    font-style: oblique;
+    background-color: rgb(172, 172, 172);
+    padding: 15px;
+    stroke: 5px white;
+    border: 1px white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+
+}
+
+button:hover{
+    cursor: pointer;
+}

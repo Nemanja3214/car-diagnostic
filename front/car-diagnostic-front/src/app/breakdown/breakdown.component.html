@@ -1,0 +1,77 @@
+<div>
+    <form (ngSubmit)="createBreakdown()" [formGroup]="createForm">
+        <mat-card>
+        <mat-card-header>
+            <mat-card-title>Create breakdown</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field >
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" placeholder="Input breakdown name">
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <mat-label>Select client</mat-label>
+                <mat-select #availableClientSelect (selectionChange)="onClientChange($event)">
+                    <mat-option *ngFor="let topping of availableClients" [value]="topping">
+                    {{topping.name + " " + topping.lastName + " " + topping.phone}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <mat-label>Select car</mat-label>
+                <mat-select #availableCarsSelect formControlName="car" (selectionChange)="onCarChange($event)">
+                    <mat-option *ngFor="let topping of availableCars" [value]="topping">
+                    {{topping.plate}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+            <mat-label>Select symptoms</mat-label>
+            <mat-select #availableSelect multiple formControlName="symptoms">
+                <mat-option *ngFor="let topping of availableItems" [value]="topping">
+                {{topping}}
+                </mat-option>
+            </mat-select>
+            </mat-form-field>
+            <br>
+            <mat-checkbox [formControl]="engineLamp" *ngIf="!isElectric" ngDefaultControl>Engine lamp is on</mat-checkbox>
+            <mat-checkbox [formControl]="codeLamp" *ngIf="isElectric" ngDefaultControl>OBD lamp is on</mat-checkbox>
+            <br>
+            <button  mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">Submit</button>
+        </mat-card-content>
+        </mat-card>
+    </form>
+  </div>
+  <h2 *ngIf="cnt !== null">There is {{cnt}} same cases</h2>
+  <div>
+    <h2>Repairments</h2>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+      
+        <!-- Position Column -->
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef> No. </th>
+          <td mat-cell *matCellDef="let element; let i = index"> {{i+1}} </td>
+        </ng-container>
+      
+        <!-- Name Column -->
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef> Price </th>
+          <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+        </ng-container>
+      
+        <!-- Weight Column -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef> Action </th>
+          <td mat-cell *matCellDef="let element"> {{element.action}} </td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>

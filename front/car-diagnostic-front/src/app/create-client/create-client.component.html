@@ -1,0 +1,30 @@
+<div>
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Create client</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+    <mat-form-field>
+      <input matInput placeholder="Name" formControlName="name">
+      <mat-error *ngIf="userForm.get('name').invalid && userForm.get('name').touched">Name is required</mat-error>
+    </mat-form-field>
+    <br>
+    
+    <mat-form-field>
+      <input matInput placeholder="Last Name" formControlName="lastName">
+      <mat-error *ngIf="userForm.get('lastName').invalid && userForm.get('lastName').touched">Last Name is required</mat-error>
+    </mat-form-field>
+    <br>
+
+    <mat-form-field>
+      <input matInput placeholder="Phone" formControlName="phone">
+      <mat-error *ngIf="userForm.get('phone').invalid && userForm.get('phone').touched">Phone is required</mat-error>
+    </mat-form-field>
+    <br>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">Submit</button>
+    </mat-card-content>
+</mat-card>
+  </form>
+</div>

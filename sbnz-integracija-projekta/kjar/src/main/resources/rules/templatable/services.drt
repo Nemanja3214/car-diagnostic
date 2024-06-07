@@ -1,0 +1,66 @@
+template header
+    smallService
+    bigService
+    brakes
+    tires
+
+package templatetable;
+
+import com.ftn.sbnz.model.models.Repairment;
+import com.ftn.sbnz.model.models.Car;
+import com.ftn.sbnz.model.models.Breakdown;
+import com.ftn.sbnz.model.models.Discount;
+
+import java.util.List;
+
+import java.lang.Double;
+import java.lang.Double;
+
+template "discount-rules"
+
+rule "Small service Service_@{row.rowNumber}"
+no-loop true
+when
+    $car: Car($km: km, $r: repairments)
+    eval($km % Double.parseDouble("@{smallService}") == 0)
+then
+    System.out.println("SMALL SERVICE");
+    insert(new Repairment(null, 100, null, null, null, "Potrebno je uraditi mali servis."));
+
+    $r.add(new Repairment(null, 100, null, null, null, "Potrebno je uraditi mali servis."));
+end
+
+rule "Big service Service_@{row.rowNumber}"
+no-loop true
+when
+    $car: Car($km: km, $r: repairments)
+    eval($km % Double.parseDouble("@{bigService}") == 0)
+then
+    System.out.println("BIG SERVICE");
+    insert(new Repairment(null, 100, null, null, null, "Potrebno je uraditi veliki servis."));
+    $r.add(new Repairment(null, 100, null, null, null, "Potrebno je uraditi veliki servis."));
+end
+
+rule "Tires Service_@{row.rowNumber}"
+no-loop true
+when
+    $car: Car($km: km, $r: repairments)
+    eval($km % Double.parseDouble("@{tires}") == 0)
+then
+    System.out.println("CHECK TIRES");
+    insert(new Repairment(null, 100, null, null, null, "Potrebno je zamijeniti gume."));
+    $r.add(new Repairment(null, 100, null, null, null, "Potrebno je zamijeniti gume."));
+end
+
+rule "Brakes Service_@{row.rowNumber}"
+no-loop true
+when
+    $car: Car($km: km, $r: repairments)
+    eval($km % Double.parseDouble("@{brakes}") == 0)
+then
+    System.out.println("CHECK BRAKES");
+    insert(new Repairment(null, 100, null, null, null, "Potrebno je provjeriti kocioni sistem."));
+    $r.add(new Repairment(null, 100, null, null, null, "Potrebno je provjeriti kocioni sistem."));
+end
+
+end template

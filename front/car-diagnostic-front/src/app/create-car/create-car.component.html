@@ -1,0 +1,72 @@
+<div>
+    <form [formGroup]="carForm" (ngSubmit)="onSubmit()">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Create car</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-form-field>
+                    <input matInput formControlName="plate" placeholder="Plate" (input)="logChanges()" >
+                  </mat-form-field>
+                  <br>
+                
+                  <mat-form-field>
+                    <input matInput formControlName="yearOfProduction" placeholder="Year of Production">
+                  </mat-form-field>
+                  <br>
+                
+                  <mat-form-field>
+                    <mat-label>Kilometars</mat-label>
+                    <input matInput formControlName="km" placeholder="Kilometers">
+                  </mat-form-field>
+                  <br>
+                
+                  <mat-form-field>
+                    <mat-label>Select client</mat-label>
+                    <mat-select #availableClientSelect formControlName="owner">
+                        <mat-option *ngFor="let topping of availableClients" [value]="topping">
+                        {{topping.name + " " + topping.lastName + " " + topping.phone}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+                
+                <mat-form-field>
+                    <mat-label>Select car model</mat-label>
+                    <mat-select #availableCarModelSelect formControlName="model">
+                        <mat-option *ngFor="let topping of availableCarModels" [value]="topping">
+                        {{topping.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+
+                  <mat-button-toggle-group
+                   name="fontStyle" aria-label="Font Style" [(ngModel)]="selectedType"
+                    [ngModelOptions]="{standalone: true}" (change)="toggleChanged()">
+                    <mat-button-toggle value="electric">Electric</mat-button-toggle>
+                    <mat-button-toggle value="gas">Gas</mat-button-toggle>
+                  </mat-button-toggle-group>
+                  <br>
+                  <br>
+
+                  <div *ngIf="selectedType == 'electric'"> 
+                    <mat-form-field>
+                        <input matInput formControlName="nominalMaxCharge" placeholder="Nominal max charge">
+                      </mat-form-field>
+                      <br>
+                      <mat-form-field>
+                        <input matInput formControlName="nominalMaxVoltage" placeholder="Nominal max voltage">
+                      </mat-form-field>
+                      <br>
+                  </div>
+
+                  <div *ngIf="selectedType == 'gas'"> 
+                    <!-- IF any need -->
+                </div>
+                
+                  <button  mat-flat-button color="primary" type="submit" [disabled]="carForm.invalid">Submit</button>
+        </mat-card-content>
+    </mat-card>
+      </form>
+    </div>

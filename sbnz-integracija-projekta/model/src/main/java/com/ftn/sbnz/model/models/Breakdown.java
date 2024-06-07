@@ -3,10 +3,35 @@ package com.ftn.sbnz.model.models;
 
 import java.util.List;
 
+import javax.persistence.*;
+
+@Entity
+@Table
 public class Breakdown {
 
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    public Breakdown(Integer id, String name, Car car, List<Symptom> symptoms) {
+        this.id = id;
+        this.name = name;
+        this.car = car;
+        this.symptoms = symptoms;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     private String name;
+    @ManyToOne
     private Car car;
+
 
     public Breakdown(String name, List<Symptom> symptoms) {
         this.name = name;
@@ -42,10 +67,18 @@ public class Breakdown {
     public void setCar(Car car){
         this.car = car;
     }
-
+    @ElementCollection(targetClass = Symptom.class)
     private List<Symptom> symptoms;
 
     public Breakdown() {}
 
-
+    @Override
+    public String toString() {
+        return "Breakdown{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", car=" + car +
+                ", symptoms=" + symptoms +
+                '}';
+    }
 }

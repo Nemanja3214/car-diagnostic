@@ -2,18 +2,66 @@ package com.ftn.sbnz.model.models;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table
 public class Car {
+     @Id
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+     private boolean ruleFinished;
+
+    public boolean isRuleFinished() {
+        return ruleFinished;
+    }
+
+    public void setRuleFinished(boolean ruleFinished) {
+        this.ruleFinished = ruleFinished;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Car(Integer id, String plate, int yearOfProduction, double km, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments) {
+        this.id = id;
+        this.plate = plate;
+        this.yearOfProduction = yearOfProduction;
+        this.km = km;
+        this.potentionalEngineIssue = potentionalEngineIssue;
+        this.owner = owner;
+        this.model = model;
+        this.lamps = lamps;
+        this.repairments = repairments;
+    }
+
     protected String plate;
     protected int yearOfProduction;
+    protected double km;
     protected boolean potentionalEngineIssue;
+    @ManyToOne(cascade = CascadeType.ALL)
     protected Client owner;
+    @ManyToOne
     protected CarModel model;
+    @OneToMany
     protected List<Lamp> lamps;
+    @OneToMany
     protected List<Repairment> repairments;
+    protected boolean isElectric;
 
-    public Car() {}
+    public Car() {
+        repairments = new ArrayList<>();
+    }
 
     public Car(String plate, int yearOfProduction, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments) {
         this.plate = plate;
@@ -23,6 +71,25 @@ public class Car {
         this.model = model;
         this.lamps = lamps;
         this.repairments = repairments;
+    }
+
+    public Car(String plate, int yearOfProduction, double km, boolean potentionalEngineIssue, Client owner, CarModel model, List<Lamp> lamps, List<Repairment> repairments) {
+        this.plate = plate;
+        this.yearOfProduction = yearOfProduction;
+        this.km = km;
+        this.potentionalEngineIssue = potentionalEngineIssue;
+        this.owner = owner;
+        this.model = model;
+        this.lamps = lamps;
+        this.repairments = repairments;
+    }
+
+    public double getKm() {
+        return km;
+    }
+
+    public void setKm(double km) {
+        this.km = km;
     }
 
     public List<Repairment> getRepairments() {
@@ -44,6 +111,24 @@ public class Car {
     public int getYearOfProduction() {
         return yearOfProduction;
     }
+
+    public boolean getPotentionalEngineIssue() {
+        return this.potentionalEngineIssue;
+    }
+
+
+    public boolean isIsElectric() {
+        return this.isElectric;
+    }
+
+    public boolean getIsElectric() {
+        return this.isElectric;
+    }
+
+    public void setIsElectric(boolean isElectric) {
+        this.isElectric = isElectric;
+    }
+
 
     public void setYearOfProduction(int yearOfProduction) {
         this.yearOfProduction = yearOfProduction;
