@@ -9,6 +9,7 @@ import com.ftn.sbnz.service.dtos.breakdown.BatteryCheckDTO;
 import com.ftn.sbnz.service.dtos.breakdown.BreakdownDTO;
 import com.ftn.sbnz.service.dtos.breakdown.CreateBreakdownDTO;
 import com.ftn.sbnz.service.dtos.breakdown.CurrentReadingDTO;
+import com.ftn.sbnz.service.dtos.breakdown.SymptomsDTO;
 import com.ftn.sbnz.service.dtos.repairment.RepairmentDTO;
 import com.ftn.sbnz.service.exceptions.NotFoundException;
 import com.ftn.sbnz.service.repositories.*;
@@ -24,6 +25,8 @@ import org.drools.core.time.SessionPseudoClock;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.QueryResults;
+import org.kie.api.runtime.rule.QueryResultsRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +81,7 @@ public class BreakdownService implements IBreakdownService {
         cepKSession = container.newKieSession("cepKsession");
        
     }
+
 
     @Override
     public List<BreakdownDTO> getAll() {
@@ -363,5 +367,23 @@ public class BreakdownService implements IBreakdownService {
 
         // after - previous
         return dto;
+    }
+
+
+    @Override
+    public Long countSameSymptoms(SymptomsDTO dto) throws NotFoundException {
+        boolean hasInvalidSymptom = dto.getSymptoms().stream()
+                .anyMatch(str -> Symptom.fromString(str) == null);
+        if (hasInvalidSymptom)
+            throw new NotFoundException();
+        List<Symptom> symptoms = dto.getSymptoms().stream().map(Symptom::fromString).collect(Collectors.toList());
+        kSession.insert(symptoms);
+        QueryResults results = kSession.getQueryResults( "getCarsWithSymptom", symptoms );
+        for ( QueryResultsRow row : results ) {
+            Long count = ( Long) row.get( "cnt" );
+            System.out.println( count + "\n" );
+            return (long) count;
+        }
+        return 0L;
     }
 }

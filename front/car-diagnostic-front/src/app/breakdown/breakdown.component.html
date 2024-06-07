@@ -45,6 +45,7 @@
         </mat-card>
     </form>
   </div>
+  <h2 *ngIf="cnt !== null">There is {{cnt}} same cases</h2>
   <div>
     <h2>Repairments</h2>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">

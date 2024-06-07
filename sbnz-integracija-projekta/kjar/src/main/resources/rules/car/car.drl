@@ -14,6 +14,9 @@ import com.ftn.sbnz.model.models.FaultProblems.InvertorProblem
 import com.ftn.sbnz.model.models.FaultProblems.FaultProblemKinds
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Collection;
+import java.util.Set;
 import com.ftn.sbnz.model.models.Repairment
 
 rule "broken battery if headlights are on and engine is not starting"
@@ -498,6 +501,18 @@ when
 then
     System.out.println("Do the optics");
     insert(new Repairment(null, 20.0, null, null, $breakdown, "Do the optics", 0));
+end
+
+
+query "getCarsWithSymptom" (List $givenSymptoms)
+    $set : Set() from accumulate (
+            Breakdown($car: car, symptoms.containsAll($givenSymptoms)),
+            collectSet($car)
+        ) 
+    cnt : Number() from accumulate (
+        Car() from $set,
+        count(1)
+    )
 end
 
 

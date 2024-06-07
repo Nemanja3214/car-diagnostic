@@ -81,13 +81,7 @@ end
 //     return new HashSet<Car>(collection).size();
 // }
 
-query "getCarsWithSymptom"
-    $set : Set() from accumulate (
-            $b: Breakdown($car: car),
-            collectSet($car)
-        )
-    
-end
+
 
 
 //rule "Print Count of Cars With Symptom"

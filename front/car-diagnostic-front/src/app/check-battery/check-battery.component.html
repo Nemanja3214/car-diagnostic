@@ -32,6 +32,7 @@
     <br>
     <button  mat-flat-button color="primary" type="submit" [disabled]="!chooseCarForm.valid">Submit</button>
 </form>
+<mat-spinner *ngIf="loading"></mat-spinner>
 <div *ngIf="carId" style="display: block;" class="canvasContainer">
     <canvas baseChart 
                 [datasets]="lineChartData"
@@ -43,7 +44,7 @@
 <br>
 <h3 *ngIf="!carId">Graph</h3>
 
-<mat-spinner *ngIf="loading"></mat-spinner>
+
 
 <div class="repairments">
     <h3>Repairments</h3>
