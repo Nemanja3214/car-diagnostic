@@ -21,7 +21,7 @@
             <br>
             <mat-form-field>
                 <mat-label>Select car</mat-label>
-                <mat-select #availableCarsSelect formControlName="car">
+                <mat-select #availableCarsSelect formControlName="car" (selectionChange)="onCarChange($event)">
                     <mat-option *ngFor="let topping of availableCars" [value]="topping">
                     {{topping.plate}}
                     </mat-option>
@@ -37,7 +37,8 @@
             </mat-select>
             </mat-form-field>
             <br>
-            <mat-checkbox [formControl]="engineLamp" ngDefaultControl>Hide required marker</mat-checkbox>
+            <mat-checkbox [formControl]="engineLamp" *ngIf="!isElectric" ngDefaultControl>Engine lamp is on</mat-checkbox>
+            <mat-checkbox [formControl]="codeLamp" *ngIf="isElectric" ngDefaultControl>OBD lamp is on</mat-checkbox>
             <br>
             <button  mat-flat-button color="primary" type="submit" [disabled]="!createForm.valid">Submit</button>
         </mat-card-content>

@@ -39,11 +39,17 @@ export class BreakdownComponent implements OnInit{
   @Input()
   engineLamp = new FormControl(false);
 
+  @Input()
+  codeLamp = new FormControl(false);
+
+  isElectric: boolean = false;
+
   createForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     symptoms: new FormControl([], [Validators.required]),
     car: new FormControl<Car | null>(null, [Validators.required]),
-    engineLamp: this.engineLamp
+    engineLamp: this.engineLamp,
+    codeLamp: this.codeLamp
   });
 
   displayedColumns: string[] = ['position', 'price', 'action'];
@@ -120,5 +126,11 @@ export class BreakdownComponent implements OnInit{
         console.error('Error handler:', error);
       }
     );
+  }
+
+  onCarChange(event: any) {
+    // Update the selected option when the selection changes
+    let selectedOption = event.value;
+    this.isElectric = selectedOption.electric;
   }
 }

@@ -48,7 +48,8 @@ export class CarService {
 
 export interface Car{
   id: number,
-  plate: string;
+  plate: string,
+  isElectric: boolean;
 }
 
 export interface CarModel{

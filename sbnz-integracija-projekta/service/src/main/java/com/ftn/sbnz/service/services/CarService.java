@@ -47,6 +47,7 @@ public class CarService implements ICarService {
     @Override
     public void createElectric(CreateElectricCarDTO carDTO) throws NotFoundException {
         ElectricCar car = new ElectricCar();
+        car.setIsElectric(true);
         car.setKm(car.getKm());
 
         if(!carModelRepository.existsById(carDTO.getCarModelId()))
@@ -80,6 +81,7 @@ public class CarService implements ICarService {
     public void createGas(CreateGasCarDTO carDTO) throws NotFoundException {
         GasCar car = new GasCar();
         car.setKm(carDTO.getKm());
+        car.setIsElectric(false);
 
         if(!carModelRepository.existsById(carDTO.getCarModelId()))
             throw new NotFoundException();

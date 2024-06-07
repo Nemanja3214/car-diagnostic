@@ -47,6 +47,7 @@ public class Car {
     protected List<Lamp> lamps;
     @OneToMany
     protected List<Repairment> repairments;
+    protected boolean isElectric;
 
     public Car() {
         repairments = new ArrayList<>();
@@ -100,6 +101,24 @@ public class Car {
     public int getYearOfProduction() {
         return yearOfProduction;
     }
+
+    public boolean getPotentionalEngineIssue() {
+        return this.potentionalEngineIssue;
+    }
+
+
+    public boolean isIsElectric() {
+        return this.isElectric;
+    }
+
+    public boolean getIsElectric() {
+        return this.isElectric;
+    }
+
+    public void setIsElectric(boolean isElectric) {
+        this.isElectric = isElectric;
+    }
+
 
     public void setYearOfProduction(int yearOfProduction) {
         this.yearOfProduction = yearOfProduction;
