@@ -55,7 +55,7 @@ public class TemplateService implements ITemplateService {
         ObjectDataCompiler converter = new ObjectDataCompiler();
         String drl = converter.compile(data, template);
 
-        System.out.println(drl);
+        // System.out.println(drl);
 
         serviceKsession = createKieSessionFromDRL(drl);
 
@@ -99,7 +99,7 @@ public class TemplateService implements ITemplateService {
         ObjectDataCompiler converter = new ObjectDataCompiler();
         String drl = converter.compile(data, template);
 
-        System.out.println(drl);
+        // System.out.println(drl);
 
         discountKsession = createKieSessionFromDRL(drl);
     }

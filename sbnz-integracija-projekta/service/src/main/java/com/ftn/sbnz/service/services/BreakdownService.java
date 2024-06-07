@@ -130,6 +130,9 @@ public class BreakdownService implements IBreakdownService {
 
         kSession.insert(breakdown);
         kSession.insert(car);
+        for(Symptom s: breakdown.getSymptoms()){
+            kSession.insert(s);
+        }
         int ruleCount = kSession.fireAllRules();
         System.out.println(ruleCount);
 
